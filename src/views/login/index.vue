@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">余杭居家养老后台管理系统</h3>
+        <h3 class="title">自动化测试后台管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -104,7 +104,7 @@ export default {
     handleLogin() {
       const result = login({ ...this.loginForm, remember: this.remember })
       if (result) {
-        this.$router.push({ path: '/analyse' })
+        this.$router.push({ path: '/user/list' })
         console.log(result)
       }
 
