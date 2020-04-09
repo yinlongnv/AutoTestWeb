@@ -49,7 +49,7 @@ export const constantRoutes = [
         path: '/user/list',
         name: 'list',
         component: () => import('@/views/AutoTest/UserManage'),
-        meta: { title: '用户列表', icon: 'dashboard' }
+        meta: { title: '用户管理', icon: 'dashboard' }
       },
       {
         path: '/user/detail',
@@ -71,7 +71,19 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/record',
+    component: Layout,
+    meta: { title: '日志管理', icon: 'dashboard' },
+    children: [
+      {
+        path: '/record/list',
+        name: 'record',
+        component: () => import('@/views/AutoTest/RecordList'),
+        meta: { title: '日志管理', icon: 'dashboard' }
+      }
+    ]
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
