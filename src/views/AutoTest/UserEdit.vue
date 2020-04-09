@@ -115,13 +115,13 @@ export default {
       this.$refs["ruleForm"].validate(valid => {
         if (valid) {
           this.createAccount();
-          sessionStorage.removeItem("userDetail");
         } else {
           return false;
         }
       });
     },
     async createAccount() {
+      sessionStorage.removeItem("userDetail");
       const result = await createUser({ ...this.form });
       this.$message({
         type: "success",

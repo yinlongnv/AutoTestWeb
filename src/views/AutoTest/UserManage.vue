@@ -19,7 +19,12 @@
         />
       </el-select>
       <div style="text-align:right;width:100%">
-        <el-select v-model="role" placeholder="请选择账号角色" size="small" :no-data-text="'暂无数据'">
+        <el-select
+          v-model="searchObj.role"
+          placeholder="请选择账号角色"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
           <el-option
             v-for="item in roleOptions"
             :key="item.value"
@@ -40,7 +45,7 @@
         <el-input
           v-model="searchName"
           icon="el-icon-search"
-          placeholder="搜索用户姓名/账号名称"
+          placeholder="搜索用户名/用户编号"
           size="small"
           style="width:200px"
         />
@@ -66,8 +71,8 @@
       </el-table-column>
       <el-table-column label="账号状态" width="100">
         <template slot-scope="scope">
-          <el-tag type="success">{{ scope.row.status | statusFilter }}</el-tag>
-          <!-- <el-tag type="warning">{{ scope.row.sex | sexFilter }}</el-tag> -->
+          <el-tag type="success" v-if="scope.row.status">{{ scope.row.status | statusFilter }}</el-tag>
+          <el-tag type="warning" v-else>{{scope.row.status | statusFilter}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="账号角色" width="120">
@@ -100,11 +105,19 @@
           <div style="display:flex">
             <el-button type="text" size="small" @click="editItem(scope.row)">编辑</el-button>
             <el-button
+              v-if="scope.row.status"
               type="text"
               style="color:#e6a23c"
               size="small"
               @click="disableItem(scope.row)"
             >禁用</el-button>
+            <el-button
+              v-else
+              type="text"
+              style="color:#67c23a"
+              size="small"
+              @click="enableItem(scope.row)"
+            >启用</el-button>
             <el-button type="text" size="small" @click="changePwd(scope.row)">修改密码</el-button>
             <el-button
               type="text"
@@ -168,7 +181,8 @@ export default {
       chartDataObj: {},
       searchName: "",
       searchObj: {
-        name: ""
+        name: "",
+        role: ""
       },
       idList: [],
       type: "",
@@ -186,8 +200,16 @@ export default {
           value: "删除"
         }
       ],
-      role: "",
-      roleOptions: []
+      roleOptions: [
+        {
+          name: "root",
+          value: 1
+        },
+        {
+          name: "qa",
+          value: 0
+        }
+      ]
     };
   },
   computed: {
@@ -196,11 +218,11 @@ export default {
   methods: {
     batchActions() {
       if (this.type === "禁用") {
-        this.disableItem();
+        this.disableItem(this.idList);
       } else if (this.type === "删除") {
         this.deleteItem(this.idList);
       } else {
-        this.enableItem();
+        this.enableItem(this.idList);
       }
       this.type = "";
     },
@@ -246,10 +268,10 @@ export default {
     },
     enableItem(row) {
       if (Array.isArray(row)) {
-        this.deleteItems(row);
+        this.enableItems(row);
       } else {
         let ids = [row.id];
-        this.deleteItems(ids);
+        this.enableItems(ids);
       }
     },
     createAccount() {

@@ -15,9 +15,9 @@ export function timeFilter(val) {
 }
 export function statusFilter(val) {
   if (val) {
-    return val;
+    return "启用";
   } else {
-    return "-";
+    return "禁用";
   }
 }
 export function roleFilter(val) {
