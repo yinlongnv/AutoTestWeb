@@ -62,9 +62,16 @@ export const constantRoutes = [
         name: 'edit',
         component: () => import('@/views/AutoTest/UserEdit'),
         hidden: true
+      },
+      {
+        path: '/my/center',
+        name: 'center',
+        component: () => import('@/views/AutoTest/MyCenter'),
+        hidden: true
       }
     ]
   },
+
   {
     path: '/404',
     component: () => import('@/views/404'),

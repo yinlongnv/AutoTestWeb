@@ -1,9 +1,9 @@
 <template>
   <div class="old-info-container">
-    <div>编辑账号</div>
+    <div>{{ editStatus === 1?'编辑账号':'创建账号' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item prop="username" label="用户姓名：" :label-width="formLabelWidth">
-        <el-input v-model="form.username" :style="inputWidth" size="small" placeholder="请输入真实姓名" />
+      <el-form-item prop="username" label="用户名：" :label-width="formLabelWidth">
+        <el-input v-model="form.username" :style="inputWidth" size="small" placeholder="请输入用户名" />
       </el-form-item>
       <el-form-item label="身份证号：" :label-width="formLabelWidth">
         <el-input v-model="form.id_number" :style="inputWidth" size="small" placeholder="请输入真实身份证号" />
@@ -13,9 +13,6 @@
       </el-form-item>
       <el-form-item label="邮箱地址" :label-width="formLabelWidth">
         <el-input v-model="form.email" :style="inputWidth" size="small" placeholder="请输入邮箱地址" />
-      </el-form-item>
-      <el-form-item prop="accountname" label="账号名称" :label-width="formLabelWidth">
-        <el-input v-model="form.accountname" :style="inputWidth" size="small" placeholder="请输入账号名称，字数限制10个字" />
       </el-form-item>
       <el-form-item prop="role" label="账号角色" :label-width="formLabelWidth">
         <el-select v-model="form.role" :style="inputWidth" multiple placeholder="请选择账号角色" @change="selectRoles">
@@ -27,34 +24,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="所属部门" :label-width="formLabelWidth">
-        <el-select v-model="form.community_name" style="width:150px" placeholder="请选择一级部门" size="small" :no-data-text="'暂无数据'" @change="selectCommunity">
-          <el-option
-            v-for="item in communityList"
-            :key="item.community_id"
-            :label="item.name"
-            :value="item.community_id"
-          />
-        </el-select>
-        <el-select v-model="form.subdistrict_name" style="width:150px" placeholder="请选择二级部门" size="small" :no-data-text="'暂无数据'" @change="selectSubdistrict">
-          <el-option
-            v-for="item in subdistrictList"
-            :key="item.subdistrict_id"
-            :label="item.name"
-            :value="item.subdistrict_id"
-          />
-        </el-select>
-        <el-select v-model="form.subdistrict_name" style="width:150px" placeholder="请选择三级部门" size="small" :no-data-text="'暂无数据'" @change="selectSubdistrict">
-          <el-option
-            v-for="item in subdistrictList"
-            :key="item.subdistrict_id"
-            :label="item.name"
-            :value="item.subdistrict_id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="密码：" :label-width="formLabelWidth">
-        <el-input v-model="form.phone" :style="inputWidth" size="small" placeholder="请输入账号密码，6-20位，需含字母、数字、符号" />
+      <el-form-item :label="editStatus === 1?'密码：':'初始密码：'" :label-width="formLabelWidth">
+        <el-input v-model="form.password" :style="inputWidth" size="small" placeholder="请输入账号密码，6-20位，需含字母、数字、符号" />
       </el-form-item>
 
     </el-form>
@@ -83,13 +54,11 @@ export default {
   filters: { timeFilter },
   data() {
     return {
+      editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
         username: [
-          { required: true, message: '请输入正确的用户姓名', trigger: 'blur' }
-        ],
-        accountname: [
-          { required: true, message: '请输入正确的账号名称', trigger: 'blur' }
+          { required: true, message: '请输入正确的用户名', trigger: 'blur' }
         ],
         role: [
           { required: true, message: '请选择正确的账号角色', trigger: 'blur' }
@@ -114,6 +83,8 @@ export default {
   },
   created() {
     this.getCommunityList()
+    // this.editStatus = Boolean(this.$route.query.type)
+    console.log(this.$route.query.type, this.editStatus)
   },
   methods: {
     closeDialog() {

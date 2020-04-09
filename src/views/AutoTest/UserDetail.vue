@@ -2,16 +2,16 @@
   <div>
     <div>账号详情</div>
     <div class="user-info">
-      <div class="info-item">用户姓名:<span>王三火</span></div>
-      <div class="info-item">账号名称:<span>王三火</span></div>
-      <div class="info-item">账号角色:<span>王三火</span></div>
-      <div class="info-item">所属部门:<span>王三火</span></div>
-      <div class="info-item">账号状态:<el-tag type="warning" style="color:#e6a23c" size="small">禁用</el-tag></div>
-      <div class="info-item">身份证号:<span>王三火</span></div>
-      <div class="info-item">手机号:<span>王三火</span></div>
-      <div class="info-item">邮箱地址:<span>王三火</span></div>
-      <div class="info-item">创建账号:<span>王三火</span></div>
-      <div class="info-item" style="padding-bottom:24px">创建时间:<span>王三火</span></div>
+      <div class="info-item">用户名:<span>{{ userInfo.username }}</span></div>
+      <div class="info-item">用户编号:<span>{{ userInfo.user_number }}</span></div>
+      <div class="info-item">账号状态:<el-tag type="warning" style="color:#e6a23c" size="small">{{ userInfo.status }}</el-tag></div>
+      <div class="info-item">账号角色:<span>{{ userInfo.role }}</span></div>
+      <div class="info-item">身份证号:<span>{{ userInfo.id_number }}</span></div>
+      <div class="info-item">手机号:<span>{{ userInfo.phone_number }}</span></div>
+      <div class="info-item">邮箱地址:<span>{{ userInfo.email }}</span></div>
+      <div class="info-item">最后登录IP:<span>{{ userInfo.last_ip }}</span></div>
+      <div class="info-item">最后登录时间:<span>{{ userInfo.last_login }}</span></div>
+      <div class="info-item" style="padding-bottom:24px">密码:<span>{{ userInfo.password }}</span></div>
 
     </div>
     <div style="padding:24px 0">
@@ -25,6 +25,12 @@
 
 <script>
 export default {
+  data() {
+    return {
+      userInfo: {
+      }
+    }
+  },
   methods: {
     goBack() {
       this.$router.go(-1)

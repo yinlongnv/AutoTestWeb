@@ -52,40 +52,45 @@
         type="selection"
         width="55"
       />
-      <el-table-column label="用户姓名" width="100">
+      <el-table-column label="用户名" width="100">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.aged_name }}</el-button>
+          <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.username }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="账号名称" width="100">
+      <el-table-column label="用户编号" width="100">
         <template slot-scope="scope">
-          <div>{{ scope.row.aged_name }}</div>
+          <div>{{ scope.row.user_number }}</div>
         </template>
       </el-table-column>
       <el-table-column label="账号状态" width="100">
         <template slot-scope="scope">
-          <el-tag type="success">{{ scope.row.sex | sexFilter }}</el-tag>
+          <el-tag type="success">{{ scope.row.status | sexFilter }}</el-tag>
           <!-- <el-tag type="warning">{{ scope.row.sex | sexFilter }}</el-tag> -->
         </template>
       </el-table-column>
       <el-table-column label="账号角色" width="120">
         <template slot-scope="scope">
-          <div>{{ scope.row.age }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="手机号" width="120">
-        <template slot-scope="scope">
-          <div>{{ scope.row.phone }}</div>
+          <div>{{ scope.row.role }}</div>
         </template>
       </el-table-column>
       <el-table-column label="创建账号" width="120">
         <template slot-scope="scope">
-          <div>{{ scope.row.id_card_num }}</div>
+          <div>{{ scope.row.created_by }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="180">
+      <el-table-column label="最后登录IP" width="120">
         <template slot-scope="scope">
-          <div>{{ scope.row.town_name+scope.row.community_name+scope.row.subdistrict_name+scope.row.house_num }}</div>
+          <div>{{ scope.row.last_ip }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="最后登录时间" width="180">
+        <template slot-scope="scope">
+          <div>{{ scope.row.last_login }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="登录次数" width="80">
+        <template slot-scope="scope">
+          <div>{{ scope.row.login_count }}</div>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
@@ -104,7 +109,7 @@
     <el-dialog title="修改密码" :visible.sync="dialogPwdVisible" @close="closeDialog">
       <el-form ref="pwdRef" :model="form" :rules="rules">
         <el-form-item label="新密码" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" style="width:300px" placeholder="请输入新密码" size="small" />
+          <el-input v-model="form.password" style="width:300px" placeholder="请输入新密码" size="small" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -135,7 +140,7 @@ export default {
       },
       timeArray: [],
       form: {
-        name: ''
+        password: ''
       },
       formLabelWidth: '120px',
       dialogPwdVisible: false,
@@ -177,7 +182,7 @@ export default {
     },
 
     editItem(row) {
-      this.$router.push({ path: '/user/edit' })
+      this.$router.push({ path: '/user/edit', query: { type: 1 }})
     },
     disableItem(row) {
       this.$confirm('确定要禁用吗?', '提示', {
@@ -198,7 +203,7 @@ export default {
       })
     },
     createAccount() {
-      this.$router.push({ path: '/user/edit' })
+      this.$router.push({ path: '/user/edit', query: { type: 0 }})
     },
     changePwd() {
       this.dialogPwdVisible = true
