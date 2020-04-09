@@ -25,9 +25,18 @@
   </div>
 </template>
 <script>
-import request from '@/utils/request'
+import request from "@/utils/request";
+const debounce = (function() {
+  let timeout;
+  return function(fn, delay) {
+    let that = this;
+    let args = arguments;
+    clearTimeout(timeout);
+    setTimeout(fn.apply(that, args), delay);
+  };
+})();
 export default {
-  name: 'DfTable',
+  name: "DfTable",
   props: {
     pageSize: {
       type: Number,
@@ -35,7 +44,7 @@ export default {
     },
     method: {
       type: String,
-      default: 'get'
+      default: "get"
     },
     searchParam: {
       type: Object,
@@ -43,7 +52,7 @@ export default {
     },
     url: {
       type: String,
-      default: ''
+      default: ""
     },
     ifShowPagination: {
       type: Boolean,
@@ -64,80 +73,79 @@ export default {
       },
       tableData: [],
       tableKey: 0
-    }
+    };
   },
   mounted() {
-    this.onSearch()
+    this.onSearch();
     this.$watch(
-      'searchParam',
+      "searchParam",
       () => {
-        this.tableKey++
-        this.onSearch()
+        this.tableKey++;
+        // debounce(this.onSearch, 500);
+        this.onSearch();
       },
       { deep: true }
-    )
+    );
   },
   methods: {
     handleSelectionChange(val) {
-      this.$emit('handleSelectionChange', val)
+      this.$emit("handleSelectionChange", val);
     },
     selectall(val) {
-      this.$emit('selectall', val, 'all')
+      this.$emit("selectall", val, "all");
     },
     selectSingle(val) {
-      this.$emit('selectSingle', val)
+      this.$emit("selectSingle", val);
     },
     onSortChange(params) {
-      this.$emit('onSortChange', params)
+      this.$emit("onSortChange", params);
     },
     async onSearch(current = 1) {
-      if (this.url === '/record/list') {
+      if (this.url === "/record/list") {
         // 模拟下载excel数据
         this.tableData = [
           {
-            username: 'aaa',
-            id_number: '12344',
-            role: '管理员',
-            login_ip: '127.1.1',
-            action: '哈哈哈',
-            page: '测试',
-            time: '2020-4-1 11:00:01'
+            username: "aaa",
+            id_number: "12344",
+            role: "管理员",
+            login_ip: "127.1.1",
+            action: "哈哈哈",
+            page: "测试",
+            time: "2020-4-1 11:00:01"
           }
-        ]
-        this.$emit('tableLoaded', this.tableData)
+        ];
+        this.$emit("tableLoaded", this.tableData);
       } else if (this.url) {
-        this.loading = true
+        this.loading = true;
         try {
-          this.pager.current = current
+          this.pager.current = current;
           const data = {
             ...this.searchParam,
             ps: this.pager.size,
-            pn: this.pager.current
-          }
-          const result = await request({ url: this.url, params: data })
-          console.log('result', result)
-          this.tableData = result.data.data.list
+            page: this.pager.current
+          };
+          const result = await request({ url: this.url, params: data });
+          console.log("result", result);
+          this.tableData = result.data.records;
           // if (result && result.resultList) {
           //   this.tableData = result.resultList
           //   this.pager.total = result.resultCount
           // }
-          this.$emit('tableLoaded', this.tableData)
-          this.loading = false
-        // eslint-disable-next-line no-empty
-        } catch (e) {
-
-        }
+          this.$emit("tableLoaded", this.tableData);
+          this.loading = false;
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
       }
     },
     async onChangePage(current) {
-      this.onSearch(current)
+      this.onSearch(current);
       window.scrollTo({
         top: 0
         // behavior: 'smooth'
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
