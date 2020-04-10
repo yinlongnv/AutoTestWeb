@@ -43,13 +43,13 @@ export const constantRoutes = [
   {
     path: '/user',
     component: Layout,
-    meta: { title: '用户管理', icon: 'dashboard' },
+    meta: { title: '用户管理' },
     children: [
       {
         path: '/user/list',
         name: 'list',
         component: () => import('@/views/AutoTest/UserManage'),
-        meta: { title: '用户管理', icon: 'dashboard' }
+        meta: { title: '用户管理' }
       },
       {
         path: '/user/detail',
@@ -74,14 +74,53 @@ export const constantRoutes = [
   {
     path: '/record',
     component: Layout,
-    meta: { title: '日志管理', icon: 'dashboard' },
+    meta: { title: '日志管理' },
     children: [
       {
         path: '/record/list',
         name: 'record',
         component: () => import('@/views/AutoTest/RecordList'),
-        meta: { title: '日志管理', icon: 'dashboard' }
+        meta: { title: '日志管理' }
       }
+    ]
+  },
+  {
+    path: '/api',
+    component: Layout,
+    meta: { title: '接口管理' },
+    children: [
+      {
+        path: '/api/list',
+        name: 'api',
+        component: () => import('@/views/AutoTest/ApiList'),
+        meta: { title: '接口管理' }
+      },
+      {
+        path: '/api/edit',
+        name: 'edit',
+        component: () => import('@/views/AutoTest/ApiEdit'),
+        hidden: true
+      }
+
+    ]
+  },
+  {
+    path: '/case',
+    component: Layout,
+    meta: { title: '用例管理' },
+    children: [
+      {
+        path: '/case/list',
+        name: 'case',
+        component: () => import('@/views/AutoTest/CaseList'),
+        meta: { title: '用例管理' }
+      },
+      {
+        path: '/case/edit',
+        component: () => import('@/views/AutoTest/CaseEdit'),
+        hidden: true
+      }
+
     ]
   },
   {
@@ -90,69 +129,69 @@ export const constantRoutes = [
     hidden: true
   },
 
-  {
-    path: '/analyse',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        name: 'analyse',
-        component: () => import('@/views/Analyse/index'),
-        meta: { title: '数据分析', icon: 'dashboard' }
-      }
-    ]
-  },
-  {
-    path: '/old',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        name: 'old',
-        component: () => import('@/views/OldManage/index'),
-        meta: { title: '老人管理', icon: 'dashboard' }
-      }
-    ]
-  },
+  // {
+  //   path: '/analyse',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'analyse',
+  //       component: () => import('@/views/Analyse/index'),
+  //       meta: { title: '数据分析', icon: 'dashboard' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/old',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'old',
+  //       component: () => import('@/views/OldManage/index'),
+  //       meta: { title: '老人管理', icon: 'dashboard' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/service',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'service',
-        component: () => import('@/views/Service/index'),
-        meta: { title: '服务人员', icon: 'dashboard' }
-      }
-    ]
-  },
+  // {
+  //   path: '/service',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'service',
+  //       component: () => import('@/views/Service/index'),
+  //       meta: { title: '服务人员', icon: 'dashboard' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/history',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import('@/views/History/index'), // Parent router-view
-        name: 'history',
-        meta: { title: '服务历史', icon: 'dashboard' }
-      }
-    ]
-  },
+  // {
+  //   path: '/history',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       component: () => import('@/views/History/index'), // Parent router-view
+  //       name: 'history',
+  //       meta: { title: '服务历史', icon: 'dashboard' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/project',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import('@/views/ProjectManage/index'), // Parent router-view
-        name: 'project',
-        meta: { title: '服务项目管理', icon: 'dashboard' }
-      }
-    ]
-  },
+  // {
+  //   path: '/project',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       component: () => import('@/views/ProjectManage/index'), // Parent router-view
+  //       name: 'project',
+  //       meta: { title: '服务项目管理', icon: 'dashboard' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

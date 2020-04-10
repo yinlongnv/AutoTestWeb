@@ -2,7 +2,7 @@
   <div class="old-manage">
     <div style="padding:16px">用户列表</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" icon="el-icon-folder-add" @click="createAccount">创建账号</el-button>
+      <el-button type="primary" size="small" @click="createAccount">创建账号</el-button>
       <el-select
         v-model="type"
         style="width:150px;margin-left:16px"
@@ -53,9 +53,9 @@
       </div>
     </div>
     <base-table
+      ref="tableRef"
       :url="'/user/list'"
       :search-param="searchObj"
-      ref="tableRef"
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
@@ -148,16 +148,6 @@ import { mapGetters } from "vuex";
 import BaseTable from "@/components/BaseTable";
 import { statusFilter, roleFilter } from "@/utils/filter";
 import { deleteItems, disableItems, enableItems } from "@/api/user";
-import { Row } from "element-ui";
-const debounce = (function() {
-  let timeout;
-  return function(fn, delay) {
-    let that = this;
-    let args = arguments;
-    clearTimeout(timeout);
-    setTimeout(fn.apply(that, args), delay);
-  };
-})();
 export default {
   components: { BaseTable },
   filters: {
@@ -244,7 +234,7 @@ export default {
           if (Array.isArray(row)) {
             this.disableItems(row);
           } else {
-            let ids = [row.id];
+            const ids = [row.id];
             this.disableItems(ids);
           }
         })
@@ -260,7 +250,7 @@ export default {
           if (Array.isArray(row)) {
             this.deleteItems(row);
           } else {
-            let ids = [row.id];
+            const ids = [row.id];
             this.deleteItems(ids);
           }
         })
