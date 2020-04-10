@@ -1,29 +1,29 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs'
 export function sexFilter(val) {
   if (val === 1) {
-    return "男";
+    return '男'
   } else {
-    return "女";
+    return '女'
   }
 }
 export function timeFilter(val) {
   if (val) {
-    return dayjs(val).format("YYYY-MM-DD hh:mm:ss");
+    return dayjs(val).format('YYYY-MM-DD hh:mm:ss')
   } else {
-    return "-";
+    return '-'
   }
 }
 export function statusFilter(val) {
   if (val) {
-    return val;
+    return val
   } else {
-    return "-";
+    return '-'
   }
 }
 export function roleFilter(val) {
   if (val) {
-    return val;
+    return val
   } else {
-    return "-";
+    return '-'
   }
 }

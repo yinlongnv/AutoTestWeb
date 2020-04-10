@@ -1,111 +1,112 @@
 <template>
   <div class="old-manage">
-    <div style="padding:16px">用户列表</div>
+    <div style="padding:16px">用例管理</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" icon="el-icon-folder-add" @click="createAccount">创建账号</el-button>
-      <el-select
-        v-model="type"
-        style="width:150px;margin-left:16px"
-        placeholder="批量管理"
+      <el-button type="primary" size="small" icon="el-icon-folder-add" @click="createApi">创建接口</el-button>
+      <el-button
+        :loading="downloadLoading"
+        icon="el-icon-download"
         size="small"
-        :no-data-text="'暂无数据'"
-        @change="batchActions"
-      >
-        <el-option
-          v-for="item in typeOptions"
-          :key="item.value"
-          :label="item.name"
-          :value="item.value"
-        />
-      </el-select>
+        @click="handleDownload"
+      >下载模板</el-button>
+      <el-button
+        :loading="downloadLoading"
+        icon="el-icon-upload2"
+        size="small"
+        @click="handleDownload"
+      >批量导入</el-button>
+      <el-button
+        :loading="downloadLoading"
+        icon="el-icon-delete"
+        size="small"
+        @click="deleteItem"
+      >批量删除</el-button>
+
       <div style="text-align:right;width:100%">
-        <el-select v-model="role" placeholder="请选择账号角色" size="small" :no-data-text="'暂无数据'">
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-        <el-date-picker
-          v-model="timeArray"
+        <el-autocomplete
+          v-model="apiGroup"
+          style="width:100px;margin-left:16px"
           size="small"
-          type="daterange"
-          :value-format="'yyyy-MM-dd'"
-          :format="'yyyy-MM-dd'"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
+          class="inline-input"
+          :fetch-suggestions="querySearch"
+          placeholder="所属业务"
+          @select="handleSelect"
         />
+
+        <el-autocomplete
+          v-model="reqMethod"
+          style="width:100px;margin-left:16px"
+          size="small"
+          class="inline-input"
+          :fetch-suggestions="querySearch"
+          placeholder="请求方法"
+          @select="handleSelect"
+        />
+
         <el-input
-          v-model="searchName"
+          v-model="apiName"
           icon="el-icon-search"
-          placeholder="搜索用户姓名/账号名称"
+          placeholder="搜索接口名称"
           size="small"
-          style="width:200px"
+          style="width:130px"
         />
-        <el-button type="primary" size="small" @click="searchObj.name = searchName">搜索</el-button>
+        <el-button type="primary" size="small" @click="searchObj.apiName = apiName">搜索</el-button>
       </div>
     </div>
     <base-table
       ref="tableRef"
-      :url="'/user/list'"
+      :url="'/api/list'"
       :search-param="searchObj"
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="用户名" width="100">
+      <el-table-column label="所关联接口名称" width="120">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.username }}</el-button>
+          <div>{{ scope.row.apiName }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="用户编号" width="100">
+      <el-table-column label="用例描述">
         <template slot-scope="scope">
-          <div>{{ scope.row.userNumber }}</div>
+          <div>{{ scope.row.caseDescription }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="账号状态" width="100">
-        <template slot-scope="scope">
-          <el-tag type="success">{{ scope.row.status | statusFilter }}</el-tag>
-          <!-- <el-tag type="warning">{{ scope.row.sex | sexFilter }}</el-tag> -->
-        </template>
-      </el-table-column>
-      <el-table-column label="账号角色" width="120">
-        <template slot-scope="scope">
-          <div>{{ scope.row.role|roleFilter }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建账号" width="120">
+      <el-table-column label="创建人">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录IP" width="120">
+
+      <el-table-column label="执行人">
         <template slot-scope="scope">
-          <div>{{ scope.row.lastIp }}</div>
+          <div>{{ scope.row.username }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录时间" width="180">
+      <el-table-column label="执行时间">
         <template slot-scope="scope">
-          <div>{{ scope.row.lastLogin }}</div>
+          <div>{{ scope.row.lastExecuteTime }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="登录次数" width="80">
+      <el-table-column label="执行状态">
         <template slot-scope="scope">
-          <div>{{ scope.row.loginCount }}</div>
+          <div>{{ scope.row.caseStatus }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="执行次数">
+        <template slot-scope="scope">
+          <div>{{ scope.row.executeCount }}</div>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <div style="display:flex">
             <el-button type="text" size="small" @click="editItem(scope.row)">编辑</el-button>
+            <!-- <el-button type="text" size="small" @click="createCase(scope.row)">创建用例</el-button> -->
+
             <el-button
               type="text"
-              style="color:#e6a23c"
               size="small"
-              @click="disableItem(scope.row)"
-            >禁用</el-button>
-            <el-button type="text" size="small" @click="changePwd(scope.row)">修改密码</el-button>
+              @click="createApi(scope.row)"
+            >复制</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
@@ -113,6 +114,7 @@
               @click="deleteItem(scope.row)"
             >删除</el-button>
           </div>
+
         </template>
       </el-table-column>
     </base-table>
@@ -143,6 +145,7 @@ export default {
   },
   data() {
     return {
+      downloadLoading: false,
       rules: {
         name: [
           { required: true, message: '请输入正确的新密码', trigger: 'blur' }
@@ -156,34 +159,58 @@ export default {
       dialogPwdVisible: false,
       oldInfoObj: {},
       chartDataObj: {},
-      searchName: '',
+      apiName: '',
       searchObj: {
-        name: ''
+        apiName: ''
       },
       idList: [],
       type: '',
       typeOptions: [
         {
-          name: '批量禁用',
-          value: '禁用'
+          name: '全部',
+          value: 0
         },
         {
-          name: '批量启用',
-          value: '启用'
+          name: '所属业务',
+          value: 1
         },
         {
-          name: '批量删除',
-          value: '删除'
+          name: '请求方法',
+          value: 2
         }
       ],
       role: '',
-      roleOptions: []
+      roleOptions: [],
+      apiGroup: '',
+      apiGroupOptions: [],
+      reqMethod: '',
+      reqMethodOptions: []
     }
   },
   computed: {
     ...mapGetters(['communityList'])
   },
+  created() {
+    this.restaurants = this.loadAll()
+  },
   methods: {
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/utils/Export2Excel').then(excel => {
+        const tHeader = ['用户名', '身份证号', '账号角色', '登入IP', '账号操作', '操作界面', '操作时间']
+        const filterVal = ['username', 'id_number', 'role', 'login_ip', 'action', 'page', 'time']
+        const list = this.list
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
     batchActions() {
       if (this.type === '禁用') {
         this.disableItem()
@@ -199,8 +226,8 @@ export default {
     },
 
     editItem(row) {
-      sessionStorage.setItem('userDetail', JSON.stringify(row))
-      this.$router.push({ path: '/user/edit', query: { type: 1 }})
+      sessionStorage.setItem('apiDetail', JSON.stringify(row))
+      this.$router.push({ path: '/api/edit', query: { type: 1 }})
     },
     disableItem(row) {
       this.$confirm('确定要禁用吗?', '提示', {
@@ -242,10 +269,13 @@ export default {
         this.deleteItems(ids)
       }
     },
-    createAccount() {
-      this.$router.push({ path: '/user/edit', query: { type: 0 }})
+    createApi(row) {
+      if (row) {
+        sessionStorage.setItem('apiDetail', JSON.stringify(row))
+      }
+      this.$router.push({ path: '/api/edit', query: { type: 0 }})
     },
-    changePwd() {
+    createCase() {
       this.dialogPwdVisible = true
     },
     confrimPwd() {
@@ -288,6 +318,27 @@ export default {
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id)
       console.log(this.idList)
+    },
+    handleSelect() {
+
+    },
+    loadAll() {
+      return [
+        { 'value': '1' },
+        { 'value': '2' },
+        { 'value': '3' }
+      ]
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    querySearch(queryString, cb) {
+      var restaurants = this.restaurants
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
     }
   }
 }

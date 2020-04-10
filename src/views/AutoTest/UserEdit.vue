@@ -50,16 +50,16 @@
 </template>
 
 <script>
-import { timeFilter } from "@/utils/filter";
-import { createUser } from "@/api/user";
+import { timeFilter } from '@/utils/filter'
+import { createUser } from '@/api/user'
 const FORM = {
-  userName: "",
-  idNumber: "",
-  phoneNumber: "",
-  email: "",
-  role: "",
-  password: ""
-};
+  userName: '',
+  idNumber: '',
+  phoneNumber: '',
+  email: '',
+  role: '',
+  password: ''
+}
 export default {
   filters: { timeFilter },
   data() {
@@ -68,86 +68,86 @@ export default {
       form: FORM,
       rules: {
         username: [
-          { required: true, message: "请输入正确的用户名", trigger: "blur" }
+          { required: true, message: '请输入正确的用户名', trigger: 'blur' }
         ],
         role: [
-          { required: true, message: "请选择正确的账号角色", trigger: "blur" }
+          { required: true, message: '请选择正确的账号角色', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请输入正确的密码", trigger: "blur" }
+          { required: true, message: '请输入正确的密码', trigger: 'blur' }
         ]
       },
       options: [
         {
-          label: "root",
+          label: 'root',
           value: 1
         },
         {
-          label: "qa",
+          label: 'qa',
           value: 2
         }
       ],
-      inputWidth: "width:460px",
-      imageUrl: "",
-      formLabelWidth: "120px",
+      inputWidth: 'width:460px',
+      imageUrl: '',
+      formLabelWidth: '120px',
       communityList: [],
       subdistrictList: []
-    };
+    }
   },
   created() {
     // this.editStatus = Boolean(this.$route.query.type)
-    console.log(this.$route.query.type, this.editStatus);
-    this.form = JSON.parse(sessionStorage.getItem("userDetail")) || FORM;
+    console.log(this.$route.query.type, this.editStatus)
+    this.form = JSON.parse(sessionStorage.getItem('userDetail')) || FORM
   },
   methods: {
     closeDialog() {
-      this.$refs["ruleForm"].resetFields();
+      this.$refs['ruleForm'].resetFields()
     },
     selectRoles(val) {
-      console.log(val);
-      console.log(this.role);
+      console.log(val)
+      console.log(this.role)
     },
     goBack() {
-      this.$router.go(-1);
-      sessionStorage.removeItem("userDetail");
+      this.$router.go(-1)
+      sessionStorage.removeItem('userDetail')
     },
     confirmEdit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.createAccount();
-          sessionStorage.removeItem("userDetail");
+          this.createAccount()
+          sessionStorage.removeItem('userDetail')
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     async createAccount() {
-      const result = await createUser({ ...this.form });
+      await createUser({ ...this.form })
       this.$message({
-        type: "success",
-        message: "创建成功"
-      });
-      this.$router.push({ path: "/user/list" });
+        type: 'success',
+        message: '创建成功'
+      })
+      this.$router.push({ path: '/user/list' })
     },
 
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+      this.imageUrl = URL.createObjectURL(file.raw)
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error('上传头像图片只能是 JPG 格式!')
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt2M
     },
     selectCommunity(val) {},
     selectSubdistrict(val) {}
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
