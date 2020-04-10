@@ -117,7 +117,7 @@ export const constantRoutes = [
       },
       {
         path: '/case/edit',
-        component: () => import('@/views/AutoTest/ApiEdit'),
+        component: () => import('@/views/AutoTest/CaseEdit'),
         hidden: true
       }
 

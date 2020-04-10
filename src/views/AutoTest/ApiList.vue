@@ -2,7 +2,7 @@
   <div class="old-manage">
     <div style="padding:16px">接口管理</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" icon="el-icon-folder-add" @click="createApi">创建接口</el-button>
+      <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button
         :loading="downloadLoading"
         icon="el-icon-download"
@@ -286,7 +286,7 @@ export default {
       this.$router.push({ path: '/api/edit', query: { type: 0 }})
     },
     createCase() {
-      this.dialogPwdVisible = true
+      this.$router.push({ path: '/case/edit', query: { type: 0 }})
     },
     confrimPwd() {
       this.$refs['pwdRef'].validate(valid => {

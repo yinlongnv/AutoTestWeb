@@ -2,7 +2,7 @@
   <div class="old-manage">
     <div style="padding:16px">用例管理</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" icon="el-icon-folder-add" @click="createApi">创建接口</el-button>
+      <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
       <el-button
         :loading="downloadLoading"
         icon="el-icon-download"
@@ -46,7 +46,7 @@
         <el-input
           v-model="apiName"
           icon="el-icon-search"
-          placeholder="搜索接口名称"
+          placeholder="搜索用例名称"
           size="small"
           style="width:130px"
         />
@@ -60,7 +60,7 @@
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="所关联接口名称" width="120">
+      <el-table-column label="所关联用例名称" width="120">
         <template slot-scope="scope">
           <div>{{ scope.row.apiName }}</div>
         </template>
@@ -105,7 +105,7 @@
             <el-button
               type="text"
               size="small"
-              @click="createApi(scope.row)"
+              @click="createCase(scope.row)"
             >复制</el-button>
             <el-button
               type="text"
@@ -226,8 +226,8 @@ export default {
     },
 
     editItem(row) {
-      sessionStorage.setItem('apiDetail', JSON.stringify(row))
-      this.$router.push({ path: '/api/edit', query: { type: 1 }})
+      sessionStorage.setItem('createCase', JSON.stringify(row))
+      this.$router.push({ path: '/case/edit', query: { type: 1 }})
     },
     disableItem(row) {
       this.$confirm('确定要禁用吗?', '提示', {
@@ -269,14 +269,11 @@ export default {
         this.deleteItems(ids)
       }
     },
-    createApi(row) {
+    createCase(row) {
       if (row) {
         sessionStorage.setItem('apiDetail', JSON.stringify(row))
       }
-      this.$router.push({ path: '/api/edit', query: { type: 0 }})
-    },
-    createCase() {
-      this.dialogPwdVisible = true
+      this.$router.push({ path: '/case/edit', query: { type: 0 }})
     },
     confrimPwd() {
       this.$refs['pwdRef'].validate(valid => {
