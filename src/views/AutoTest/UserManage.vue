@@ -54,7 +54,7 @@
     </div>
     <base-table
       ref="tableRef"
-      :url="'/user/list'"
+      :url="'/user/listWithSearch'"
       :search-param="searchObj"
       @handleSelectionChange="handleSelectionChange"
     >
@@ -64,7 +64,7 @@
           <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.username }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="用户编号" width="100">
+      <el-table-column label="用户编号" width="200">
         <template slot-scope="scope">
           <div>{{ scope.row.userNumber }}</div>
         </template>

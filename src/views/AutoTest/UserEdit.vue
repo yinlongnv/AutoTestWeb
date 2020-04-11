@@ -53,7 +53,7 @@
 import { timeFilter } from "@/utils/filter";
 import { createUser } from "@/api/user";
 const FORM = {
-  userName: "",
+  username: "",
   idNumber: "",
   phoneNumber: "",
   email: "",
@@ -68,14 +68,12 @@ export default {
       form: FORM,
       rules: {
         username: [
-          { required: true, message: "请输入正确的用户名", trigger: "blur" }
+          { required: true, message: "用户名不能为空", trigger: "blur" }
         ],
         role: [
-          { required: true, message: "请选择正确的账号角色", trigger: "blur" }
+          { required: true, message: "账号角色不能为空", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: "请输入正确的密码", trigger: "blur" }
-        ]
+        password: [{ required: true, message: "密码不能为空", trigger: "blur" }]
       },
       options: [
         {
@@ -83,8 +81,8 @@ export default {
           value: 1
         },
         {
-          label: "qa",
-          value: 2
+          label: "QA",
+          value: 0
         }
       ],
       inputWidth: "width:460px",
@@ -128,24 +126,7 @@ export default {
         message: "创建成功"
       });
       this.$router.push({ path: "/user/list" });
-    },
-
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
-    selectCommunity(val) {},
-    selectSubdistrict(val) {}
+    }
   }
 };
 </script>
