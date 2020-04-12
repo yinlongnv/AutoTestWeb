@@ -1,5 +1,5 @@
 <template>
-  <div class="old-manage">
+  <div class="record-list">
     <div style="padding:16px">操作日志</div>
     <div class="flex-box">
       <el-button
@@ -28,17 +28,16 @@
           end-placeholder="结束日期"
         />
         <el-input
-          v-model="searchName"
+          v-model="searchObj.kw"
           icon="el-icon-search"
           placeholder="搜索用户名/账号操作"
           size="small"
           style="width:200px"
         />
-      <!-- <el-button type="primary" size="small" @click="searchObj.kw = searchName">搜索</el-button> -->
       </div>
 
     </div>
-    <base-table :url="'/record/list'" :search-param="searchObj" @tableLoaded="getTableData">
+    <base-table :url="'/record/list'" :search-param="searchObj">
       <el-table-column label="用户名">
         <template slot-scope="scope">
           <div>{{ scope.row.username }}</div>
@@ -80,12 +79,11 @@
 
 <script>
 import BaseTable from '@/components/BaseTable'
-import { sexFilter, timeFilter } from '@/utils/filter'
+import { timeFilter } from '@/utils/filter'
 import { parseTime } from '@/utils'
 export default {
   components: { BaseTable },
   filters: {
-    sexFilter,
     timeFilter
   },
   data() {
@@ -96,19 +94,27 @@ export default {
       searchObj: {
         kw: ''
       },
-      type: '',
-
       role: '',
-      roleOptions: [],
+      roleOptions: [
+        // {
+        //   name: '全部',
+        //   value: 0
+        // },
+        {
+          name: 'root',
+          value: 1
+        },
+        {
+          name: 'qa',
+          value: 0
+        }
+      ],
       list: []
 
     }
   },
   methods: {
-    getTableData(data) {
-      console.log(data)
-      this.list = data
-    },
+    // 批量导出
     handleDownload() {
       this.downloadLoading = true
       import('@/utils/Export2Excel').then(excel => {
@@ -141,7 +147,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.old-manage{
+.record-list{
   .flex-box{
     display: flex;
     align-items: center;

@@ -19,7 +19,7 @@
         :loading="downloadLoading"
         icon="el-icon-delete"
         size="small"
-        @click="deleteItem"
+        @click="onDelete(idList)"
       >批量删除</el-button>
 
       <div style="text-align:right;width:100%">
@@ -44,13 +44,12 @@
         />
 
         <el-input
-          v-model="apiName"
+          v-model="searchObj.apiName"
           icon="el-icon-search"
           placeholder="搜索用例名称"
           size="small"
           style="width:130px"
         />
-        <el-button type="primary" size="small" @click="searchObj.apiName = apiName">搜索</el-button>
       </div>
     </div>
     <base-table
@@ -99,7 +98,7 @@
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="editItem(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
             <!-- <el-button type="text" size="small" @click="createCase(scope.row)">创建用例</el-button> -->
 
             <el-button
@@ -111,32 +110,20 @@
               type="text"
               style="color:#f56c6c"
               size="small"
-              @click="deleteItem(scope.row)"
+              @click="onDelete(scope.row)"
             >删除</el-button>
           </div>
 
         </template>
       </el-table-column>
     </base-table>
-    <el-dialog title="修改密码" :visible.sync="dialogPwdVisible" @close="closeDialog">
-      <el-form ref="pwdRef" :model="form" :rules="rules">
-        <el-form-item label="新密码" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.password" style="width:300px" placeholder="请输入新密码" size="small" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogPwdVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confrimPwd">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import BaseTable from '@/components/BaseTable'
 import { statusFilter, roleFilter } from '@/utils/filter'
-import { deleteItems, disableItems, enableItems } from '@/api/user'
+import { deleteCases } from '@/api/user'
 export default {
   components: { BaseTable },
   filters: {
@@ -156,7 +143,6 @@ export default {
         password: ''
       },
       formLabelWidth: '120px',
-      dialogPwdVisible: false,
       oldInfoObj: {},
       chartDataObj: {},
       apiName: '',
@@ -187,13 +173,19 @@ export default {
       reqMethodOptions: []
     }
   },
-  computed: {
-    ...mapGetters(['communityList'])
-  },
   created() {
     this.restaurants = this.loadAll()
   },
   methods: {
+    // 顶部操作
+    // 创建用例
+    createCase(row) {
+      if (row) {
+        sessionStorage.setItem('apiDetail', JSON.stringify(row))
+      }
+      this.$router.push({ path: '/case/edit', query: { type: 0 }})
+    },
+    // 下载模板
     handleDownload() {
       this.downloadLoading = true
       import('@/utils/Export2Excel').then(excel => {
@@ -211,111 +203,12 @@ export default {
         this.downloadLoading = false
       })
     },
-    batchActions() {
-      if (this.type === '禁用') {
-        this.disableItem()
-      } else if (this.type === '删除') {
-        this.deleteItem(this.idList)
-      } else {
-        this.enableItem()
-      }
-      this.type = ''
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        return v[j]
+      }))
     },
-    goDetail(row) {
-      this.$router.push({ path: '/user/detail' })
-    },
-
-    editItem(row) {
-      sessionStorage.setItem('createCase', JSON.stringify(row))
-      this.$router.push({ path: '/case/edit', query: { type: 1 }})
-    },
-    disableItem(row) {
-      this.$confirm('确定要禁用吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          if (Array.isArray(row)) {
-            this.disableItems(row)
-          } else {
-            const ids = [row.id]
-            this.disableItems(ids)
-          }
-        })
-        .catch(() => {})
-    },
-    deleteItem(row) {
-      this.$confirm('确定要删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          if (Array.isArray(row)) {
-            this.deleteItems(row)
-          } else {
-            const ids = [row.id]
-            this.deleteItems(ids)
-          }
-        })
-        .catch(() => {})
-    },
-    enableItem(row) {
-      if (Array.isArray(row)) {
-        this.deleteItems(row)
-      } else {
-        const ids = [row.id]
-        this.deleteItems(ids)
-      }
-    },
-    createCase(row) {
-      if (row) {
-        sessionStorage.setItem('apiDetail', JSON.stringify(row))
-      }
-      this.$router.push({ path: '/case/edit', query: { type: 0 }})
-    },
-    confrimPwd() {
-      this.$refs['pwdRef'].validate(valid => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    closeDialog() {
-      this.$refs['pwdRef'].resetFields()
-    },
-    async deleteItems(userIds) {
-      try {
-        await deleteItems({ userIds: userIds })
-        this.$refs.tableRef.onSearch()
-      } catch (error) {
-        this.$message.error(error)
-      }
-    },
-    async enableItems(userIds) {
-      try {
-        await enableItems({ userIds: userIds })
-        this.$refs.tableRef.onSearch()
-      } catch (error) {
-        this.$message.error(error)
-      }
-    },
-    async disableItems(userIds) {
-      try {
-        await disableItems({ userIds: userIds })
-        this.$refs.tableRef.onSearch()
-      } catch (error) {
-        this.$message.error(error)
-      }
-    },
-    handleSelectionChange(row) {
-      this.idList = row.map(f => f.id)
-      console.log(this.idList)
-    },
+    // 搜索+选择
     handleSelect() {
 
     },
@@ -336,7 +229,45 @@ export default {
       var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
       // 调用 callback 返回建议列表的数据
       cb(results)
+    },
+    // 列表操作
+    goDetail(row) {
+      this.$router.push({ path: '/user/detail' })
+    },
+    onEdit(row) {
+      sessionStorage.setItem('createCase', JSON.stringify(row))
+      this.$router.push({ path: '/case/edit', query: { type: 1 }})
+    },
+    onDelete(row) {
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          if (Array.isArray(row)) {
+            this.deleteCases(row)
+          } else {
+            const ids = [row.id]
+            this.deleteCases(ids)
+          }
+        })
+        .catch(() => {})
+    },
+    handleSelectionChange(row) {
+      this.idList = row.map(f => f.id)
+      console.log(this.idList)
+    },
+    // 接口调用
+    async deleteCases(userIds) {
+      try {
+        await deleteCases({ userIds: userIds })
+        this.$refs.tableRef.onSearch()
+      } catch (error) {
+        this.$message.error(error)
+      }
     }
+
   }
 }
 </script>

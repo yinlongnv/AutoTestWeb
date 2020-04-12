@@ -43,13 +43,13 @@
           end-placeholder="结束日期"
         />
         <el-input
-          v-model="searchName"
+          v-model="searchObj.name"
           icon="el-icon-search"
           placeholder="搜索用户名/用户编号"
           size="small"
           style="width:200px"
         />
-        <el-button type="primary" size="small" @click="searchObj.name = searchName">搜索</el-button>
+        <!-- <el-button type="primary" size="small" @click="searchObj.name = searchName">搜索</el-button> -->
       </div>
     </div>
     <base-table
@@ -71,8 +71,8 @@
       </el-table-column>
       <el-table-column label="账号状态" width="100">
         <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.status">{{ scope.row.status | statusFilter }}</el-tag>
-          <el-tag type="warning" v-else>{{scope.row.status | statusFilter}}</el-tag>
+          <el-tag v-if="scope.row.status" type="success">{{ scope.row.status | statusFilter }}</el-tag>
+          <el-tag v-else type="warning">{{ scope.row.status | statusFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="账号角色" width="120">
@@ -103,27 +103,27 @@
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="editItem(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
             <el-button
               v-if="scope.row.status"
               type="text"
               style="color:#e6a23c"
               size="small"
-              @click="disableItem(scope.row)"
+              @click="onDisable(scope.row)"
             >禁用</el-button>
             <el-button
               v-else
               type="text"
               style="color:#67c23a"
               size="small"
-              @click="enableItem(scope.row)"
+              @click="onEnable(scope.row)"
             >启用</el-button>
             <el-button type="text" size="small" @click="changePwd(scope.row)">修改密码</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
-              @click="deleteItem(scope.row)"
+              @click="onDelete(scope.row)"
             >删除</el-button>
           </div>
         </template>
@@ -144,10 +144,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import BaseTable from "@/components/BaseTable";
-import { statusFilter, roleFilter } from "@/utils/filter";
-import { deleteItems, disableItems, enableItems } from "@/api/user";
+import BaseTable from '@/components/BaseTable'
+import { statusFilter, roleFilter } from '@/utils/filter'
+import { deleteUsers, disableUsers, enableUsers } from '@/api/user'
+
 export default {
   components: { BaseTable },
   filters: {
@@ -158,161 +158,160 @@ export default {
     return {
       rules: {
         name: [
-          { required: true, message: "请输入正确的新密码", trigger: "blur" }
+          { required: true, message: '请输入正确的新密码', trigger: 'blur' }
         ]
       },
       timeArray: [],
       form: {
-        password: ""
+        password: ''
       },
-      formLabelWidth: "120px",
+      formLabelWidth: '120px',
       dialogPwdVisible: false,
       oldInfoObj: {},
       chartDataObj: {},
-      searchName: "",
+      searchName: '',
       searchObj: {
-        name: "",
-        role: ""
+        name: '',
+        role: ''
       },
       idList: [],
-      type: "",
+      type: '',
       typeOptions: [
         {
-          name: "批量禁用",
-          value: "禁用"
+          name: '批量禁用',
+          value: '禁用'
         },
         {
-          name: "批量启用",
-          value: "启用"
+          name: '批量启用',
+          value: '启用'
         },
         {
-          name: "批量删除",
-          value: "删除"
+          name: '批量删除',
+          value: '删除'
         }
       ],
       roleOptions: [
         {
-          name: "root",
+          name: 'root',
           value: 1
         },
         {
-          name: "qa",
+          name: 'qa',
           value: 0
         }
       ]
-    };
-  },
-  computed: {
-    ...mapGetters(["communityList"])
+    }
   },
   methods: {
+    createAccount() {
+      this.$router.push({ path: '/user/edit', query: { type: 0 }})
+    },
+    // 列表操作
     batchActions() {
-      if (this.type === "禁用") {
-        this.disableItem(this.idList);
-      } else if (this.type === "删除") {
-        this.deleteItem(this.idList);
+      if (this.type === '禁用') {
+        this.onDisable(this.idList)
+      } else if (this.type === '删除') {
+        this.onDelete(this.idList)
       } else {
-        this.enableItem(this.idList);
+        this.onEnable(this.idList)
       }
-      this.type = "";
+      this.type = ''
+    },
+    onDisable(row) {
+      this.$confirm('确定要禁用吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          if (Array.isArray(row)) {
+            this.disableUsers(row)
+          } else {
+            const ids = [row.id]
+            this.disableUsers(ids)
+          }
+        })
+        .catch(() => {})
+    },
+    onDelete(row) {
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          if (Array.isArray(row)) {
+            this.deleteUsers(row)
+          } else {
+            const ids = [row.id]
+            this.deleteUsers(ids)
+          }
+        })
+        .catch(() => {})
+    },
+    onEnable(row) {
+      if (Array.isArray(row)) {
+        this.enableUsers(row)
+      } else {
+        const ids = [row.id]
+        this.enableUsers(ids)
+      }
+    },
+    onEdit(row) {
+      sessionStorage.setItem('userDetail', JSON.stringify(row))
+      this.$router.push({ path: '/user/edit', query: { type: 1 }})
     },
     goDetail(row) {
-      this.$router.push({ path: "/user/detail" });
-    },
-
-    editItem(row) {
-      sessionStorage.setItem("userDetail", JSON.stringify(row));
-      this.$router.push({ path: "/user/edit", query: { type: 1 } });
-    },
-    disableItem(row) {
-      this.$confirm("确定要禁用吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          if (Array.isArray(row)) {
-            this.disableItems(row);
-          } else {
-            const ids = [row.id];
-            this.disableItems(ids);
-          }
-        })
-        .catch(() => {});
-    },
-    deleteItem(row) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          if (Array.isArray(row)) {
-            this.deleteItems(row);
-          } else {
-            const ids = [row.id];
-            this.deleteItems(ids);
-          }
-        })
-        .catch(() => {});
-    },
-    enableItem(row) {
-      if (Array.isArray(row)) {
-        this.enableItems(row);
-      } else {
-        let ids = [row.id];
-        this.enableItems(ids);
-      }
-    },
-    createAccount() {
-      this.$router.push({ path: "/user/edit", query: { type: 0 } });
-    },
-    changePwd() {
-      this.dialogPwdVisible = true;
-    },
-    confrimPwd() {
-      this.$refs["pwdRef"].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    closeDialog() {
-      this.$refs["pwdRef"].resetFields();
-    },
-    async deleteItems(userIds) {
-      try {
-        await deleteItems({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
-      } catch (error) {
-        this.$message.error(error);
-      }
-    },
-    async enableItems(userIds) {
-      try {
-        await enableItems({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
-      } catch (error) {
-        this.$message.error(error);
-      }
-    },
-    async disableItems(userIds) {
-      try {
-        await disableItems({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
-      } catch (error) {
-        this.$message.error(error);
-      }
+      this.$router.push({ path: '/user/detail' })
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id);
-      console.log(this.idList);
+      this.idList = row.map(f => f.id)
+      console.log(this.idList)
+    },
+    // 修改密码
+    changePwd() {
+      this.dialogPwdVisible = true
+    },
+    confrimPwd() {
+      this.$refs['pwdRef'].validate(valid => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    closeDialog() {
+      this.$refs['pwdRef'].resetFields()
+    },
+    // 接口调用
+    async deleteUsers(userIds) {
+      try {
+        await deleteUsers({ userIds: userIds })
+        this.$refs.tableRef.onSearch()
+      } catch (error) {
+        this.$message.error(error)
+      }
+    },
+    async enableUsers(userIds) {
+      try {
+        await enableUsers({ userIds: userIds })
+        this.$refs.tableRef.onSearch()
+      } catch (error) {
+        this.$message.error(error)
+      }
+    },
+    async disableUsers(userIds) {
+      try {
+        await disableUsers({ userIds: userIds })
+        this.$refs.tableRef.onSearch()
+      } catch (error) {
+        this.$message.error(error)
+      }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -25,18 +25,16 @@
   </div>
 </template>
 <script>
-import request from "@/utils/request";
-// const debounce = (function() {
-//   let timeout
-//   return function(fn, delay) {
-//     const that = this
-//     const args = arguments
-//     clearTimeout(timeout)
-//     setTimeout(fn.apply(that, args), delay)
-//   }
-// })()
+import request from '@/utils/request'
+const debounce = (function() {
+  let timer = 0
+  return function(func, delay) {
+    clearTimeout(timer)
+    timer = setTimeout(func, delay)
+  }
+})()
 export default {
-  name: "DfTable",
+  name: 'DfTable',
   props: {
     pageSize: {
       type: Number,
@@ -44,7 +42,7 @@ export default {
     },
     method: {
       type: String,
-      default: "get"
+      default: 'get'
     },
     searchParam: {
       type: Object,
@@ -52,7 +50,7 @@ export default {
     },
     url: {
       type: String,
-      default: ""
+      default: ''
     },
     ifShowPagination: {
       type: Boolean,
@@ -71,91 +69,99 @@ export default {
         current: 1,
         size: this.pageSize || 20
       },
-      tableData: [],
-      tableKey: 0
-    };
+      tableData: []
+    }
   },
   mounted() {
-    this.onSearch();
+    this.onSearch()
     this.$watch(
-      "searchParam",
+      'searchParam',
       () => {
-        this.tableKey++;
-        // debounce(this.onSearch, 500);
-        this.onSearch();
+        debounce(() => {
+          this.onSearch()
+        }, 1000)
       },
       { deep: true }
-    );
+    )
   },
   methods: {
     handleSelectionChange(val) {
-      this.$emit("handleSelectionChange", val);
+      this.$emit('handleSelectionChange', val)
     },
     selectall(val) {
-      this.$emit("selectall", val, "all");
+      this.$emit('selectall', val, 'all')
     },
     selectSingle(val) {
-      this.$emit("selectSingle", val);
+      this.$emit('selectSingle', val)
     },
     onSortChange(params) {
-      this.$emit("onSortChange", params);
+      this.$emit('onSortChange', params)
     },
     async onSearch(current = 1) {
       // 待删除
 
-      if (this.url === "/record/list") {
+      if (this.url === '/record/list') {
         // 模拟下载excel数据
         this.tableData = [
           {
-            username: "aaa",
-            id_number: "12344",
-            role: "管理员",
-            login_ip: "127.1.1",
-            action: "哈哈哈",
-            page: "测试",
-            time: "2020-4-1 11:00:01"
+            username: 'aaa',
+            id_number: '12344',
+            role: '管理员',
+            login_ip: '127.1.1',
+            action: '哈哈哈',
+            page: '测试',
+            time: '2020-4-1 11:00:01'
           }
-        ];
-        this.$emit("tableLoaded", this.tableData);
-      } else if (this.url === "/api/list") {
+        ]
+        this.$emit('tableLoaded', this.tableData)
+      } else if (this.url === '/api/list') {
         // 模拟下载excel数据
         this.tableData = [
           {
-            projectName: "sss"
+            projectName: 'sss'
           }
-        ];
-        this.$emit("tableLoaded", this.tableData);
+        ]
+        this.$emit('tableLoaded', this.tableData)
       } else if (this.url) {
-        this.loading = true;
+        this.loading = true
         try {
-          this.pager.current = current;
+          // this.tableData = [
+          //   {
+          //     username: 'aaa',
+          //     id_number: '12344',
+          //     role: '管理员',
+          //     login_ip: '127.1.1',
+          //     action: '哈哈哈',
+          //     page: '测试',
+          //     time: '2020-4-1 11:00:01',
+          //     status: 1
+          //   }
+          // ]
+          this.pager.current = current
           const data = {
             ...this.searchParam,
             ps: this.pager.size,
             page: this.pager.current
-          };
-          const result = await request({ url: this.url, params: data });
-          console.log("result", result);
-          this.tableData = result.data.data.records;
-          // if (result && result.resultList) {
-          //   this.tableData = result.resultList
-          //   this.pager.total = result.resultCount
-          // }
-          this.$emit("tableLoaded", this.tableData);
-          this.loading = false;
-          // eslint-disable-next-line no-empty
-        } catch (e) {}
+          }
+          const result = await request({ url: this.url, params: data })
+          console.log('result', result)
+          this.tableData = result.data.data.records
+          this.$emit('tableLoaded', this.tableData)
+          this.loading = false
+        } catch (error) {
+          this.$message.error(error)
+        }
       }
     },
     async onChangePage(current) {
-      this.onSearch(current);
+      this.onSearch(current)
       window.scrollTo({
         top: 0
         // behavior: 'smooth'
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

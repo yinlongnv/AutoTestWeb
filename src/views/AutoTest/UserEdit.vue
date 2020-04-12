@@ -50,16 +50,16 @@
 </template>
 
 <script>
-import { timeFilter } from "@/utils/filter";
-import { createUser } from "@/api/user";
+import { timeFilter } from '@/utils/filter'
+import { createUser } from '@/api/user'
 const FORM = {
-  username: "",
-  idNumber: "",
-  phoneNumber: "",
-  email: "",
-  role: "",
-  password: ""
-};
+  username: '',
+  idNumber: '',
+  phoneNumber: '',
+  email: '',
+  role: '',
+  password: ''
+}
 export default {
   filters: { timeFilter },
   data() {
@@ -68,67 +68,67 @@ export default {
       form: FORM,
       rules: {
         username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
+          { required: true, message: '用户名不能为空', trigger: 'blur' }
         ],
         role: [
-          { required: true, message: "账号角色不能为空", trigger: "blur" }
+          { required: true, message: '账号角色不能为空', trigger: 'blur' }
         ],
-        password: [{ required: true, message: "密码不能为空", trigger: "blur" }]
+        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
       },
       options: [
         {
-          label: "root",
+          label: 'root',
           value: 1
         },
         {
-          label: "QA",
+          label: 'QA',
           value: 0
         }
       ],
-      inputWidth: "width:460px",
-      imageUrl: "",
-      formLabelWidth: "120px",
+      inputWidth: 'width:460px',
+      imageUrl: '',
+      formLabelWidth: '120px',
       communityList: [],
       subdistrictList: []
-    };
+    }
   },
   created() {
     // this.editStatus = Boolean(this.$route.query.type)
-    console.log(this.$route.query.type, this.editStatus);
-    this.form = JSON.parse(sessionStorage.getItem("userDetail")) || FORM;
+    console.log(this.$route.query.type, this.editStatus)
+    this.form = JSON.parse(sessionStorage.getItem('userDetail')) || FORM
   },
   methods: {
     closeDialog() {
-      this.$refs["ruleForm"].resetFields();
+      this.$refs['ruleForm'].resetFields()
     },
     selectRoles(val) {
-      console.log(val);
-      console.log(this.role);
+      console.log(val)
+      console.log(this.role)
     },
     goBack() {
-      this.$router.go(-1);
-      sessionStorage.removeItem("userDetail");
+      this.$router.go(-1)
+      sessionStorage.removeItem('userDetail')
     },
     confirmEdit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.createAccount();
+          this.createAccount()
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     async createAccount() {
-      sessionStorage.removeItem("userDetail");
-      const result = await createUser({ ...this.form });
+      sessionStorage.removeItem('userDetail')
+      await createUser({ ...this.form })
       this.$message({
-        type: "success",
-        message: "创建成功"
-      });
-      this.$router.push({ path: "/user/list" });
+        type: 'success',
+        message: '创建成功'
+      })
+      this.$router.push({ path: '/user/list' })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
