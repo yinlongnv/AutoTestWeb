@@ -70,7 +70,7 @@
     </div>
     <base-table
       ref="tableRef"
-      :url="'/api/list'"
+      :url="'/api/listWithSearch'"
       :search-param="searchObj"
       @handleSelectionChange="handleSelectionChange"
     >
