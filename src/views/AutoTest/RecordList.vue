@@ -35,7 +35,6 @@
           style="width:200px"
         />
       </div>
-
     </div>
     <base-table :url="'/record/list'" :search-param="searchObj">
       <el-table-column label="用户名">
@@ -78,9 +77,9 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { timeFilter } from '@/utils/filter'
-import { parseTime } from '@/utils'
+import BaseTable from "@/components/BaseTable";
+import { timeFilter } from "@/utils/filter";
+import { parseTime } from "@/utils";
 export default {
   components: { BaseTable },
   filters: {
@@ -90,71 +89,86 @@ export default {
     return {
       downloadLoading: false,
       timeArray: [],
-      searchName: '',
+      searchName: "",
       searchObj: {
-        kw: ''
+        kw: ""
       },
-      role: '',
+      role: "",
       roleOptions: [
         // {
         //   name: '全部',
         //   value: 0
         // },
         {
-          name: 'root',
+          name: "root",
           value: 1
         },
         {
-          name: 'qa',
+          name: "QA",
           value: 0
         }
       ],
       list: []
-
-    }
+    };
   },
   methods: {
     // 批量导出
     handleDownload() {
-      this.downloadLoading = true
-      import('@/utils/Export2Excel').then(excel => {
-        const tHeader = ['用户名', '身份证号', '账号角色', '登入IP', '账号操作', '操作界面', '操作时间']
-        const filterVal = ['username', 'id_number', 'role', 'login_ip', 'action', 'page', 'time']
-        const list = this.list
-        const data = this.formatJson(filterVal, list)
+      this.downloadLoading = true;
+      import("@/utils/Export2Excel").then(excel => {
+        const tHeader = [
+          "用户名",
+          "身份证号",
+          "账号角色",
+          "登入IP",
+          "账号操作",
+          "操作界面",
+          "操作时间"
+        ];
+        const filterVal = [
+          "username",
+          "id_number",
+          "role",
+          "login_ip",
+          "action",
+          "page",
+          "time"
+        ];
+        const list = this.list;
+        const data = this.formatJson(filterVal, list);
         excel.export_json_to_excel({
           header: tHeader,
           data,
           filename: this.filename,
           autoWidth: this.autoWidth,
           bookType: this.bookType
-        })
-        this.downloadLoading = false
-      })
+        });
+        this.downloadLoading = false;
+      });
     },
     formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === "timestamp") {
+            return parseTime(v[j]);
+          } else {
+            return v[j];
+          }
+        })
+      );
     }
-
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.record-list{
-  .flex-box{
+.record-list {
+  .flex-box {
     display: flex;
     align-items: center;
-    >button{
+    > button {
       margin-left: 16px;
     }
   }
 }
-
 </style>
