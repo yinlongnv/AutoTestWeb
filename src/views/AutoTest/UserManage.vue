@@ -109,15 +109,15 @@
               type="text"
               style="color:#e6a23c"
               size="small"
-              @click="onDisable(scope.row)"
-            >禁用</el-button>
+              @click="onEnable(scope.row)"
+            >启用</el-button>
             <el-button
               v-else
               type="text"
               style="color:#67c23a"
               size="small"
-              @click="onEnable(scope.row)"
-            >启用</el-button>
+              @click="onDisable(scope.row)"
+            >禁用</el-button>
             <el-button type="text" size="small" @click="changePwd(scope.row)">修改密码</el-button>
             <el-button
               type="text"
@@ -144,9 +144,9 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { statusFilter, roleFilter } from '@/utils/filter'
-import { deleteUsers, disableUsers, enableUsers } from '@/api/user'
+import BaseTable from "@/components/BaseTable";
+import { statusFilter, roleFilter } from "@/utils/filter";
+import { deleteUsers, disableUsers, enableUsers } from "@/api/user";
 
 export default {
   components: { BaseTable },
@@ -158,160 +158,160 @@ export default {
     return {
       rules: {
         name: [
-          { required: true, message: '请输入正确的新密码', trigger: 'blur' }
+          { required: true, message: "请输入正确的新密码", trigger: "blur" }
         ]
       },
       timeArray: [],
       form: {
-        password: ''
+        password: ""
       },
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       dialogPwdVisible: false,
       oldInfoObj: {},
       chartDataObj: {},
-      searchName: '',
+      searchName: "",
       searchObj: {
-        name: '',
-        role: ''
+        name: "",
+        role: ""
       },
       idList: [],
-      type: '',
+      type: "",
       typeOptions: [
         {
-          name: '批量禁用',
-          value: '禁用'
+          name: "批量禁用",
+          value: "禁用"
         },
         {
-          name: '批量启用',
-          value: '启用'
+          name: "批量启用",
+          value: "启用"
         },
         {
-          name: '批量删除',
-          value: '删除'
+          name: "批量删除",
+          value: "删除"
         }
       ],
       roleOptions: [
         {
-          name: 'root',
+          name: "root",
           value: 1
         },
         {
-          name: 'qa',
+          name: "QA",
           value: 0
         }
       ]
-    }
+    };
   },
   methods: {
     createAccount() {
-      this.$router.push({ path: '/user/edit', query: { type: 0 }})
+      this.$router.push({ path: "/user/edit", query: { type: 0 } });
     },
     // 列表操作
     batchActions() {
-      if (this.type === '禁用') {
-        this.onDisable(this.idList)
-      } else if (this.type === '删除') {
-        this.onDelete(this.idList)
+      if (this.type === "禁用") {
+        this.onDisable(this.idList);
+      } else if (this.type === "删除") {
+        this.onDelete(this.idList);
       } else {
-        this.onEnable(this.idList)
+        this.onEnable(this.idList);
       }
-      this.type = ''
+      this.type = "";
     },
     onDisable(row) {
-      this.$confirm('确定要禁用吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("确定要禁用吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           if (Array.isArray(row)) {
-            this.disableUsers(row)
+            this.disableUsers(row);
           } else {
-            const ids = [row.id]
-            this.disableUsers(ids)
+            const ids = [row.id];
+            this.disableUsers(ids);
           }
         })
-        .catch(() => {})
+        .catch(() => {});
     },
     onDelete(row) {
-      this.$confirm('确定要删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("确定要删除吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           if (Array.isArray(row)) {
-            this.deleteUsers(row)
+            this.deleteUsers(row);
           } else {
-            const ids = [row.id]
-            this.deleteUsers(ids)
+            const ids = [row.id];
+            this.deleteUsers(ids);
           }
         })
-        .catch(() => {})
+        .catch(() => {});
     },
     onEnable(row) {
       if (Array.isArray(row)) {
-        this.enableUsers(row)
+        this.enableUsers(row);
       } else {
-        const ids = [row.id]
-        this.enableUsers(ids)
+        const ids = [row.id];
+        this.enableUsers(ids);
       }
     },
     onEdit(row) {
-      sessionStorage.setItem('userDetail', JSON.stringify(row))
-      this.$router.push({ path: '/user/edit', query: { type: 1 }})
+      sessionStorage.setItem("userDetail", JSON.stringify(row));
+      this.$router.push({ path: "/user/edit", query: { type: 1 } });
     },
     goDetail(row) {
-      this.$router.push({ path: '/user/detail' })
+      this.$router.push({ path: "/user/detail" });
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id)
-      console.log(this.idList)
+      this.idList = row.map(f => f.id);
+      console.log(this.idList);
     },
     // 修改密码
     changePwd() {
-      this.dialogPwdVisible = true
+      this.dialogPwdVisible = true;
     },
     confrimPwd() {
-      this.$refs['pwdRef'].validate(valid => {
+      this.$refs["pwdRef"].validate(valid => {
         if (valid) {
-          alert('submit!')
+          alert("submit!");
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     closeDialog() {
-      this.$refs['pwdRef'].resetFields()
+      this.$refs["pwdRef"].resetFields();
     },
     // 接口调用
     async deleteUsers(userIds) {
       try {
-        await deleteUsers({ userIds: userIds })
-        this.$refs.tableRef.onSearch()
+        await deleteUsers({ userIds: userIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     async enableUsers(userIds) {
       try {
-        await enableUsers({ userIds: userIds })
-        this.$refs.tableRef.onSearch()
+        await enableUsers({ userIds: userIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     async disableUsers(userIds) {
       try {
-        await disableUsers({ userIds: userIds })
-        this.$refs.tableRef.onSearch()
+        await disableUsers({ userIds: userIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,50 +1,50 @@
-import request from '@/utils/request'
+import request from "@/utils/request";
 export function createUser(data) {
   return request({
-    url: '/user/createOrEdit',
-    method: 'post',
+    url: "/user/createOrEdit",
+    method: "post",
     data
-  })
+  });
 }
 // 用户管理
 export function deleteUsers(data) {
   return request({
-    url: '/user/delete',
-    method: 'post',
+    url: "/user/delete",
+    method: "post",
     data
-  })
+  });
 }
 export function enableUsers(data) {
   return request({
-    url: '/user/enable',
-    method: 'post',
+    url: "/user/enable",
+    method: "post",
     data
-  })
+  });
 }
 export function disableUsers(data) {
   return request({
-    url: '/user/disable',
-    method: 'post',
+    url: "/user/disable",
+    method: "post",
     data
-  })
+  });
 }
 // 日志管理
 
 // 接口管理——url待修改
 export function deleteApis(data) {
   return request({
-    url: '/user/delete',
-    method: 'post',
+    url: "/user/delete",
+    method: "post",
     data
-  })
+  });
 }
 // 用例管理
 export function deleteCases(data) {
   return request({
-    url: '/user/delete',
-    method: 'post',
+    url: "/user/delete",
+    method: "post",
     data
-  })
+  });
 }
 // export function login(data) {
 //   return request({
@@ -71,9 +71,8 @@ export function deleteCases(data) {
 
 export function login(data) {
   return request({
-    url: '/login',
-    method: 'post',
+    url: "/user/login",
+    method: "post",
     data
-  })
+  });
 }
-
