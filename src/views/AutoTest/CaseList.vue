@@ -115,7 +115,7 @@
         />-->
 
         <el-input
-          v-model="searchObj.apiName"
+          v-model="searchObj.caseDescription"
           icon="el-icon-search"
           placeholder="搜索用例描述"
           size="small"
@@ -235,7 +235,8 @@ export default {
       chartDataObj: {},
       apiName: "",
       searchObj: {
-        apiName: ""
+        caseDescription: "",
+        executeStatus: ""
       },
       idList: [],
       type: "",

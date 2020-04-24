@@ -36,14 +36,14 @@
           v-model="timeArray"
           size="small"
           type="daterange"
-          :value-format="'yyyy-MM-dd'"
-          :format="'yyyy-MM-dd'"
+          :value-format="'yyyy-MM-dd HH-mm-ss'"
+          :format="'yyyy-MM-dd HH-mm-ss'"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
         <el-input
-          v-model="searchObj.name"
+          v-model="searchObj.userInfo"
           icon="el-icon-search"
           placeholder="搜索用户名/用户编号"
           size="small"
@@ -171,7 +171,7 @@ export default {
       chartDataObj: {},
       searchName: "",
       searchObj: {
-        name: "",
+        userInfo: "",
         role: ""
       },
       idList: [],

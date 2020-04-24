@@ -207,9 +207,10 @@ export default {
         password: ""
       },
       formLabelWidth: "120px",
-      oldInfoObj: {},
-      chartDataObj: {},
       searchObj: {
+        projectName: "",
+        apiGroup: "",
+        reqMethod: "",
         apiName: ""
       },
       idList: [],
