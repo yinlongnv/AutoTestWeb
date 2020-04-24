@@ -13,6 +13,7 @@
       <slot />
     </el-table>
     <el-pagination
+      :style="'text-align:center'"
       v-show="pager.total > pager.size"
       ref="livePagination"
       class="live-pagination"
@@ -38,7 +39,7 @@ export default {
   props: {
     pageSize: {
       type: Number,
-      default: 20
+      default: 10
     },
     method: {
       type: String,
@@ -67,7 +68,7 @@ export default {
       pager: {
         total: 0,
         current: 1,
-        size: this.pageSize || 20
+        size: this.pageSize
       },
       tableData: []
     };
@@ -146,6 +147,7 @@ export default {
           const result = await request({ url: this.url, params: data });
           console.log("result", result);
           this.tableData = result.data.data.tbody;
+          this.pager.total = result.data.data.pageInfo.total;
           this.$emit("tableLoaded", this.tableData);
           this.loading = false;
         } catch (error) {
