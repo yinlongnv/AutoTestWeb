@@ -3,7 +3,6 @@
     <el-form
       ref="loginForm"
       :model="loginForm"
-      :rules="loginRules"
       class="login-form"
       auto-complete="on"
       label-position="left"
@@ -65,14 +64,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("Please enter the correct user name"));
+        callback(new Error("请输入用户名"));
       } else {
         callback();
       }
     };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("The password can not be less than 6 digits"));
+        callback(new Error("密码不能小于6位"));
       } else {
         callback();
       }
@@ -115,11 +114,17 @@ export default {
         this.$refs.password.focus();
       });
     },
-    handleLogin() {
-      const result = login({ ...this.loginForm, remember: this.remember });
-      if (result) {
+    async handleLogin() {
+      const result = await login({
+        ...this.loginForm,
+        remember: this.remember
+      });
+      if (result.data.code === "00000") {
+        console.log(result.data);
+        sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
         this.$router.push({ path: "/user/list" });
-        console.log(result);
+      } else {
+        this.$message.error(result.data.message);
       }
 
       // this.$refs.loginForm.validate(valid => {

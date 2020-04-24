@@ -12,7 +12,18 @@
       </div>
       <div class="info-item">
         账号状态:
-        <el-tag type="warning" style="color:#e6a23c" size="small">{{ userInfo.status }}</el-tag>
+        <el-tag
+          v-if="userInfo.status ===1 "
+          type="warning"
+          style="color:#e6a23c"
+          size="small"
+        >{{ userInfo.status|statusFilter }}</el-tag>
+        <el-tag
+          v-else
+          type="success"
+          style="color:#67c23a"
+          size="small"
+        >{{ userInfo.status|statusFilter }}</el-tag>
       </div>
       <div class="info-item">
         账号角色:
@@ -46,25 +57,46 @@
     <div style="padding:24px 0">
       <el-button size="small" @click="goBack">返回</el-button>
       <el-button type="primary" size="small" @click="goEdit">编辑</el-button>
-      <el-button type="success" size="small" @click="disableItem">禁用</el-button>
+      <el-button v-if="!userInfo.status" type="warning" size="small" @click="disableItem">禁用</el-button>
+      <el-button v-else type="success" size="small" @click="enableItem">启用</el-button>
       <el-button type="danger" size="small" @click="deleteItem">删除</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import {
+  getUserDetail,
+  enableUsers,
+  disableUsers,
+  deleteUsers
+} from "@/api/user";
+import { statusFilter } from "@/utils/filter";
 export default {
   data() {
     return {
       userInfo: {}
     };
   },
+  created() {
+    this.getUserDetail();
+  },
+  filters: {
+    statusFilter
+  },
   methods: {
+    async getUserDetail() {
+      try {
+        let result = await getUserDetail({ id: this.$route.query.id });
+        this.userInfo = result.data.data;
+        sessionStorage.setItem("userDetail", JSON.stringify(this.userInfo));
+      } catch (error) {}
+    },
     goBack() {
       this.$router.go(-1);
     },
     goEdit() {
-      this.$router.push({ path: "/user/edit" });
+      this.$router.push({ path: "/user/edit", query: { type: 1 } });
     },
     deleteItem(row) {
       this.$confirm("确定要删除吗?", "提示", {
@@ -72,7 +104,12 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       })
-        .then(() => {})
+        .then(() => {
+          this.deleteUsers([this.userInfo.id]).then(() => {
+            this.getUserDetail();
+            this.$router.go(-1);
+          });
+        })
         .catch(() => {});
     },
     disableItem(row) {
@@ -81,8 +118,42 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       })
-        .then(() => {})
+        .then(() => {
+          this.disableUsers([this.userInfo.id]).then(() => {
+            this.getUserDetail();
+          });
+        })
         .catch(() => {});
+    },
+    enableItem(row) {
+      this.enableUsers([this.userInfo.id]).then(() => {
+        this.getUserDetail();
+      });
+    },
+    // 接口调用
+    async deleteUsers(userIds) {
+      try {
+        await deleteUsers({ userIds: userIds });
+        this.$refs.tableRef.onSearch();
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
+    async enableUsers(userIds) {
+      try {
+        await enableUsers({ userIds: userIds });
+        this.$refs.tableRef.onSearch();
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
+    async disableUsers(userIds) {
+      try {
+        await disableUsers({ userIds: userIds });
+        this.$refs.tableRef.onSearch();
+      } catch (error) {
+        this.$message.error(error);
+      }
     }
   }
 };

@@ -71,8 +71,8 @@
       </el-table-column>
       <el-table-column label="账号状态" width="100">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status" type="success">{{ scope.row.status | statusFilter }}</el-tag>
-          <el-tag v-else type="warning">{{ scope.row.status | statusFilter }}</el-tag>
+          <el-tag v-if="scope.row.status" type="warning">{{ scope.row.status | statusFilter }}</el-tag>
+          <el-tag v-else type="success">{{ scope.row.status | statusFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="账号角色" width="120">
@@ -107,14 +107,14 @@
             <el-button
               v-if="scope.row.status"
               type="text"
-              style="color:#e6a23c"
+              style="color:#67c23a"
               size="small"
               @click="onEnable(scope.row)"
             >启用</el-button>
             <el-button
               v-else
               type="text"
-              style="color:#67c23a"
+              style="color:#e6a23c"
               size="small"
               @click="onDisable(scope.row)"
             >禁用</el-button>
@@ -262,7 +262,7 @@ export default {
       this.$router.push({ path: "/user/edit", query: { type: 1 } });
     },
     goDetail(row) {
-      this.$router.push({ path: "/user/detail" });
+      this.$router.push({ path: "/user/detail", query: { id: row.id } });
     },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);

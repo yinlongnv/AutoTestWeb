@@ -58,7 +58,7 @@
       </el-form-item>
       <el-form-item prop="reqBody" label="请求体" :label-width="formLabelWidth">
         <el-input
-          v-model="form.reqHeaders"
+          v-model="form.reqBody"
           type="textarea"
           rows="3"
           :style="inputWidth"
@@ -102,7 +102,7 @@
 
 <script>
 import { timeFilter } from "@/utils/filter";
-import { createUser } from "@/api/user";
+import { createApi } from "@/api/user";
 const FORM = {
   projectName: "",
   apiGroup: "",
@@ -222,12 +222,12 @@ export default {
       });
     },
     async createAccount() {
-      await createUser({ ...this.form });
+      await createApi({ ...this.form });
       this.$message({
         type: "success",
         message: "创建成功"
       });
-      this.$router.push({ path: "/user/list" });
+      this.$router.push({ path: "/api/list" });
     },
 
     handleAvatarSuccess(res, file) {

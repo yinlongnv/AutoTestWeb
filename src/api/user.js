@@ -6,6 +6,13 @@ export function createUser(data) {
     data
   });
 }
+export function createApi(data) {
+  return request({
+    url: "/api/createOrEdit",
+    method: "post",
+    data
+  });
+}
 // 用户管理
 export function deleteUsers(data) {
   return request({
@@ -26,6 +33,13 @@ export function disableUsers(data) {
     url: "/user/disable",
     method: "post",
     data
+  });
+}
+export function getUserDetail(data) {
+  return request({
+    url: "/user/detail",
+    method: "get",
+    params: data
   });
 }
 // 日志管理

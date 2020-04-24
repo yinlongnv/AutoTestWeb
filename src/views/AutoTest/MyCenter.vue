@@ -61,9 +61,9 @@
           </el-form-item>
         </div>
         <div v-if="dialogTitle==='修改身份证号'">
-          <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
+          <el-form-item label="身份证号" :label-width="formLabelWidth" prop="idNumber">
             <el-input
-              v-model="form.id_number"
+              v-model="form.idNumber"
               style="width:300px"
               placeholder="请输入身份证号"
               size="small"
@@ -71,9 +71,9 @@
           </el-form-item>
         </div>
         <div v-if="dialogTitle==='修改手机号'">
-          <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone_number">
+          <el-form-item label="手机号" :label-width="formLabelWidth" prop="phoneNumber">
             <el-input
-              v-model="form.phone_number"
+              v-model="form.phoneNumber"
               style="width:300px"
               placeholder="请输入手机号"
               size="small"
@@ -86,27 +86,11 @@
           </el-form-item>
         </div>
         <div v-if="dialogTitle==='修改密码'">
-          <el-form-item label="原密码" :label-width="formLabelWidth" prop="oldPassword">
+          <el-form-item label="新密码" :label-width="formLabelWidth" prop="password">
             <el-input
-              v-model="form.oldPassword"
-              style="width:300px"
-              placeholder="请输入原密码"
-              size="small"
-            />
-          </el-form-item>
-          <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
-            <el-input
-              v-model="form.newPassword"
+              v-model="form.password"
               style="width:300px"
               placeholder="请输入新密码"
-              size="small"
-            />
-          </el-form-item>
-          <el-form-item label="确认新密码" :label-width="formLabelWidth" prop="confirmPassword">
-            <el-input
-              v-model="form.confirmPassword"
-              style="width:300px"
-              placeholder="请确认新密码"
               size="small"
             />
           </el-form-item>
@@ -139,6 +123,7 @@ const DIALOGTITLES = {
     return "修改密码";
   }
 };
+import { createUser, getUserDetail } from "@/api/user";
 export default {
   data() {
     return {
@@ -168,10 +153,32 @@ export default {
       formLabelWidth: "120px"
     };
   },
+  created() {
+    this.getUserDetail();
+  },
   methods: {
+    async getUserDetail() {
+      try {
+        let id = JSON.parse(sessionStorage.getItem("userInfo")).id;
+        let result = await getUserDetail({ id });
+        this.userInfo = result.data.data;
+        this.form = result.data.data;
+      } catch (error) {}
+    },
+    async createAccount() {
+      let id = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      await createUser({ ...this.form, id });
+      this.$message({
+        type: "success",
+        message: "编辑成功"
+      });
+    },
     confrimChange() {
       this.$refs["ruleForm"].validate(valid => {
         if (valid) {
+          this.createAccount().then(() => {
+            this.getUserDetail();
+          });
           this.dialogVisible = false;
         } else {
           console.log("error submit!!");
