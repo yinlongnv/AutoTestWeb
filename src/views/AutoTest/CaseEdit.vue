@@ -2,9 +2,31 @@
   <div class="old-info-container">
     <div>{{ editStatus === 1?'编辑用例':'创建用例' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item prop="apiId" label="关联接口" :label-width="formLabelWidth">
+      <el-form-item prop="projectName" label="所属业务" :label-width="formLabelWidth">
         <el-autocomplete
-          v-model="form.apiId"
+          v-model="form.projectName"
+          :style="inputWidth"
+          size="small"
+          class="inline-input"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入所属业务"
+          @select="handleSelect"
+        />
+      </el-form-item>
+      <el-form-item prop="apiGroup" label="所属分组" :label-width="formLabelWidth">
+        <el-autocomplete
+          v-model="form.apiGroup"
+          :style="inputWidth"
+          size="small"
+          class="inline-input"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入所属分组"
+          @select="handleSelect"
+        />
+      </el-form-item>
+      <el-form-item prop="apiNamePath" label="关联接口" :label-width="formLabelWidth">
+        <el-autocomplete
+          v-model="form.apiNamePath"
           :style="inputWidth"
           size="small"
           class="inline-input"
@@ -14,10 +36,24 @@
         />
       </el-form-item>
       <el-form-item prop="caseContent" label="用例内容" :label-width="formLabelWidth">
-        <el-input v-model="form.caseContent" type="textarea" rows="3" :style="inputWidth" size="small" placeholder="请输入用例内容" />
+        <el-input
+          v-model="form.caseContent"
+          type="textarea"
+          rows="3"
+          :style="inputWidth"
+          size="small"
+          placeholder="请输入用例内容"
+        />
       </el-form-item>
       <el-form-item prop="caseDescription" label="用例描述" :label-width="formLabelWidth">
-        <el-input v-model="form.caseDescription" type="textarea" rows="3" :style="inputWidth" size="small" placeholder="请输入用例描述" />
+        <el-input
+          v-model="form.caseDescription"
+          type="textarea"
+          rows="3"
+          :style="inputWidth"
+          size="small"
+          placeholder="请输入用例描述"
+        />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -28,13 +64,15 @@
 </template>
 
 <script>
-import { timeFilter } from '@/utils/filter'
-import { createUser } from '@/api/user'
+import { timeFilter } from "@/utils/filter";
+import { createUser } from "@/api/user";
 const FORM = {
-  apiId: '',
-  caseContent: '',
-  caseDescription: ''
-}
+  projectName: "",
+  apiGroup: "",
+  apiNamePath: "",
+  caseContent: "",
+  caseDescription: ""
+};
 export default {
   filters: { timeFilter },
   data() {
@@ -43,83 +81,88 @@ export default {
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        apiId: [
-          { required: true, message: '请输入正确关联接口id', trigger: 'blur' }
+        projectName: [
+          { required: true, message: "请选择所属业务", trigger: "blur" }
+        ],
+        apiGroup: [
+          { required: true, message: "请选择所属分组", trigger: "blur" }
+        ],
+        apiNamePath: [
+          { required: true, message: "请选择关联接口", trigger: "blur" }
         ],
         caseContent: [
-          { required: true, message: '请输入正确的用例内容', trigger: 'blur' }
+          { required: true, message: "请输入正确的用例内容", trigger: "blur" }
         ],
         caseDescription: [
-          { required: true, message: '请输入正确的用例描述', trigger: 'blur' }
+          { required: true, message: "请输入用例描述", trigger: "blur" }
         ]
       },
-      inputWidth: 'width:460px',
-      formLabelWidth: '120px',
+      inputWidth: "width:460px",
+      formLabelWidth: "120px",
       communityList: [],
       subdistrictList: []
-    }
+    };
   },
   created() {
     // this.editStatus = Boolean(this.$route.query.type)
-    console.log(this.$route.query.type, this.editStatus)
-    this.form = JSON.parse(sessionStorage.getItem('caseDetail')) || FORM
-    this.restaurants = this.loadAll()
+    console.log(this.$route.query.type, this.editStatus);
+    this.form = JSON.parse(sessionStorage.getItem("caseDetail")) || FORM;
+    this.restaurants = this.loadAll();
   },
   methods: {
     querySearch(queryString, cb) {
-      var restaurants = this.restaurants
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      var restaurants = this.restaurants;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
       // 调用 callback 返回建议列表的数据
-      cb(results)
+      cb(results);
     },
     createFilter(queryString) {
-      return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-      }
+      return restaurant => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
     },
     loadAll() {
-      return [
-        { 'value': '1' },
-        { 'value': '2' },
-        { 'value': '3' }
-
-      ]
+      return [{ value: "1" }, { value: "2" }, { value: "3" }];
     },
     handleSelect(item) {
-      console.log(item)
+      console.log(item);
     },
     closeDialog() {
-      this.$refs['ruleForm'].resetFields()
+      this.$refs["ruleForm"].resetFields();
     },
     selectRoles(val) {
-      console.log(val)
-      console.log(this.role)
+      console.log(val);
+      console.log(this.role);
     },
     goBack() {
-      this.$router.go(-1)
-      sessionStorage.removeItem('caseDetail')
+      this.$router.go(-1);
+      sessionStorage.removeItem("caseDetail");
     },
     confirmEdit() {
-      this.$refs['ruleForm'].validate(valid => {
+      this.$refs["ruleForm"].validate(valid => {
         if (valid) {
-          this.createAccount()
-          sessionStorage.removeItem('caseDetail')
+          this.createAccount();
+          sessionStorage.removeItem("caseDetail");
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     async createAccount() {
-      await createUser({ ...this.form })
+      await createUser({ ...this.form });
       this.$message({
-        type: 'success',
-        message: '创建成功'
-      })
-      this.$router.push({ path: '/user/list' })
+        type: "success",
+        message: "创建成功"
+      });
+      this.$router.push({ path: "/user/list" });
     }
-
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

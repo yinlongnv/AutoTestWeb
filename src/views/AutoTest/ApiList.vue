@@ -37,7 +37,7 @@
             :label="item.name"
             :value="item.value"
           />
-        </el-select> -->
+        </el-select>-->
 
         <el-autocomplete
           v-model="apiGroup"
@@ -111,11 +111,7 @@
           <div style="display:flex">
             <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
             <el-button type="text" size="small" @click="onCreateCase(scope.row)">创建用例</el-button>
-            <el-button
-              type="text"
-              size="small"
-              @click="createApi(scope.row)"
-            >复制</el-button>
+            <el-button type="text" size="small" @click="createApi(scope.row)">复制</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
@@ -123,168 +119,183 @@
               @click="onDelete(scope.row)"
             >删除</el-button>
           </div>
-
         </template>
       </el-table-column>
     </base-table>
-
   </div>
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { statusFilter, roleFilter } from '@/utils/filter'
-import { deleteApis } from '@/api/user'
+import BaseTable from "@/components/BaseTable";
+import { statusFilter, reqMethodFilter } from "@/utils/filter";
+import { deleteApis } from "@/api/user";
 export default {
   components: { BaseTable },
   filters: {
     statusFilter,
-    roleFilter
+    reqMethodFilter
   },
   data() {
     return {
       downloadLoading: false,
       rules: {
         name: [
-          { required: true, message: '请输入正确的新密码', trigger: 'blur' }
+          { required: true, message: "请输入正确的新密码", trigger: "blur" }
         ]
       },
       timeArray: [],
       form: {
-        password: ''
+        password: ""
       },
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       oldInfoObj: {},
       chartDataObj: {},
       searchObj: {
-        apiName: ''
+        apiName: ""
       },
       idList: [],
-      type: '',
+      type: "",
       typeOptions: [
         {
-          name: '全部',
+          name: "全部",
           value: 0
         },
         {
-          name: '所属业务',
+          name: "所属业务",
           value: 1
         },
         {
-          name: '请求方法',
+          name: "请求方法",
           value: 2
         }
       ],
-      role: '',
+      role: "",
       roleOptions: [],
-      apiGroup: '',
+      apiGroup: "",
       apiGroupOptions: [],
-      reqMethod: '',
+      reqMethod: "",
       reqMethodOptions: []
-    }
+    };
   },
 
   created() {
-    this.restaurants = this.loadAll()
+    this.restaurants = this.loadAll();
   },
   methods: {
     // 顶部操作
     // 创建接口
     createApi(row) {
       if (row) {
-        sessionStorage.setItem('apiDetail', JSON.stringify(row))
+        sessionStorage.setItem("apiDetail", JSON.stringify(row));
       }
-      this.$router.push({ path: '/api/edit', query: { type: 0 }})
+      this.$router.push({ path: "/api/edit", query: { type: 0 } });
     },
     // 下载模板
     handleDownload() {
-      this.downloadLoading = true
-      import('@/utils/Export2Excel').then(excel => {
-        const tHeader = ['用户名', '身份证号', '账号角色', '登入IP', '账号操作', '操作界面', '操作时间']
-        const filterVal = ['username', 'id_number', 'role', 'login_ip', 'action', 'page', 'time']
-        const list = this.list
-        const data = this.formatJson(filterVal, list)
+      this.downloadLoading = true;
+      import("@/utils/Export2Excel").then(excel => {
+        const tHeader = [
+          "用户名",
+          "身份证号",
+          "账号角色",
+          "登入IP",
+          "账号操作",
+          "操作界面",
+          "操作时间"
+        ];
+        const filterVal = [
+          "username",
+          "id_number",
+          "role",
+          "login_ip",
+          "action",
+          "page",
+          "time"
+        ];
+        const list = this.list;
+        const data = this.formatJson(filterVal, list);
         excel.export_json_to_excel({
           header: tHeader,
           data,
           filename: this.filename,
           autoWidth: this.autoWidth,
           bookType: this.bookType
-        })
-        this.downloadLoading = false
-      })
+        });
+        this.downloadLoading = false;
+      });
     },
     formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        return v[j]
-      }))
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          return v[j];
+        })
+      );
     },
     // 所属业务和请求方法
-    handleSelect() {
-
-    },
+    handleSelect() {},
     // 搜索+选择
     loadAll() {
-      return [
-        { 'value': '1' },
-        { 'value': '2' },
-        { 'value': '3' }
-      ]
+      return [{ value: "get" }, { value: "post" }, { value: "3" }];
     },
     createFilter(queryString) {
-      return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-      }
+      return restaurant => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
     },
     querySearch(queryString, cb) {
-      var restaurants = this.restaurants
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      var restaurants = this.restaurants;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
       // 调用 callback 返回建议列表的数据
-      cb(results)
+      cb(results);
     },
     // 列表操作
     onDelete(row) {
-      this.$confirm('确定要删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("确定要删除吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           if (Array.isArray(row)) {
-            this.deleteApis(row)
+            this.deleteApis(row);
           } else {
-            const ids = [row.id]
-            this.deleteApis(ids)
+            const ids = [row.id];
+            this.deleteApis(ids);
           }
         })
-        .catch(() => {})
+        .catch(() => {});
     },
 
     onCreateCase() {
-      this.$router.push({ path: '/case/edit', query: { type: 0 }})
+      this.$router.push({ path: "/case/edit", query: { type: 0 } });
     },
     onEdit(row) {
-      sessionStorage.setItem('apiDetail', JSON.stringify(row))
-      this.$router.push({ path: '/api/edit', query: { type: 1 }})
+      sessionStorage.setItem("apiDetail", JSON.stringify(row));
+      this.$router.push({ path: "/api/edit", query: { type: 1 } });
     },
     goDetail(row) {
-      this.$router.push({ path: '/user/detail' })
+      this.$router.push({ path: "/user/detail" });
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id)
-      console.log(this.idList)
+      this.idList = row.map(f => f.id);
+      console.log(this.idList);
     },
     // 接口调用
     async deleteApis(userIds) {
       try {
-        await deleteApis({ userIds: userIds })
-        this.$refs.tableRef.onSearch()
+        await deleteApis({ userIds: userIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -29,7 +29,7 @@
           size="small"
           class="inline-input"
           :fetch-suggestions="querySearch"
-          placeholder="所属业务"
+          placeholder="关联接口"
           @select="handleSelect"
         />
 
@@ -39,14 +39,14 @@
           size="small"
           class="inline-input"
           :fetch-suggestions="querySearch"
-          placeholder="请求方法"
+          placeholder="执行状态"
           @select="handleSelect"
         />
 
         <el-input
           v-model="searchObj.apiName"
           icon="el-icon-search"
-          placeholder="搜索用例名称"
+          placeholder="搜索用例描述"
           size="small"
           style="width:130px"
         />
@@ -54,12 +54,12 @@
     </div>
     <base-table
       ref="tableRef"
-      :url="'/api/listWithSearch'"
+      :url="'/case/listWithSearch'"
       :search-param="searchObj"
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="所关联用例名称" width="120">
+      <el-table-column label="关联接口名称" width="120">
         <template slot-scope="scope">
           <div>{{ scope.row.apiName }}</div>
         </template>
@@ -87,7 +87,7 @@
       </el-table-column>
       <el-table-column label="执行状态">
         <template slot-scope="scope">
-          <div>{{ scope.row.caseStatus }}</div>
+          <div>{{ scope.row.executeStatus }}</div>
         </template>
       </el-table-column>
       <el-table-column label="执行次数">
@@ -152,11 +152,11 @@ export default {
           value: 0
         },
         {
-          name: "所属业务",
+          name: "关联接口",
           value: 1
         },
         {
-          name: "请求方法",
+          name: "执行状态",
           value: 2
         }
       ],
@@ -224,7 +224,7 @@ export default {
     // 搜索+选择
     handleSelect() {},
     loadAll() {
-      return [{ value: "1" }, { value: "2" }, { value: "3" }];
+      return [{ value: "全部" }, { value: "2" }, { value: "3" }];
     },
     createFilter(queryString) {
       return restaurant => {

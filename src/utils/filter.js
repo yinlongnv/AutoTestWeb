@@ -27,3 +27,10 @@ export function roleFilter(val) {
     return "QA";
   }
 }
+export function reqMethodFilter(val) {
+  if (val) {
+    return "get";
+  } else {
+    return "post";
+  }
+}
