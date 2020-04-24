@@ -8,7 +8,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">产品演训中心API</h3>
+        <h3 class="title">演训产品中心API</h3>
       </div>
 
       <el-form-item prop="username">

@@ -9,7 +9,7 @@
         @click="handleDownload"
       >批量导出日志</el-button>
       <div style="text-align:right;width:100%">
-        <el-select v-model="role" placeholder="请选择账号角色" size="small" :no-data-text="'暂无数据'">
+        <el-select v-model="role" placeholder="请选择相应用户" size="small" :no-data-text="'暂无数据'">
           <el-option
             v-for="item in roleOptions"
             :key="item.value"

@@ -1,4 +1,11 @@
 import request from "@/utils/request";
+export function login(data) {
+  return request({
+    url: "/user/login",
+    method: "post",
+    data
+  });
+}
 export function createUser(data) {
   return request({
     url: "/user/createOrEdit",
@@ -6,14 +13,6 @@ export function createUser(data) {
     data
   });
 }
-export function createApi(data) {
-  return request({
-    url: "/api/createOrEdit",
-    method: "post",
-    data
-  });
-}
-// 用户管理
 export function deleteUsers(data) {
   return request({
     url: "/user/delete",
@@ -42,24 +41,7 @@ export function getUserDetail(data) {
     params: data
   });
 }
-// 日志管理
 
-// 接口管理——url待修改
-export function deleteApis(data) {
-  return request({
-    url: "/user/delete",
-    method: "post",
-    data
-  });
-}
-// 用例管理
-export function deleteCases(data) {
-  return request({
-    url: "/user/delete",
-    method: "post",
-    data
-  });
-}
 // export function login(data) {
 //   return request({
 //     url: '/vue-admin-template/user/login',
@@ -82,11 +64,3 @@ export function deleteCases(data) {
 //     method: 'post'
 //   })
 // }
-
-export function login(data) {
-  return request({
-    url: "/user/login",
-    method: "post",
-    data
-  });
-}

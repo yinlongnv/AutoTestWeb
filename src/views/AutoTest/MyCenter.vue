@@ -8,7 +8,7 @@
       </el-row>
       <el-row>
         <el-col :span="3">账号角色</el-col>
-        <el-col :span="10" :offset="1">{{ userInfo.role }}</el-col>
+        <el-col :span="10" :offset="1">{{ userInfo.role|roleFilter }}</el-col>
       </el-row>
     </div>
     <div class="content">
@@ -124,6 +124,7 @@ const DIALOGTITLES = {
   }
 };
 import { createUser, getUserDetail } from "@/api/user";
+import { statusFilter, roleFilter } from "@/utils/filter";
 export default {
   data() {
     return {
@@ -155,6 +156,10 @@ export default {
   },
   created() {
     this.getUserDetail();
+  },
+  filters: {
+    statusFilter,
+    roleFilter
   },
   methods: {
     async getUserDetail() {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>账号详情</div>
+    <div>用例详情</div>
     <div class="user-info">
       <div class="info-item">
         用户名:

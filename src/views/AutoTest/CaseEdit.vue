@@ -65,7 +65,7 @@
 
 <script>
 import { timeFilter } from "@/utils/filter";
-import { createUser } from "@/api/user";
+import { createCase } from "@/api/case";
 const FORM = {
   projectName: "",
   apiGroup: "",
@@ -127,7 +127,7 @@ export default {
       };
     },
     loadAll() {
-      return [{ value: "1" }, { value: "2" }, { value: "3" }];
+      return [{ value: "靶场" }, { value: "攻防" }, { value: "演练" }];
     },
     handleSelect(item) {
       console.log(item);
@@ -154,12 +154,21 @@ export default {
       });
     },
     async createAccount() {
-      await createUser({ ...this.form });
-      this.$message({
-        type: "success",
-        message: "创建成功"
-      });
-      this.$router.push({ path: "/user/list" });
+      // sessionStorage.removeItem("userDetail");
+      let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      await createCase({ ...this.form, userId });
+      if (this.editStatus === 0) {
+        this.$message({
+          type: "success",
+          message: "创建成功"
+        });
+      } else {
+        this.$message({
+          type: "success",
+          message: "编辑成功"
+        });
+      }
+      this.$router.push({ path: "/case/list" });
     }
   }
 };

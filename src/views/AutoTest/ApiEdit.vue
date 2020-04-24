@@ -102,7 +102,7 @@
 
 <script>
 import { timeFilter } from "@/utils/filter";
-import { createApi } from "@/api/user";
+import { createApi } from "@/api/api";
 const FORM = {
   projectName: "",
   apiGroup: "",
@@ -195,7 +195,7 @@ export default {
       };
     },
     loadAll() {
-      return [{ value: "1" }, { value: "2" }, { value: "3" }];
+      return [{ value: "靶场" }, { value: "攻防" }, { value: "演练" }];
     },
     handleSelect(item) {
       console.log(item);
@@ -221,15 +221,31 @@ export default {
         }
       });
     },
+    // async createAccount() {
+    //   await createApi({ ...this.form });
+    //   this.$message({
+    //     type: "success",
+    //     message: "创建成功"
+    //   });
+    //   this.$router.push({ path: "/api/list" });
+    // },
     async createAccount() {
-      await createApi({ ...this.form });
-      this.$message({
-        type: "success",
-        message: "创建成功"
-      });
+      // sessionStorage.removeItem("userDetail");
+      let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      await createApi({ ...this.form, userId });
+      if (this.editStatus === 0) {
+        this.$message({
+          type: "success",
+          message: "创建成功"
+        });
+      } else {
+        this.$message({
+          type: "success",
+          message: "编辑成功"
+        });
+      }
       this.$router.push({ path: "/api/list" });
     },
-
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
     },

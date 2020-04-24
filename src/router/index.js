@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -32,100 +32,110 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/',
-    redirect: '/login'
+    path: "/",
+    redirect: "/login"
   },
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
+    path: "/login",
+    component: () => import("@/views/login/index"),
     hidden: true
   },
   {
-    path: '/user',
+    path: "/user",
     component: Layout,
-    meta: { title: '用户管理' },
+    meta: { title: "用户管理" },
     children: [
       {
-        path: '/user/list',
-        name: 'list',
-        component: () => import('@/views/AutoTest/UserManage'),
-        meta: { title: '用户管理' }
+        path: "/user/list",
+        name: "list",
+        component: () => import("@/views/AutoTest/UserList"),
+        meta: { title: "用户管理" }
       },
       {
-        path: '/user/detail',
-        name: 'detail',
-        component: () => import('@/views/AutoTest/UserDetail'),
+        path: "/user/detail",
+        name: "detail",
+        component: () => import("@/views/AutoTest/UserDetail"),
         hidden: true
       },
       {
-        path: '/user/edit',
-        name: 'edit',
-        component: () => import('@/views/AutoTest/UserEdit'),
+        path: "/user/edit",
+        name: "edit",
+        component: () => import("@/views/AutoTest/UserEdit"),
         hidden: true
       },
       {
-        path: '/my/center',
-        name: 'center',
-        component: () => import('@/views/AutoTest/MyCenter'),
+        path: "/my/center",
+        name: "center",
+        component: () => import("@/views/AutoTest/MyCenter"),
         hidden: true
       }
     ]
   },
   {
-    path: '/record',
+    path: "/api",
     component: Layout,
-    meta: { title: '日志管理' },
+    meta: { title: "接口管理" },
     children: [
       {
-        path: '/record/list',
-        name: 'record',
-        component: () => import('@/views/AutoTest/RecordList'),
-        meta: { title: '日志管理' }
-      }
-    ]
-  },
-  {
-    path: '/api',
-    component: Layout,
-    meta: { title: '接口管理' },
-    children: [
-      {
-        path: '/api/list',
-        name: 'api',
-        component: () => import('@/views/AutoTest/ApiList'),
-        meta: { title: '接口管理' }
+        path: "/api/list",
+        name: "api",
+        component: () => import("@/views/AutoTest/ApiList"),
+        meta: { title: "接口管理" }
       },
       {
-        path: '/api/edit',
-        name: 'edit',
-        component: () => import('@/views/AutoTest/ApiEdit'),
+        path: "/api/detail",
+        name: "detail",
+        component: () => import("@/views/AutoTest/ApiDetail"),
         hidden: true
-      }
-
-    ]
-  },
-  {
-    path: '/case',
-    component: Layout,
-    meta: { title: '用例管理' },
-    children: [
-      {
-        path: '/case/list',
-        name: 'case',
-        component: () => import('@/views/AutoTest/CaseList'),
-        meta: { title: '用例管理' }
       },
       {
-        path: '/case/edit',
-        component: () => import('@/views/AutoTest/CaseEdit'),
+        path: "/api/edit",
+        name: "edit",
+        component: () => import("@/views/AutoTest/ApiEdit"),
         hidden: true
       }
-
     ]
   },
   {
-    path: '/404',
-    component: () => import('@/views/404'),
+    path: "/case",
+    component: Layout,
+    meta: { title: "用例管理" },
+    children: [
+      {
+        path: "/case/list",
+        name: "case",
+        component: () => import("@/views/AutoTest/CaseList"),
+        meta: { title: "用例管理" }
+      },
+      {
+        path: "/case/detail",
+        name: "detail",
+        component: () => import("@/views/AutoTest/CaseDetail"),
+        hidden: true
+      },
+      {
+        path: "/case/edit",
+        component: () => import("@/views/AutoTest/CaseEdit"),
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: "/record",
+    component: Layout,
+    meta: { title: "日志管理" },
+    children: [
+      {
+        path: "/record/list",
+        name: "record",
+        component: () => import("@/views/AutoTest/RecordList"),
+        meta: { title: "日志管理" }
+      }
+    ]
+  },
+  {
+    path: "/404",
+    component: () => import("@/views/404"),
     hidden: true
   },
 
@@ -194,23 +204,23 @@ export const constantRoutes = [
   // },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+  { path: "*", redirect: "/404", hidden: true }
+];
 
 const createRouter = () =>
   new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
     routes: constantRoutes,
-    mode: 'history'
-  })
+    mode: "history"
+  });
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;

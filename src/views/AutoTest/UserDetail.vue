@@ -27,7 +27,7 @@
       </div>
       <div class="info-item">
         账号角色:
-        <span>{{ userInfo.role }}</span>
+        <span>{{ userInfo.role|roleFilter }}</span>
       </div>
       <div class="info-item">
         身份证号:
@@ -71,7 +71,7 @@ import {
   disableUsers,
   deleteUsers
 } from "@/api/user";
-import { statusFilter } from "@/utils/filter";
+import { statusFilter, roleFilter } from "@/utils/filter";
 export default {
   data() {
     return {
@@ -82,7 +82,8 @@ export default {
     this.getUserDetail();
   },
   filters: {
-    statusFilter
+    statusFilter,
+    roleFilter
   },
   methods: {
     async getUserDetail() {

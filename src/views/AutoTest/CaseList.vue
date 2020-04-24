@@ -15,15 +15,86 @@
         size="small"
         @click="handleDownload"
       >批量导入</el-button>
-      <el-button
+      <!-- <el-button
         :loading="downloadLoading"
         icon="el-icon-delete"
         size="small"
         @click="onDelete(idList)"
-      >批量删除</el-button>
+      >批量删除</el-button>-->
+      <el-select
+        v-model="type"
+        style="width:150px;margin-left:16px"
+        placeholder="批量管理"
+        size="small"
+        :no-data-text="'暂无数据'"
+        @change="batchActions"
+      >
+        <el-option
+          v-for="item in typeOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        />
+      </el-select>
 
       <div style="text-align:right;width:100%">
-        <el-autocomplete
+        <el-select
+          v-model="searchObj.projectName"
+          style="width:150px"
+          placeholder="请选择所属业务"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>
+        <el-select
+          v-model="searchObj.apiGroup"
+          style="width:150px"
+          placeholder="请选择所属分组"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>
+        <el-select
+          v-model="searchObj.role"
+          style="width:150px"
+          placeholder="请选择关联接口"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>
+        <el-select
+          v-model="searchObj.executeStatus"
+          style="width:150px"
+          placeholder="请选择执行状态"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>
+        <!-- <el-autocomplete
           v-model="apiGroup"
           style="width:100px;margin-left:16px"
           size="small"
@@ -41,7 +112,7 @@
           :fetch-suggestions="querySearch"
           placeholder="执行状态"
           @select="handleSelect"
-        />
+        />-->
 
         <el-input
           v-model="searchObj.apiName"
@@ -60,13 +131,27 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column label="关联接口名称" width="120">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <div>{{ scope.row.apiName }}</div>
+        </template>-->
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            size="small"
+            @click="goApiDetail(scope.row)"
+          >{{ scope.row.apiName }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="用例描述">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <div>{{ scope.row.caseDescription }}</div>
+        </template>-->
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            size="small"
+            @click="goCaseDetail(scope.row)"
+          >{{ scope.row.caseDescription }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="创建人">
@@ -87,8 +172,15 @@
       </el-table-column>
       <el-table-column label="执行状态">
         <template slot-scope="scope">
-          <div>{{ scope.row.executeStatus }}</div>
+          <el-tag
+            v-if="scope.row.executeStatus"
+            type="warning"
+          >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
+          <el-tag v-else type="success">{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
         </template>
+        <!-- <template slot-scope="scope">
+          <div>{{ scope.row.executeStatus|executeStatusFilter }}</div>
+        </template>-->
       </el-table-column>
       <el-table-column label="执行次数">
         <template slot-scope="scope">
@@ -100,8 +192,8 @@
           <div style="display:flex">
             <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
             <!-- <el-button type="text" size="small" @click="createCase(scope.row)">创建用例</el-button> -->
-
-            <el-button type="text" size="small" @click="createCase(scope.row)">复制</el-button>
+            <el-button type="text" size="small" @click="executeCase(scope.row)">执行</el-button>
+            <el-button type="text" size="small" @click="createCase(scope.row)">复制用例</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
@@ -117,13 +209,14 @@
 
 <script>
 import BaseTable from "@/components/BaseTable";
-import { statusFilter, roleFilter } from "@/utils/filter";
-import { deleteCases } from "@/api/user";
+import { statusFilter, roleFilter, executeStatusFilter } from "@/utils/filter";
+import { deleteCases, createCase, getCaseDetail } from "@/api/case";
 export default {
   components: { BaseTable },
   filters: {
     statusFilter,
-    roleFilter
+    roleFilter,
+    executeStatusFilter
   },
   data() {
     return {
@@ -148,20 +241,25 @@ export default {
       type: "",
       typeOptions: [
         {
-          name: "全部",
-          value: 0
+          name: "批量执行",
+          value: "执行"
         },
         {
-          name: "关联接口",
-          value: 1
-        },
-        {
-          name: "执行状态",
-          value: 2
+          name: "批量删除",
+          value: "删除"
         }
       ],
       role: "",
-      roleOptions: [],
+      roleOptions: [
+        {
+          name: "失败",
+          value: 1
+        },
+        {
+          name: "成功",
+          value: 0
+        }
+      ],
       apiGroup: "",
       apiGroupOptions: [],
       reqMethod: "",
@@ -176,7 +274,7 @@ export default {
     // 创建用例
     createCase(row) {
       if (row) {
-        sessionStorage.setItem("apiDetail", JSON.stringify(row));
+        sessionStorage.setItem("caseDetail", JSON.stringify(row));
       }
       this.$router.push({ path: "/case/edit", query: { type: 0 } });
     },
@@ -242,9 +340,11 @@ export default {
       // 调用 callback 返回建议列表的数据
       cb(results);
     },
-    // 列表操作
-    goDetail(row) {
-      this.$router.push({ path: "/user/detail" });
+    goApiDetail(row) {
+      this.$router.push({ path: "/api/detail", query: { id: row.id } });
+    },
+    goCaseDetail(row) {
+      this.$router.push({ path: "/case/detail", query: { id: row.id } });
     },
     onEdit(row) {
       sessionStorage.setItem("createCase", JSON.stringify(row));
@@ -271,9 +371,9 @@ export default {
       console.log(this.idList);
     },
     // 接口调用
-    async deleteCases(userIds) {
+    async deleteCases(caseIds) {
       try {
-        await deleteCases({ userIds: userIds });
+        await deleteCases({ caseIds: caseIds });
         this.$refs.tableRef.onSearch();
       } catch (error) {
         this.$message.error(error);

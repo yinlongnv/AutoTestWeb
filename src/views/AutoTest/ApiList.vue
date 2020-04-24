@@ -38,8 +38,63 @@
             :value="item.value"
           />
         </el-select>-->
-
-        <el-autocomplete
+        <el-select
+          v-model="searchObj.projectName"
+          style="width:150px"
+          placeholder="请选择所属业务"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>
+        <el-select
+          v-model="searchObj.apiGroup"
+          style="width:150px"
+          placeholder="请选择所属分组"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>
+        <!-- <el-select
+          v-model="searchObj.role"
+          style="width:150px"
+          placeholder="请选择关联接口"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>-->
+        <el-select
+          v-model="searchObj.reqMethod"
+          style="width:150px"
+          placeholder="请选择请求方法"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          />
+        </el-select>
+        <!-- <el-autocomplete
           v-model="apiGroup"
           style="width:100px;margin-left:16px"
           size="small"
@@ -57,7 +112,7 @@
           :fetch-suggestions="querySearch"
           placeholder="请求方法"
           @select="handleSelect"
-        />
+        />-->
 
         <el-input
           v-model="searchObj.apiName"
@@ -75,22 +130,26 @@
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="接口路径" width="100">
+
+      <el-table-column label="接口名称" width="120">
+        <!-- <template slot-scope="scope">
+          <div>{{ scope.row.apiName }}</div>
+        </template>-->
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.apiName }}</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="接口路径" width="200">
         <template slot-scope="scope">
           <div>{{ scope.row.apiPath }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="接口名称" width="120">
-        <template slot-scope="scope">
-          <div>{{ scope.row.apiName }}</div>
-        </template>
-      </el-table-column>
+
       <el-table-column label="请求方法" width="100">
         <template slot-scope="scope">
           <div>{{ scope.row.reqMethod }}</div>
         </template>
       </el-table-column>
-
       <el-table-column label="所属业务" width="120">
         <template slot-scope="scope">
           <div>{{ scope.row.projectName }}</div>
@@ -101,17 +160,17 @@
           <div>{{ scope.row.apiGroup }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" width="180">
+      <el-table-column label="创建人" width="100">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width="200">
+      <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
           <div style="display:flex">
             <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
             <el-button type="text" size="small" @click="onCreateCase(scope.row)">创建用例</el-button>
-            <el-button type="text" size="small" @click="createApi(scope.row)">复制</el-button>
+            <el-button type="text" size="small" @click="createApi(scope.row)">复制接口</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
@@ -128,7 +187,7 @@
 <script>
 import BaseTable from "@/components/BaseTable";
 import { statusFilter, reqMethodFilter } from "@/utils/filter";
-import { deleteApis } from "@/api/user";
+import { deleteApis, createApi, getApiDetail } from "@/api/api";
 export default {
   components: { BaseTable },
   filters: {
@@ -279,16 +338,16 @@ export default {
       this.$router.push({ path: "/api/edit", query: { type: 1 } });
     },
     goDetail(row) {
-      this.$router.push({ path: "/user/detail" });
+      this.$router.push({ path: "/api/detail", query: { id: row.id } });
     },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);
       console.log(this.idList);
     },
     // 接口调用
-    async deleteApis(userIds) {
+    async deleteApis(apiIds) {
       try {
-        await deleteApis({ userIds: userIds });
+        await deleteApis({ apiIds: apiIds });
         this.$refs.tableRef.onSearch();
       } catch (error) {
         this.$message.error(error);

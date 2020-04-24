@@ -34,3 +34,10 @@ export function reqMethodFilter(val) {
     return "post";
   }
 }
+export function executeStatusFilter(val) {
+  if (val) {
+    return "失败";
+  } else {
+    return "成功";
+  }
+}
