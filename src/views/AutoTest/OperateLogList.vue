@@ -9,7 +9,12 @@
         @click="handleDownload"
       >批量导出日志</el-button>
       <div style="text-align:right;width:100%">
-        <el-select v-model="role" placeholder="请选择用户名称" size="small" :no-data-text="'暂无数据'">
+        <el-select
+          v-model="searchObj.username"
+          placeholder="请选择账号名称"
+          size="small"
+          :no-data-text="'暂无数据'"
+        >
           <el-option
             v-for="item in roleOptions"
             :key="item.value"
@@ -28,48 +33,48 @@
           end-placeholder="结束日期"
         />
         <el-input
-          v-model="searchObj.kw"
+          v-model="searchObj.logInfo"
           icon="el-icon-search"
-          placeholder="搜索用户名/账号操作"
+          placeholder="搜索账号操作/操作界面"
           size="small"
           style="width:200px"
         />
       </div>
     </div>
-    <base-table :url="'/record/list'" :search-param="searchObj">
+    <base-table :url="'/operateLog/listWithSearch'" :search-param="searchObj">
       <el-table-column label="用户名">
         <template slot-scope="scope">
           <div>{{ scope.row.username }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="身份证号">
+      <el-table-column label="用户编号">
         <template slot-scope="scope">
-          <div>{{ scope.row.id_number }}</div>
+          <div>{{ scope.row.userNumber }}</div>
         </template>
       </el-table-column>
       <el-table-column label="账号角色">
         <template slot-scope="scope">
-          <div>{{ scope.row.role }}</div>
+          <div>{{ scope.row.role|roleFilter }}</div>
         </template>
       </el-table-column>
       <el-table-column label="登入IP">
         <template slot-scope="scope">
-          <div>{{ scope.row.login_ip }}</div>
+          <div>{{ scope.row.lastIp }}</div>
         </template>
       </el-table-column>
       <el-table-column label="账号操作">
         <template slot-scope="scope">
-          <div>{{ scope.row.action }}</div>
+          <div>{{ scope.row.logContent }}</div>
         </template>
       </el-table-column>
       <el-table-column label="操作界面">
         <template slot-scope="scope">
-          <div>{{ scope.row.page }}</div>
+          <div>{{ scope.row.operatePath }}</div>
         </template>
       </el-table-column>
       <el-table-column label="操作时间">
         <template slot-scope="scope">
-          <div>{{ scope.row.time }}</div>
+          <div>{{ scope.row.createdAt }}</div>
         </template>
       </el-table-column>
     </base-table>
@@ -78,12 +83,13 @@
 
 <script>
 import BaseTable from "@/components/BaseTable";
-import { timeFilter } from "@/utils/filter";
+import { timeFilter, roleFilter } from "@/utils/filter";
 import { parseTime } from "@/utils";
 export default {
   components: { BaseTable },
   filters: {
-    timeFilter
+    timeFilter,
+    roleFilter
   },
   data() {
     return {
@@ -91,7 +97,8 @@ export default {
       timeArray: [],
       searchName: "",
       searchObj: {
-        kw: ""
+        logInfo: "",
+        role: ""
       },
       role: "",
       roleOptions: [
@@ -127,12 +134,12 @@ export default {
         ];
         const filterVal = [
           "username",
-          "id_number",
+          "idNumber",
           "role",
-          "login_ip",
-          "action",
-          "page",
-          "time"
+          "LastIp",
+          "logContent",
+          "operatePath",
+          "createdAt"
         ];
         const list = this.list;
         const data = this.formatJson(filterVal, list);

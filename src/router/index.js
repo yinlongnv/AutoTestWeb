@@ -121,14 +121,14 @@ export const constantRoutes = [
     ]
   },
   {
-    path: "/record",
+    path: "/operateLog",
     component: Layout,
     meta: { title: "日志管理" },
     children: [
       {
-        path: "/record/list",
-        name: "record",
-        component: () => import("@/views/AutoTest/RecordList"),
+        path: "/operateLog/list",
+        name: "operateLog",
+        component: () => import("@/views/AutoTest/OperateLogList"),
         meta: { title: "日志管理" }
       }
     ]

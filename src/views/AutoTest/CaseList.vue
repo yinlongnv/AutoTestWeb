@@ -192,7 +192,7 @@
           <div style="display:flex">
             <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
             <!-- <el-button type="text" size="small" @click="createCase(scope.row)">创建用例</el-button> -->
-            <el-button type="text" size="small" @click="executeCase(scope.row)">执行</el-button>
+            <el-button type="text" size="small" @click="onRun(scope.row)">执行</el-button>
             <el-button type="text" size="small" @click="createCase(scope.row)">复制用例</el-button>
             <el-button
               type="text"
@@ -278,6 +278,14 @@ export default {
         sessionStorage.setItem("caseDetail", JSON.stringify(row));
       }
       this.$router.push({ path: "/case/edit", query: { type: 0 } });
+    }, // 列表操作
+    batchActions() {
+      if (this.type === "删除") {
+        this.onDelete(this.idList);
+      } else {
+        this.onRun(this.idList);
+      }
+      this.type = "";
     },
     // 下载模板
     handleDownload() {

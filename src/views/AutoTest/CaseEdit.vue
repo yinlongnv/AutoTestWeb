@@ -24,9 +24,9 @@
           @select="handleSelect"
         />
       </el-form-item>
-      <el-form-item prop="apiNamePath" label="关联接口" :label-width="formLabelWidth">
+      <el-form-item prop="apiName" label="关联接口" :label-width="formLabelWidth">
         <el-autocomplete
-          v-model="form.apiNamePath"
+          v-model="form.apiName"
           :style="inputWidth"
           size="small"
           class="inline-input"
@@ -35,9 +35,9 @@
           @select="handleSelect"
         />
       </el-form-item>
-      <el-form-item prop="caseContent" label="用例内容" :label-width="formLabelWidth">
+      <el-form-item prop="caseBody" label="用例内容" :label-width="formLabelWidth">
         <el-input
-          v-model="form.caseContent"
+          v-model="form.caseBody"
           type="textarea"
           rows="3"
           :style="inputWidth"
@@ -69,8 +69,8 @@ import { createCase } from "@/api/case";
 const FORM = {
   projectName: "",
   apiGroup: "",
-  apiNamePath: "",
-  caseContent: "",
+  apiName: "",
+  caseBody: "",
   caseDescription: ""
 };
 export default {
@@ -87,10 +87,10 @@ export default {
         apiGroup: [
           { required: true, message: "请选择所属分组", trigger: "blur" }
         ],
-        apiNamePath: [
+        apiName: [
           { required: true, message: "请选择关联接口", trigger: "blur" }
         ],
-        caseContent: [
+        caseBody: [
           { required: true, message: "请输入正确的用例内容", trigger: "blur" }
         ],
         caseDescription: [
