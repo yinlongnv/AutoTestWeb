@@ -41,7 +41,11 @@
         />
       </div>
     </div>
-    <base-table :url="'/operateLog/listWithSearch'" :search-param="searchObj">
+    <base-table
+      @tableLoaded="getTableData"
+      :url="'/operateLog/listWithSearch'"
+      :search-param="searchObj"
+    >
       <el-table-column label="用户名">
         <template slot-scope="scope">
           <div>{{ scope.row.username }}</div>
@@ -119,13 +123,16 @@ export default {
     };
   },
   methods: {
+    getTableData(data) {
+      this.list = data;
+    },
     // 批量导出
     handleDownload() {
       this.downloadLoading = true;
       import("@/utils/Export2Excel").then(excel => {
         const tHeader = [
           "用户名",
-          "身份证号",
+          "用户编号",
           "账号角色",
           "登入IP",
           "账号操作",
@@ -134,9 +141,9 @@ export default {
         ];
         const filterVal = [
           "username",
-          "idNumber",
+          "userNumber",
           "role",
-          "LastIp",
+          "lastIp",
           "logContent",
           "operatePath",
           "createdAt"
