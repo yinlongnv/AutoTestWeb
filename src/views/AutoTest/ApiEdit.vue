@@ -3,26 +3,13 @@
     <div>{{ editStatus === 1?'编辑接口':'创建接口' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
       <el-form-item prop="projectName" label="所属业务" :label-width="formLabelWidth">
-        <el-autocomplete
-          v-model="form.projectName"
-          :style="inputWidth"
+        <el-cascader
           size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入所属业务"
-          @select="handleSelect"
-        />
-      </el-form-item>
-      <el-form-item prop="apiGroup" label="所属分组" :label-width="formLabelWidth">
-        <el-autocomplete
-          v-model="form.apiGroup"
-          :style="inputWidth"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入所属分组"
-          @select="handleSelect"
-        />
+          clearable
+          v-model="value"
+          :options="options"
+          @change="handleChange"
+        ></el-cascader>
       </el-form-item>
       <el-form-item prop="baseUrl" label="环境域名" :label-width="formLabelWidth">
         <el-autocomplete
@@ -102,7 +89,7 @@
 
 <script>
 import { timeFilter } from "@/utils/filter";
-import { createApi } from "@/api/api";
+import { createApi, getfilterMap } from "@/api/api";
 const FORM = {
   projectName: "",
   apiGroup: "",
@@ -119,6 +106,8 @@ export default {
   filters: { timeFilter },
   data() {
     return {
+      value: [],
+      options: [],
       restaurants: [],
       editStatus: Number(this.$route.query.type),
       form: FORM,
@@ -176,8 +165,32 @@ export default {
     console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("apiDetail")) || FORM;
     this.restaurants = this.loadAll();
+    this.getfilterMap();
   },
   methods: {
+    async getfilterMap() {
+      try {
+        const result = await getfilterMap();
+        let options = result.data.options;
+        for (let i of options) {
+          for (let child of i.children) {
+            delete child.children;
+          }
+        }
+        this.options = result.data.options;
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
+    handleChange(val) {
+      if (val.length === 0) {
+        this.form.projectName = "";
+        this.form.apiGroup = "";
+      } else {
+        this.form.projectName = val[0];
+        this.form.apiGroup = val[1];
+      }
+    },
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;
       var results = queryString

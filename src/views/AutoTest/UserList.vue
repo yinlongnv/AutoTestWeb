@@ -172,7 +172,9 @@ export default {
       searchName: "",
       searchObj: {
         userInfo: "",
-        role: ""
+        role: "",
+        startTime: "",
+        endTime: ""
       },
       idList: [],
       type: "",
@@ -201,6 +203,18 @@ export default {
         }
       ]
     };
+  },
+  watch: {
+    timeArray(val) {
+      console.log(val);
+      if (!val) {
+        this.searchObj.startTime = "";
+        this.searchObj.endTime = "";
+      } else {
+        this.searchObj.startTime = val[0];
+        this.searchObj.endTime = val[1];
+      }
+    }
   },
   methods: {
     createAccount() {

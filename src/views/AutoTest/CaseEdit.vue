@@ -2,38 +2,14 @@
   <div class="old-info-container">
     <div>{{ editStatus === 1?'编辑用例':'创建用例' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item prop="projectName" label="所属业务" :label-width="formLabelWidth">
-        <el-autocomplete
-          v-model="form.projectName"
-          :style="inputWidth"
+      <el-form-item prop="api" label="关联接口" :label-width="formLabelWidth">
+        <el-cascader
           size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入所属业务"
-          @select="handleSelect"
-        />
-      </el-form-item>
-      <el-form-item prop="apiGroup" label="所属分组" :label-width="formLabelWidth">
-        <el-autocomplete
-          v-model="form.apiGroup"
-          :style="inputWidth"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入所属分组"
-          @select="handleSelect"
-        />
-      </el-form-item>
-      <el-form-item prop="apiName" label="关联接口" :label-width="formLabelWidth">
-        <el-autocomplete
-          v-model="form.apiName"
-          :style="inputWidth"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入关联接口"
-          @select="handleSelect"
-        />
+          clearable
+          v-model="value"
+          :options="options"
+          @change="handleChange"
+        ></el-cascader>
       </el-form-item>
       <el-form-item prop="caseBody" label="用例内容" :label-width="formLabelWidth">
         <el-input
@@ -65,11 +41,11 @@
 
 <script>
 import { timeFilter } from "@/utils/filter";
-import { createCase } from "@/api/case";
+import { createCase, getfilterMap } from "@/api/case";
 const FORM = {
   projectName: "",
   apiGroup: "",
-  apiName: "",
+  apiMerge: "",
   caseBody: "",
   caseDescription: ""
 };
@@ -77,19 +53,13 @@ export default {
   filters: { timeFilter },
   data() {
     return {
+      value: [],
+      options: [],
       restaurants: [],
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        projectName: [
-          { required: true, message: "请选择所属业务", trigger: "blur" }
-        ],
-        apiGroup: [
-          { required: true, message: "请选择所属分组", trigger: "blur" }
-        ],
-        apiName: [
-          { required: true, message: "请选择关联接口", trigger: "blur" }
-        ],
+        api: [{ required: true, message: "请选择关联接口", trigger: "blur" }],
         caseBody: [
           { required: true, message: "请输入正确的用例内容", trigger: "blur" }
         ],
@@ -108,6 +78,7 @@ export default {
     console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("caseDetail")) || FORM;
     this.restaurants = this.loadAll();
+    this.getfilterMap();
   },
   methods: {
     querySearch(queryString, cb) {
@@ -117,6 +88,25 @@ export default {
         : restaurants;
       // 调用 callback 返回建议列表的数据
       cb(results);
+    },
+    async getfilterMap() {
+      try {
+        const result = await getfilterMap();
+        this.options = result.data.options;
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
+    handleChange(val) {
+      if (val.length === 0) {
+        this.form.projectName = "";
+        this.form.apiGroup = "";
+        this.form.apiMerge = "";
+      } else {
+        this.form.projectName = val[0];
+        this.form.apiGroup = val[1];
+        this.form.apiMerge = val[2];
+      }
     },
     createFilter(queryString) {
       return restaurant => {

@@ -21,71 +21,21 @@
         size="small"
         @click="onDelete(idList)"
       >批量删除</el-button>
-
       <div style="text-align:right;width:100%">
-        <!-- <el-select
-          v-model="type"
-          style="width:100px;margin-left:16px"
-          placeholder="筛选查询"
+        <el-cascader
           size="small"
-          :no-data-text="'暂无数据'"
-          @change="batchActions"
-        >
-          <el-option
-            v-for="item in typeOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>-->
-        <el-select
-          v-model="searchObj.projectName"
-          style="width:150px"
-          placeholder="请选择所属业务"
-          size="small"
-          :no-data-text="'暂无数据'"
-        >
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-        <el-select
-          v-model="searchObj.apiGroup"
-          style="width:150px"
-          placeholder="请选择所属分组"
-          size="small"
-          :no-data-text="'暂无数据'"
-        >
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-        <!-- <el-select
-          v-model="searchObj.role"
-          style="width:150px"
-          placeholder="请选择关联接口"
-          size="small"
-          :no-data-text="'暂无数据'"
-        >
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>-->
+          clearable
+          v-model="value"
+          :options="options"
+          @change="handleChange"
+        ></el-cascader>
         <el-select
           v-model="searchObj.reqMethod"
           style="width:150px"
           placeholder="请选择请求方法"
           size="small"
           :no-data-text="'暂无数据'"
+          clearable
         >
           <el-option
             v-for="item in roleOptions"
@@ -94,26 +44,6 @@
             :value="item.value"
           />
         </el-select>
-        <!-- <el-autocomplete
-          v-model="apiGroup"
-          style="width:100px;margin-left:16px"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="所属业务"
-          @select="handleSelect"
-        />
-
-        <el-autocomplete
-          v-model="reqMethod"
-          style="width:100px;margin-left:16px"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请求方法"
-          @select="handleSelect"
-        />-->
-
         <el-input
           v-model="searchObj.apiName"
           icon="el-icon-search"
@@ -187,7 +117,7 @@
 <script>
 import BaseTable from "@/components/BaseTable";
 import { statusFilter, reqMethodFilter } from "@/utils/filter";
-import { deleteApis, createApi, getApiDetail } from "@/api/api";
+import { deleteApis, createApi, getApiDetail, getfilterMap } from "@/api/api";
 export default {
   components: { BaseTable },
   filters: {
@@ -196,6 +126,8 @@ export default {
   },
   data() {
     return {
+      value: [],
+      options: [],
       downloadLoading: false,
       rules: {
         name: [
@@ -215,22 +147,17 @@ export default {
       },
       idList: [],
       type: "",
-      typeOptions: [
+      role: "",
+      roleOptions: [
         {
-          name: "全部",
-          value: 0
+          value: "get",
+          name: "get"
         },
         {
-          name: "所属业务",
-          value: 1
-        },
-        {
-          name: "请求方法",
-          value: 2
+          value: "post",
+          name: "post"
         }
       ],
-      role: "",
-      roleOptions: [],
       apiGroup: "",
       apiGroupOptions: [],
       reqMethod: "",
@@ -240,8 +167,32 @@ export default {
 
   created() {
     this.restaurants = this.loadAll();
+    this.getfilterMap();
   },
   methods: {
+    handleChange(val) {
+      if (val.length === 0) {
+        this.searchObj.projectName = "";
+        this.searchObj.apiGroup = "";
+      } else {
+        this.searchObj.projectName = val[0];
+        this.searchObj.apiGroup = val[1];
+      }
+    },
+    async getfilterMap() {
+      try {
+        const result = await getfilterMap();
+        let options = result.data.options;
+        for (let i of options) {
+          for (let child of i.children) {
+            delete child.children;
+          }
+        }
+        this.options = result.data.options;
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
     // 顶部操作
     // 创建接口
     createApi(row) {

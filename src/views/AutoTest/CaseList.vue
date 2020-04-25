@@ -38,53 +38,19 @@
       </el-select>
 
       <div style="text-align:right;width:100%">
-        <el-select
-          v-model="searchObj.projectName"
-          style="width:150px"
-          placeholder="请选择所属业务"
+        <el-cascader
           size="small"
-          :no-data-text="'暂无数据'"
-        >
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-        <el-select
-          v-model="searchObj.apiGroup"
-          style="width:150px"
-          placeholder="请选择所属分组"
-          size="small"
-          :no-data-text="'暂无数据'"
-        >
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-        <el-select
-          v-model="searchObj.role"
-          style="width:150px"
-          placeholder="请选择关联接口"
-          size="small"
-          :no-data-text="'暂无数据'"
-        >
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
+          clearable
+          v-model="value"
+          :options="options"
+          @change="handleChange"
+        ></el-cascader>
         <el-select
           v-model="searchObj.executeStatus"
           style="width:150px"
           placeholder="请选择执行状态"
           size="small"
+          clearable
           :no-data-text="'暂无数据'"
         >
           <el-option
@@ -94,26 +60,6 @@
             :value="item.value"
           />
         </el-select>
-        <!-- <el-autocomplete
-          v-model="apiGroup"
-          style="width:100px;margin-left:16px"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="关联接口"
-          @select="handleSelect"
-        />
-
-        <el-autocomplete
-          v-model="reqMethod"
-          style="width:100px;margin-left:16px"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="执行状态"
-          @select="handleSelect"
-        />-->
-
         <el-input
           v-model="searchObj.caseDescription"
           icon="el-icon-search"
@@ -210,7 +156,12 @@
 <script>
 import BaseTable from "@/components/BaseTable";
 import { statusFilter, roleFilter, executeStatusFilter } from "@/utils/filter";
-import { deleteCases, createCase, getCaseDetail } from "@/api/case";
+import {
+  deleteCases,
+  createCase,
+  getCaseDetail,
+  getfilterMap
+} from "@/api/case";
 export default {
   components: { BaseTable },
   filters: {
@@ -220,6 +171,8 @@ export default {
   },
   data() {
     return {
+      value: [],
+      options: [],
       downloadLoading: false,
       rules: {
         name: [
@@ -236,7 +189,10 @@ export default {
       apiName: "",
       searchObj: {
         caseDescription: "",
-        executeStatus: ""
+        executeStatus: "",
+        projectName: "",
+        apiGroup: "",
+        apiMerge: ""
       },
       idList: [],
       type: "",
@@ -269,8 +225,28 @@ export default {
   },
   created() {
     this.restaurants = this.loadAll();
+    this.getfilterMap();
   },
   methods: {
+    handleChange(val) {
+      if (val.length === 0) {
+        this.searchObj.projectName = "";
+        this.searchObj.apiGroup = "";
+        this.searchObj.apiMerge = "";
+      } else {
+        this.searchObj.projectName = val[0];
+        this.searchObj.apiGroup = val[1];
+        this.searchObj.apiMerge = val[2];
+      }
+    },
+    async getfilterMap() {
+      try {
+        const result = await getfilterMap();
+        this.options = result.data.options;
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
     // 顶部操作
     // 创建用例
     createCase(row) {

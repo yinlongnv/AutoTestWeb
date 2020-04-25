@@ -20,3 +20,10 @@ export function deleteApis(data) {
     data
   });
 }
+export function getfilterMap(data) {
+  return request({
+    url: "/api/filterMap",
+    method: "get",
+    param: data
+  });
+}

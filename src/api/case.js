@@ -20,3 +20,10 @@ export function deleteCases(data) {
     data
   });
 }
+export function getfilterMap(data) {
+  return request({
+    url: "/case/filterMap",
+    method: "get",
+    param: data
+  });
+}
