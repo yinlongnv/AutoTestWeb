@@ -2,7 +2,7 @@
   <div class="old-info-container">
     <div>{{ editStatus === 1?'编辑用例':'创建用例' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item prop="api" label="关联接口" :label-width="formLabelWidth">
+      <el-form-item prop="apiInfo" label="关联接口信息" :label-width="formLabelWidth">
         <el-cascader
           size="small"
           clearable
@@ -55,13 +55,15 @@ export default {
     return {
       value: [],
       options: [],
-      restaurants: [],
+      // restaurants: [],
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        api: [{ required: true, message: "请选择关联接口", trigger: "blur" }],
+        apiInfo: [
+          { required: true, message: "请选择关联接口信息", trigger: "blur" }
+        ],
         caseBody: [
-          { required: true, message: "请输入正确的用例内容", trigger: "blur" }
+          { required: true, message: "请输入用例内容", trigger: "blur" }
         ],
         caseDescription: [
           { required: true, message: "请输入用例描述", trigger: "blur" }
@@ -77,18 +79,18 @@ export default {
     // this.editStatus = Boolean(this.$route.query.type)
     console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("caseDetail")) || FORM;
-    this.restaurants = this.loadAll();
+    // this.restaurants = this.loadAll();
     this.getfilterMap();
   },
   methods: {
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
+    // querySearch(queryString, cb) {
+    //   var restaurants = this.restaurants;
+    //   var results = queryString
+    //     ? restaurants.filter(this.createFilter(queryString))
+    //     : restaurants;
+    //   // 调用 callback 返回建议列表的数据
+    //   cb(results);
+    // },
     async getfilterMap() {
       try {
         const result = await getfilterMap();
@@ -116,9 +118,9 @@ export default {
         );
       };
     },
-    loadAll() {
-      return [{ value: "靶场" }, { value: "攻防" }, { value: "演练" }];
-    },
+    // loadAll() {
+    //   return [{ value: "靶场" }, { value: "攻防" }, { value: "演练" }];
+    // },
     handleSelect(item) {
       console.log(item);
     },

@@ -36,8 +36,8 @@
           v-model="timeArray"
           size="small"
           type="daterange"
-          :value-format="'yyyy-MM-dd HH-mm-ss'"
-          :format="'yyyy-MM-dd HH-mm-ss'"
+          :value-format="'yyyy-MM-dd HH:mm:ss'"
+          :format="'yyyy-MM-dd HH:mm:ss'"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -118,7 +118,6 @@
               size="small"
               @click="onDisable(scope.row)"
             >禁用</el-button>
-            <el-button type="text" size="small" @click="changePwd(scope.row)">修改密码</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
@@ -129,17 +128,6 @@
         </template>
       </el-table-column>
     </base-table>
-    <el-dialog title="修改密码" :visible.sync="dialogPwdVisible" @close="closeDialog">
-      <el-form ref="pwdRef" :model="form" :rules="rules">
-        <el-form-item label="新密码" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.password" style="width:300px" placeholder="请输入新密码" size="small" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogPwdVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confrimPwd">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -157,9 +145,7 @@ export default {
   data() {
     return {
       rules: {
-        name: [
-          { required: true, message: "请输入正确的新密码", trigger: "blur" }
-        ]
+        name: [{ required: true, message: "请输入新密码", trigger: "blur" }]
       },
       timeArray: [],
       form: {
@@ -206,7 +192,7 @@ export default {
   },
   watch: {
     timeArray(val) {
-      console.log(val);
+      // console.log(val);
       if (!val) {
         this.searchObj.startTime = "";
         this.searchObj.endTime = "";
@@ -281,23 +267,6 @@ export default {
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);
       console.log(this.idList);
-    },
-    // 修改密码
-    changePwd() {
-      this.dialogPwdVisible = true;
-    },
-    confrimPwd() {
-      this.$refs["pwdRef"].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    closeDialog() {
-      this.$refs["pwdRef"].resetFields();
     },
     // 接口调用
     async deleteUsers(userIds) {

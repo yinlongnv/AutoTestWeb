@@ -26,8 +26,8 @@
           v-model="timeArray"
           size="small"
           type="daterange"
-          :value-format="'yyyy-MM-dd'"
-          :format="'yyyy-MM-dd'"
+          :value-format="'yyyy-MM-dd HH:mm:ss'"
+          :format="'yyyy-MM-dd HH:mm:ss'"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -94,6 +94,18 @@ export default {
   filters: {
     timeFilter,
     roleFilter
+  },
+  watch: {
+    timeArray(val) {
+      // console.log(val);
+      if (!val) {
+        this.searchObj.startTime = "";
+        this.searchObj.endTime = "";
+      } else {
+        this.searchObj.startTime = val[0];
+        this.searchObj.endTime = val[1];
+      }
+    }
   },
   data() {
     return {

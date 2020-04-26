@@ -18,6 +18,7 @@
         <el-select
           v-model="form.role"
           :style="inputWidth"
+          size="small"
           placeholder="请选择账号角色"
           @change="selectRoles"
         >

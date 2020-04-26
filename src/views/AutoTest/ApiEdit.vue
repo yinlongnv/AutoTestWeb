@@ -2,7 +2,7 @@
   <div class="old-info-container">
     <div>{{ editStatus === 1?'编辑接口':'创建接口' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item prop="projectName" label="所属业务" :label-width="formLabelWidth">
+      <el-form-item prop="projectGroup" label="业务分组" :label-width="formLabelWidth">
         <el-cascader
           size="small"
           clearable
@@ -91,8 +91,7 @@
 import { timeFilter } from "@/utils/filter";
 import { createApi, getfilterMap } from "@/api/api";
 const FORM = {
-  projectName: "",
-  apiGroup: "",
+  projectGroup: "",
   baseUrl: "",
   reqMethod: "",
   reqHeaders: "",
@@ -112,8 +111,8 @@ export default {
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        projectName: [
-          { required: true, message: "请选择所属业务", trigger: "blur" }
+        projectGroup: [
+          { required: true, message: "请选择业务分组", trigger: "blur" }
         ],
         apiGroup: [
           { required: true, message: "请选择所属分组", trigger: "blur" }

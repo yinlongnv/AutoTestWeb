@@ -90,7 +90,7 @@
           <div>{{ scope.row.apiGroup }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" width="100">
+      <el-table-column label="创建人" width="150">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>
