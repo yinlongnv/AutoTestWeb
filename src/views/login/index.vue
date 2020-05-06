@@ -62,9 +62,16 @@ import { login } from "@/api/user";
 export default {
   name: "Login",
   data() {
+    // const validateUsername = (rule, value, callback) => {
+    //   if (!validUsername(value)) {
+    //     callback(new Error("请输入用户账号"));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error("请输入用户名"));
+      if (value == null) {
+        callback(new Error("请输入用户账号"));
       } else {
         callback();
       }
@@ -83,9 +90,9 @@ export default {
         password: "123456"
       },
       loginRules: {
-        username: [
-          { required: true, trigger: "blur", validator: validateUsername }
-        ],
+        // username: [
+        //   { required: true, trigger: "blur", validator: validateUsername }
+        // ],
         password: [
           { required: true, trigger: "blur", validator: validatePassword }
         ]

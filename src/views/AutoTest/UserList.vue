@@ -49,7 +49,6 @@
           size="small"
           style="width:200px"
         />
-        <!-- <el-button type="primary" size="small" @click="searchObj.name = searchName">搜索</el-button> -->
       </div>
     </div>
     <base-table
@@ -161,6 +160,7 @@ export default {
         role: "",
         startTime: "",
         endTime: ""
+        // userId: sessionStorage.getItem("userInfo").id
       },
       idList: [],
       type: "",
