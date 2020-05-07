@@ -26,6 +26,7 @@
           size="small"
           clearable
           v-model="value"
+          placeholder="请选择接口所属信息"
           :options="options"
           @change="handleChange"
         ></el-cascader>
@@ -99,8 +100,14 @@
         <template slot-scope="scope">
           <div style="display:flex">
             <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="onCreateCase(scope.row)">创建用例</el-button>
             <el-button type="text" size="small" @click="createApi(scope.row)">复制接口</el-button>
+            <el-button
+              type="text"
+              size="small"
+              style="color:#e6a23c"
+              @click="onCreateCase(scope.row)"
+            >创建用例</el-button>
+            <el-button type="text" style="color:#67c23a" size="small">参数规则</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"

@@ -24,6 +24,7 @@
           placeholder="请选择账号角色"
           size="small"
           :no-data-text="'暂无数据'"
+          clearable
         >
           <el-option
             v-for="item in roleOptions"
@@ -39,8 +40,8 @@
           :value-format="'yyyy-MM-dd HH:mm:ss'"
           :format="'yyyy-MM-dd HH:mm:ss'"
           range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
+          start-placeholder="最后登录开始时间"
+          end-placeholder="最后登录结束时间"
         />
         <el-input
           v-model="searchObj.userInfo"
@@ -58,7 +59,7 @@
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="用户名" width="100">
+      <el-table-column label="用户名" width="140">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.username }}</el-button>
         </template>
@@ -68,28 +69,28 @@
           <div>{{ scope.row.userNumber }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="账号状态" width="100">
+      <el-table-column label="账号状态" width="80">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status" type="warning">{{ scope.row.status | statusFilter }}</el-tag>
           <el-tag v-else type="success">{{ scope.row.status | statusFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="账号角色" width="120">
+      <el-table-column label="账号角色" width="80">
         <template slot-scope="scope">
           <div>{{ scope.row.role|roleFilter }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="创建账号" width="120">
+      <el-table-column label="创建账号" width="140">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录IP" width="120">
+      <el-table-column label="最后登录IP" width="100">
         <template slot-scope="scope">
           <div>{{ scope.row.lastIp }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录时间" width="180">
+      <el-table-column label="最后登录时间" width="160">
         <template slot-scope="scope">
           <div>{{ scope.row.lastLogin }}</div>
         </template>

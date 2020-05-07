@@ -42,6 +42,7 @@
           size="small"
           clearable
           v-model="value"
+          placeholder="请选择关联接口信息"
           :options="options"
           @change="handleChange"
         ></el-cascader>
@@ -77,9 +78,6 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column label="关联接口名称" width="120">
-        <!-- <template slot-scope="scope">
-          <div>{{ scope.row.apiName }}</div>
-        </template>-->
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -89,9 +87,6 @@
         </template>
       </el-table-column>
       <el-table-column label="用例描述">
-        <!-- <template slot-scope="scope">
-          <div>{{ scope.row.caseDescription }}</div>
-        </template>-->
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -137,9 +132,8 @@
         <template slot-scope="scope">
           <div style="display:flex">
             <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
-            <!-- <el-button type="text" size="small" @click="createCase(scope.row)">创建用例</el-button> -->
-            <el-button type="text" size="small" @click="onRun(scope.row)">执行</el-button>
             <el-button type="text" size="small" @click="createCase(scope.row)">复制用例</el-button>
+            <el-button type="text" style="color:#67c23a" size="small" @click="onRun(scope.row)">执行</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"

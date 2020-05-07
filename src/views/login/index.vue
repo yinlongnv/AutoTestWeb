@@ -86,7 +86,7 @@ export default {
     return {
       remember: 1,
       loginForm: {
-        username: "dadalong",
+        username: "大大龙",
         password: "123456"
       },
       loginRules: {

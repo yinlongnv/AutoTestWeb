@@ -7,13 +7,14 @@
         icon="el-icon-download"
         size="small"
         @click="handleDownload"
-      >批量导出日志</el-button>
+      >导出全部日志</el-button>
       <div style="text-align:right;width:100%">
-        <el-select
-          v-model="searchObj.username"
-          placeholder="请选择账号名称"
+        <!-- <el-select
+          v-model="searchObj.role"
+          placeholder="请选择账号角色"
           size="small"
           :no-data-text="'暂无数据'"
+          clearable
         >
           <el-option
             v-for="item in roleOptions"
@@ -21,7 +22,7 @@
             :label="item.name"
             :value="item.value"
           />
-        </el-select>
+        </el-select>-->
         <el-date-picker
           v-model="timeArray"
           size="small"
@@ -29,8 +30,8 @@
           :value-format="'yyyy-MM-dd HH:mm:ss'"
           :format="'yyyy-MM-dd HH:mm:ss'"
           range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
+          start-placeholder="操作开始时间"
+          end-placeholder="操作结束时间"
         />
         <el-input
           v-model="searchObj.logInfo"
@@ -114,23 +115,21 @@ export default {
       searchName: "",
       searchObj: {
         logInfo: "",
-        role: ""
+        // role: "",
+        startTime: "",
+        endTime: ""
       },
-      role: "",
-      roleOptions: [
-        // {
-        //   name: '全部',
-        //   value: 0
-        // },
-        {
-          name: "root",
-          value: 1
-        },
-        {
-          name: "QA",
-          value: 0
-        }
-      ],
+      // role: "",
+      // roleOptions: [
+      //   {
+      //     name: "root",
+      //     value: 1
+      //   },
+      //   {
+      //     name: "QA",
+      //     value: 0
+      //   }
+      // ],
       list: []
     };
   },
