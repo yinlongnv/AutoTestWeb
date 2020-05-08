@@ -63,13 +63,6 @@ import { login } from "@/api/user";
 export default {
   name: "Login",
   data() {
-    // const validateUsername = (rule, value, callback) => {
-    //   if (!validUsername(value)) {
-    //     callback(new Error("请输入用户账号"));
-    //   } else {
-    //     callback();
-    //   }
-    // };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error("密码不能小于6位"));
@@ -85,7 +78,7 @@ export default {
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", message:'请输入用户账号'}
+          { required: true, trigger: "blur", message: "请输入用户账号" }
         ],
         password: [
           { required: true, trigger: "blur", validator: validatePassword }
@@ -115,18 +108,18 @@ export default {
         this.$refs.password.focus();
       });
     },
-     handleLogin() {
-      this.$refs['loginForm'].validate((valid) => {
-          if (valid) {
-           this.login()
-          } else {
-            return false;
-          }
-        });
+    handleLogin() {
+      this.$refs["loginForm"].validate(valid => {
+        if (valid) {
+          this.login();
+        } else {
+          return false;
+        }
+      });
     },
-    async login(){
-       let {username,password} = this.loginForm
-        let lastIp = returnCitySN["cip"];
+    async login() {
+      let { username, password } = this.loginForm;
+      let lastIp = returnCitySN["cip"];
       const result = await login({
         ...this.loginForm,
         remember: this.remember,
@@ -135,10 +128,10 @@ export default {
       if (result.data.code === "00000") {
         console.log(result.data);
         sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
-        if(result.data.data.role){
-        this.$router.push({ path: "/user/list" });
-        }else{
-         this.$router.push({ path: "/api/list" });
+        if (result.data.data.role) {
+          this.$router.push({ path: "/user/list" });
+        } else {
+          this.$router.push({ path: "/api/list" });
         }
       } else {
         this.$message.error(result.data.message);
@@ -149,9 +142,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;

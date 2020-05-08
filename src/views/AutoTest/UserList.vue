@@ -36,7 +36,7 @@
         <el-date-picker
           v-model="timeArray"
           size="small"
-          type="daterange"
+          type="datetimerange"
           :value-format="'yyyy-MM-dd HH:mm:ss'"
           :format="'yyyy-MM-dd HH:mm:ss'"
           range-separator="至"

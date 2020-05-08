@@ -136,12 +136,6 @@ export default {
       value: [],
       options: [],
       downloadLoading: false,
-      rules: {
-        name: [
-          { required: true, message: "请输入正确的新密码", trigger: "blur" }
-        ]
-      },
-      timeArray: [],
       form: {
         password: ""
       },
@@ -166,14 +160,13 @@ export default {
         }
       ],
       apiGroup: "",
-      apiGroupOptions: [],
-      reqMethod: "",
-      reqMethodOptions: []
+      // apiGroupOptions: [],
+      reqMethod: ""
+      // reqMethodOptions: []
     };
   },
 
   created() {
-    this.restaurants = this.loadAll();
     this.getfilterMap();
   },
   methods: {
@@ -208,69 +201,6 @@ export default {
       }
       this.$router.push({ path: "/api/edit", query: { type: 0 } });
     },
-    // 下载模板
-    handleDownload() {
-      this.downloadLoading = true;
-      import("@/utils/Export2Excel").then(excel => {
-        const tHeader = [
-          "用户名",
-          "身份证号",
-          "账号角色",
-          "登入IP",
-          "账号操作",
-          "操作界面",
-          "操作时间"
-        ];
-        const filterVal = [
-          "username",
-          "id_number",
-          "role",
-          "login_ip",
-          "action",
-          "page",
-          "time"
-        ];
-        const list = this.list;
-        const data = this.formatJson(filterVal, list);
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
-        });
-        this.downloadLoading = false;
-      });
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          return v[j];
-        })
-      );
-    },
-    // 所属业务和请求方法
-    handleSelect() {},
-    // 搜索+选择
-    loadAll() {
-      return [{ value: "get" }, { value: "post" }, { value: "3" }];
-    },
-    createFilter(queryString) {
-      return restaurant => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
-      };
-    },
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
     // 列表操作
     onDelete(row) {
       this.$confirm("确定要删除吗?", "提示", {
@@ -303,7 +233,6 @@ export default {
       this.idList = row.map(f => f.id);
       console.log(this.idList);
     },
-    // 接口调用
     async deleteApis(apiIds) {
       try {
         await deleteApis({ apiIds: apiIds });

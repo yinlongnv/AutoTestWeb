@@ -11,22 +11,23 @@
       <div style="text-align:right;width:100%">
         <el-select
           v-model="searchObj.user"
-          placeholder="请选择用户名"
           size="small"
+          filterable
+          placeholder="请选择用户名"
           :no-data-text="'暂无数据'"
           clearable
         >
           <el-option
-            v-for="item in roleOptions"
+            v-for="item in options"
             :key="item.value"
-            :label="item.name"
+            :label="item.label"
             :value="item.value"
-          />
+          ></el-option>
         </el-select>
         <el-date-picker
           v-model="timeArray"
           size="small"
-          type="daterange"
+          type="datetimerange"
           :value-format="'yyyy-MM-dd HH:mm:ss'"
           :format="'yyyy-MM-dd HH:mm:ss'"
           range-separator="至"
@@ -90,7 +91,11 @@
 import BaseTable from "@/components/BaseTable";
 import { timeFilter, roleFilter } from "@/utils/filter";
 import { parseTime } from "@/utils";
+import { getfilterUserName } from "@/api/operateLog";
 export default {
+  created() {
+    this.getfilterUserName();
+  },
   components: { BaseTable },
   filters: {
     timeFilter,
@@ -118,12 +123,22 @@ export default {
         endTime: "",
         logInfo: ""
       },
-      list: []
+      list: [],
+      options: [],
+      value: ""
     };
   },
   methods: {
     getTableData(data) {
       this.list = data;
+    },
+    async getfilterUserName() {
+      try {
+        const result = await getfilterUserName();
+        this.options = result.data.userNameOptions;
+      } catch (error) {
+        this.$message.error(error);
+      }
     },
     // 批量导出
     handleDownload() {
