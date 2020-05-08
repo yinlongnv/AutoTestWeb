@@ -99,47 +99,14 @@ export default {
       this.$emit("onSortChange", params);
     },
     async onSearch(current = 1) {
-      // 待删除
-
-      if (this.url === "/record/list") {
-        // 模拟下载excel数据
-        this.tableData = [
-          {
-            username: "aaa",
-            id_number: "12344",
-            role: "管理员",
-            login_ip: "127.1.1",
-            action: "哈哈哈",
-            page: "测试",
-            time: "2020-4-1 11:00:01"
-          }
-        ];
-        this.$emit("tableLoaded", this.tableData);
-      } else if (this.url === "/api/list") {
-        // 模拟下载excel数据
-        this.tableData = [
-          {
-            projectName: "sss"
-          }
-        ];
-        this.$emit("tableLoaded", this.tableData);
-      } else if (this.url) {
+     
+       if (this.url) {
         this.loading = true;
+        let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
         try {
-          // this.tableData = [
-          //   {
-          //     username: 'aaa',
-          //     id_number: '12344',
-          //     role: '管理员',
-          //     login_ip: '127.1.1',
-          //     action: '哈哈哈',
-          //     page: '测试',
-          //     time: '2020-4-1 11:00:01',
-          //     status: 1
-          //   }
-          // ]
           this.pager.current = current;
           const data = {
+            userId,
             ...this.searchParam,
             ps: this.pager.size,
             page: this.pager.current

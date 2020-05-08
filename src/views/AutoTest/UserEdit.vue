@@ -57,6 +57,13 @@ import { Form } from "element-ui";
 export default {
   filters: { timeFilter },
   data() {
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error("密码不能小于6位"));
+      } else {
+        callback();
+      }
+    };
     return {
       editStatus: Number(this.$route.query.type),
       form: {
@@ -74,7 +81,9 @@ export default {
         role: [
           { required: true, message: "账号角色不能为空", trigger: "blur" }
         ],
-        password: [{ required: true, message: "密码不能为空", trigger: "blur" }]
+        password: [
+          { required: true, validator: validatePassword, trigger: "blur" }
+        ]
       },
       options: [
         {
@@ -87,15 +96,10 @@ export default {
         }
       ],
       inputWidth: "width:460px",
-      imageUrl: "",
-      formLabelWidth: "120px",
-      communityList: [],
-      subdistrictList: []
+      formLabelWidth: "120px"
     };
   },
   created() {
-    // this.editStatus = Boolean(this.$route.query.type)
-    // console.log(this.$route.query.type, this.editStatus);
     let initForm = {
       username: "",
       idNumber: "",
@@ -130,17 +134,19 @@ export default {
     async createAccount() {
       sessionStorage.removeItem("userDetail");
       let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      await createUser({ ...this.form, userId });
-      if (this.editStatus === 0) {
+      const result = await createUser({ ...this.form, userId });
+      if (this.editStatus === 0 && result.data.code === "00000") {
         this.$message({
           type: "success",
           message: "创建成功"
         });
-      } else {
+      } else if (this.editStatus === 1 && result.data.code === "00000") {
         this.$message({
           type: "success",
           message: "编辑成功"
         });
+      } else {
+        this.$message.error(result.data.message);
       }
       this.$router.push({ path: "/user/list" });
     }

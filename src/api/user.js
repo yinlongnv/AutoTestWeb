@@ -1,4 +1,6 @@
 import request from "@/utils/request";
+let userInfo = sessionStorage.getItem("userInfo")
+let userId = userInfo?JSON.parse(sessionStorage.getItem("userInfo")).id:''
 export function login(data) {
   return request({
     url: "/user/login",
@@ -10,35 +12,35 @@ export function createUser(data) {
   return request({
     url: "/user/createOrEdit",
     method: "post",
-    data
+    data: { userId, ...data }
   });
 }
 export function deleteUsers(data) {
   return request({
     url: "/user/delete",
     method: "post",
-    data
+    data: { userId, ...data }
   });
 }
 export function enableUsers(data) {
   return request({
     url: "/user/enable",
     method: "post",
-    data
+    data: { userId, ...data }
   });
 }
 export function disableUsers(data) {
   return request({
     url: "/user/disable",
     method: "post",
-    data
+    data: { userId, ...data }
   });
 }
 export function getUserDetail(data) {
   return request({
     url: "/user/detail",
     method: "get",
-    params: data
+    params: { ...data, userId }
   });
 }
 

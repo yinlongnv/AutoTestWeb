@@ -105,6 +105,7 @@ export default function request(config) {
     },
     err => {
       console.log(err)
+      //  return Promise.reject(err.message)
     }
   )
   return instance(config)

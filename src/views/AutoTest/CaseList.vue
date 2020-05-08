@@ -76,7 +76,7 @@
       :search-param="searchObj"
       @handleSelectionChange="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="关联接口名称" width="120">
         <template slot-scope="scope">
           <el-button
@@ -86,7 +86,7 @@
           >{{ scope.row.apiName }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="用例描述">
+      <el-table-column label="用例描述" align="center">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -95,23 +95,23 @@
           >{{ scope.row.caseDescription }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="创建人">
+      <el-table-column label="创建人" align="center" width="160">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>
       </el-table-column>
 
-      <el-table-column label="执行人">
+      <el-table-column label="执行人" align="center" width="160">
         <template slot-scope="scope">
           <div>{{ scope.row.username }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="执行时间">
+      <el-table-column label="执行时间" align="center" width="160">
         <template slot-scope="scope">
           <div>{{ scope.row.lastExecuteTime }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="执行状态">
+      <el-table-column label="执行状态" align="center" width="80">
         <template slot-scope="scope">
           <el-tag
             v-if="scope.row.executeStatus"
@@ -123,7 +123,7 @@
           <div>{{ scope.row.executeStatus|executeStatusFilter }}</div>
         </template>-->
       </el-table-column>
-      <el-table-column label="执行次数">
+      <el-table-column label="执行次数" align="center" width="80">
         <template slot-scope="scope">
           <div>{{ scope.row.executeCount }}</div>
         </template>

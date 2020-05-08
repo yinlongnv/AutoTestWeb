@@ -9,9 +9,9 @@
         @click="handleDownload"
       >导出全部日志</el-button>
       <div style="text-align:right;width:100%">
-        <!-- <el-select
-          v-model="searchObj.role"
-          placeholder="请选择账号角色"
+        <el-select
+          v-model="searchObj.user"
+          placeholder="请选择用户名"
           size="small"
           :no-data-text="'暂无数据'"
           clearable
@@ -22,7 +22,7 @@
             :label="item.name"
             :value="item.value"
           />
-        </el-select>-->
+        </el-select>
         <el-date-picker
           v-model="timeArray"
           size="small"
@@ -52,32 +52,32 @@
           <div>{{ scope.row.username }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="用户编号">
+      <el-table-column label="用户编号" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.userNumber }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="账号角色">
+      <el-table-column label="账号角色" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.role|roleFilter }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="登入IP">
+      <el-table-column label="登入IP" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.lastIp }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="账号操作">
+      <el-table-column label="账号操作" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.logContent }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="操作界面">
+      <el-table-column label="操作界面" align="center" width="200">
         <template slot-scope="scope">
           <div>{{ scope.row.operatePath }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="操作时间">
+      <el-table-column label="操作时间" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.createdAt }}</div>
         </template>
@@ -98,7 +98,6 @@ export default {
   },
   watch: {
     timeArray(val) {
-      // console.log(val);
       if (!val) {
         this.searchObj.startTime = "";
         this.searchObj.endTime = "";
@@ -114,22 +113,11 @@ export default {
       timeArray: [],
       searchName: "",
       searchObj: {
-        logInfo: "",
-        // role: "",
+        user: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
+        logInfo: ""
       },
-      // role: "",
-      // roleOptions: [
-      //   {
-      //     name: "root",
-      //     value: 1
-      //   },
-      //   {
-      //     name: "QA",
-      //     value: 0
-      //   }
-      // ],
       list: []
     };
   },

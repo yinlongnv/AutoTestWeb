@@ -40,7 +40,6 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI)
 Vue.component('v-chart', ECharts)
 Vue.config.productionTip = false
-
 new Vue({
   el: '#app',
   router,

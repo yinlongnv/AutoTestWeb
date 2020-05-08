@@ -58,44 +58,44 @@
       :search-param="searchObj"
       @handleSelectionChange="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
-      <el-table-column label="用户名" width="140">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="用户名" width="120">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.username }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="用户编号" width="200">
+      <el-table-column label="用户编号" width="200" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.userNumber }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="账号状态" width="80">
+      <el-table-column label="账号状态" width="80" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status" type="warning">{{ scope.row.status | statusFilter }}</el-tag>
           <el-tag v-else type="success">{{ scope.row.status | statusFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="账号角色" width="80">
+      <el-table-column label="账号角色" width="80" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.role|roleFilter }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="创建账号" width="140">
+      <el-table-column label="创建账号" width="140" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录IP" width="100">
+      <el-table-column label="最后登录IP" width="160" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.lastIp }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录时间" width="160">
+      <el-table-column label="最后登录时间" width="160" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.lastLogin }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="登录次数" width="80">
+      <el-table-column label="登录次数" width="80" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.loginCount }}</div>
         </template>

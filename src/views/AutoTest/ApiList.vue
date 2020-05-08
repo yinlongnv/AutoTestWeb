@@ -60,7 +60,7 @@
       :search-param="searchObj"
       @handleSelectionChange="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="selection" width="55" align="center" />
 
       <el-table-column label="接口名称" width="120">
         <!-- <template slot-scope="scope">
@@ -70,28 +70,28 @@
           <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.apiName }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="接口路径" width="200">
+      <el-table-column label="接口路径" width="200" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.apiPath }}</div>
         </template>
       </el-table-column>
 
-      <el-table-column label="请求方法" width="100">
+      <el-table-column label="请求方法" width="100" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.reqMethod }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="所属业务" width="120">
+      <el-table-column label="所属业务" width="120" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.projectName }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="所属分组" width="180">
+      <el-table-column label="所属分组" width="180" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.apiGroup }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" width="150">
+      <el-table-column label="创建人" width="150" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>

@@ -3,6 +3,7 @@
     <el-form
       ref="loginForm"
       :model="loginForm"
+      :rules="loginRules"
       class="login-form"
       auto-complete="on"
       label-position="left"
@@ -69,13 +70,6 @@ export default {
     //     callback();
     //   }
     // };
-    const validateUsername = (rule, value, callback) => {
-      if (value == null) {
-        callback(new Error("请输入用户账号"));
-      } else {
-        callback();
-      }
-    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error("密码不能小于6位"));
@@ -90,9 +84,9 @@ export default {
         password: "123456"
       },
       loginRules: {
-        // username: [
-        //   { required: true, trigger: "blur", validator: validateUsername }
-        // ],
+        username: [
+          { required: true, trigger: "blur", message:'请输入用户账号'}
+        ],
         password: [
           { required: true, trigger: "blur", validator: validatePassword }
         ]
@@ -121,33 +115,34 @@ export default {
         this.$refs.password.focus();
       });
     },
-    async handleLogin() {
+     handleLogin() {
+      this.$refs['loginForm'].validate((valid) => {
+          if (valid) {
+           this.login()
+          } else {
+            return false;
+          }
+        });
+    },
+    async login(){
+       let {username,password} = this.loginForm
+        let lastIp = returnCitySN["cip"];
       const result = await login({
         ...this.loginForm,
-        remember: this.remember
+        remember: this.remember,
+        lastIp
       });
       if (result.data.code === "00000") {
         console.log(result.data);
         sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
+        if(result.data.data.role){
         this.$router.push({ path: "/user/list" });
+        }else{
+         this.$router.push({ path: "/api/list" });
+        }
       } else {
         this.$message.error(result.data.message);
       }
-
-      // this.$refs.loginForm.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true
-      //     this.$store.dispatch('user/login', this.loginForm).then(() => {
-      //       this.$router.push({ path: this.redirect || '/' })
-      //       this.loading = false
-      //     }).catch(() => {
-      //       this.loading = false
-      //     })
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
     }
   }
 };

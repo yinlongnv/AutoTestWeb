@@ -23,14 +23,14 @@
         <el-col :span="3">身份证号</el-col>
         <el-col :span="16" :offset="1">{{ userInfo.idNumber }}</el-col>
         <el-col :span="4" class="right">
-          <el-button type="text" size="small" @click="openDialog('idnumber')">修改身份证号</el-button>
+          <el-button type="text" size="small" @click="openDialog('idNumber')">修改身份证号</el-button>
         </el-col>
       </el-row>
       <el-row type="flex" align="middle">
         <el-col :span="3">手机号</el-col>
         <el-col :span="16" :offset="1">{{ userInfo.phoneNumber }}</el-col>
         <el-col :span="4" class="right">
-          <el-button type="text" size="small" @click="openDialog('phone')">修改手机号</el-button>
+          <el-button type="text" size="small" @click="openDialog('phoneNumber')">修改手机号</el-button>
         </el-col>
       </el-row>
       <el-row type="flex" align="middle">
@@ -49,6 +49,7 @@
       </el-row>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" @close="closeDialog">
+      <!-- <el-form ref="ruleForm" :model="form"> -->
       <el-form ref="ruleForm" :model="form" :rules="rules">
         <div v-if="dialogTitle==='修改用户名'">
           <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
@@ -110,10 +111,10 @@ const DIALOGTITLES = {
   username() {
     return "修改用户名";
   },
-  idnumber() {
+  idNumber() {
     return "修改身份证号";
   },
-  phone() {
+  phoneNumber() {
     return "修改手机号";
   },
   email() {
@@ -127,16 +128,20 @@ import { createUser, getUserDetail } from "@/api/user";
 import { statusFilter, roleFilter } from "@/utils/filter";
 export default {
   data() {
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error("密码不能小于6位"));
+      } else {
+        callback();
+      }
+    };
     return {
       rules: {
-        oldPassword: [
-          { required: true, message: "请输入正确的原密码", trigger: "blur" }
+        username: [
+          { required: true, message: "用户名不能为空", trigger: "blur" }
         ],
-        newPassword: [
-          { required: true, message: "请输入正确的新密码", trigger: "blur" }
-        ],
-        confirmPassword: [
-          { required: true, message: "请确认新密码", trigger: "blur" }
+        password: [
+          { required: true, validator: validatePassword, trigger: "blur" }
         ]
       },
       dialogTitle: "修改密码",
@@ -144,12 +149,10 @@ export default {
       userInfo: {},
       form: {
         username: "",
-        id_number: "",
-        phone_number: "",
+        idNumber: "",
+        phoneNumber: "",
         email: "",
-        oldPassword: "",
-        newPassword: "",
-        confrimPassword: ""
+        password: ""
       },
       formLabelWidth: "120px"
     };
@@ -161,13 +164,24 @@ export default {
     statusFilter,
     roleFilter
   },
+  watch: {
+    form: {
+      handler(val) {
+        console.log(val, "form");
+        console.log(this.userInfo, "userInfo");
+      },
+      deep: true
+    }
+  },
   methods: {
     async getUserDetail() {
       try {
         let id = JSON.parse(sessionStorage.getItem("userInfo")).id;
         let result = await getUserDetail({ id });
-        this.userInfo = result.data.data;
-        this.form = result.data.data;
+        let data = JSON.stringify(result.data.data);
+        sessionStorage.setItem("centerInfo", data);
+        this.userInfo = JSON.parse(data);
+        this.form = JSON.parse(data);
       } catch (error) {}
     },
     async createAccount() {
@@ -193,12 +207,11 @@ export default {
     },
     openDialog(type) {
       this.dialogTitle = DIALOGTITLES[type]();
-      console.log(this.dialogTitle);
-
+      console.log(this.dialogTitle, this.form);
       this.dialogVisible = true;
     },
     closeDialog() {
-      this.$refs["ruleForm"].resetFields();
+      this.form = JSON.parse(sessionStorage.getItem("centerInfo"));
     }
   }
 };
