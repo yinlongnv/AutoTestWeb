@@ -8,19 +8,20 @@
       <el-form-item label="身份证号：" :label-width="formLabelWidth">
         <el-input v-model="form.idNumber" :style="inputWidth" size="small" placeholder="请输入真实身份证号" />
       </el-form-item>
-      <el-form-item label="手机号" :label-width="formLabelWidth">
+      <el-form-item label="手机号：" :label-width="formLabelWidth">
         <el-input v-model="form.phoneNumber" :style="inputWidth" size="small" placeholder="请输入手机号" />
       </el-form-item>
-      <el-form-item label="邮箱地址" :label-width="formLabelWidth">
+      <el-form-item label="邮箱地址：" :label-width="formLabelWidth">
         <el-input v-model="form.email" :style="inputWidth" size="small" placeholder="请输入邮箱地址" />
       </el-form-item>
-      <el-form-item prop="role" label="账号角色" :label-width="formLabelWidth">
+      <el-form-item prop="role" label="账号角色：" :label-width="formLabelWidth">
         <el-select
           v-model="form.role"
           :style="inputWidth"
           size="small"
           placeholder="请选择账号角色"
           @change="selectRoles"
+          clearable
         >
           <el-option
             v-for="item in options"
@@ -95,7 +96,7 @@ export default {
           value: 0
         }
       ],
-      inputWidth: "width:460px",
+      inputWidth: "width:360px",
       formLabelWidth: "120px"
     };
   },

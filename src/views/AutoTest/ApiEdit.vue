@@ -1,75 +1,79 @@
 <template>
   <div class="old-info-container">
-    <div>{{ editStatus === 1?'编辑接口':'创建接口' }}</div>
+    <div>{{ editStatus|pageTypeFilter }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item prop="projectGroup" label="业务分组" :label-width="formLabelWidth">
+      <el-form-item prop="baseUrl" label="环境域名：" :label-width="formLabelWidth">
+        <el-input
+          v-model="form.baseUrl"
+          :style="inputWidth"
+          size="small"
+          placeholder="请输入环境域名，例如：csr.adl.top"
+        />
+      </el-form-item>
+      <el-form-item prop="projectGroup" label="业务分组：" :label-width="formLabelWidth">
         <el-cascader
           size="small"
           clearable
           v-model="value"
           :options="options"
+          placeholder="请选择业务分组"
           @change="handleChange"
         ></el-cascader>
       </el-form-item>
-      <el-form-item prop="baseUrl" label="环境域名" :label-width="formLabelWidth">
-        <el-autocomplete
-          v-model="form.baseUrl"
-          :style="inputWidth"
-          size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入环境域名"
-          @select="handleSelect"
-        />
-      </el-form-item>
-      <el-form-item prop="reqMethod" label="请求方法" :label-width="formLabelWidth">
-        <el-autocomplete
+      <el-form-item prop="reqMethod" label="请求方法：" :label-width="formLabelWidth">
+        <el-select
           v-model="form.reqMethod"
           :style="inputWidth"
           size="small"
-          class="inline-input"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入请求方法"
-          @select="handleSelect"
-        />
+          placeholder="请选择请求方法"
+          @change="selectMethod"
+          clearable
+        >
+          <el-option
+            v-for="item in methodOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item prop="reqHeaders" label="请求头" :label-width="formLabelWidth">
+      <el-form-item prop="reqHeaders" label="请求头：" :label-width="formLabelWidth">
         <el-input
           v-model="form.reqHeaders"
           type="textarea"
-          rows="3"
+          rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入请求头"
+          placeholder="请输入请求头，例如：[{'name': '参数名称','value': '参数值','required': '是否必须，1为必须，0为不必须'}]"
         />
       </el-form-item>
-      <el-form-item prop="reqBody" label="请求体" :label-width="formLabelWidth">
+      <el-form-item prop="reqBody" label="请求体：" :label-width="formLabelWidth">
         <el-input
           v-model="form.reqBody"
           type="textarea"
-          rows="3"
+          rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入请求体"
+          placeholder="请输入请求体，例如：[{'name': '名称','type': '数据类型','required': '是否必须，1为必须，0为不必须','default': '默认值','desc': '备注','sub': '其他信息，例如undefined: @string(0,16)'}]"
         />
       </el-form-item>
-      <el-form-item prop="apiResponse" label="响应信息" :label-width="formLabelWidth">
+      <el-form-item prop="apiResponse" label="响应信息：" :label-width="formLabelWidth">
         <el-input
           v-model="form.apiResponse"
           type="textarea"
-          rows="3"
+          rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入响应信息"
+          placeholder="请输入响应信息，例如：{'code': '00000','message': '操作成功','data': {}}"
         />
       </el-form-item>
-      <el-form-item prop="apiPath" label="接口路径" :label-width="formLabelWidth">
+      <el-form-item prop="apiPath" label="接口路径：" :label-width="formLabelWidth">
         <el-input v-model="form.apiPath" :style="inputWidth" size="small" placeholder="请输入接口路径" />
       </el-form-item>
-      <el-form-item prop="apiName" label="接口名称" :label-width="formLabelWidth">
+      <el-form-item prop="apiName" label="接口名称：" :label-width="formLabelWidth">
         <el-input v-model="form.apiName" :style="inputWidth" size="small" placeholder="请输入接口名称" />
       </el-form-item>
-      <el-form-item prop="apiDescription" label="接口描述" :label-width="formLabelWidth">
+      <el-form-item prop="apiDescription" label="接口描述：" :label-width="formLabelWidth">
         <el-input
           v-model="form.apiDescription"
           :style="inputWidth"
@@ -88,7 +92,7 @@
 </template>
 
 <script>
-import { timeFilter } from "@/utils/filter";
+import { timeFilter, pageTypeFilter } from "@/utils/filter";
 import { createApi, getfilterMap } from "@/api/api";
 const FORM = {
   projectGroup: "",
@@ -102,23 +106,20 @@ const FORM = {
   apiDescription: ""
 };
 export default {
-  filters: { timeFilter },
+  filters: { timeFilter, pageTypeFilter },
   data() {
     return {
       value: [],
       options: [],
-      restaurants: [],
+      // restaurants: [],
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        projectGroup: [
-          { required: true, message: "请选择业务分组", trigger: "blur" }
-        ],
-        apiGroup: [
-          { required: true, message: "请选择所属分组", trigger: "blur" }
-        ],
+        // projectGroup: [
+        //   { required: true, message: "请选择业务分组", trigger: "blur" }
+        // ],
         baseUrl: [
-          { required: true, message: "请选择环境域名", trigger: "blur" }
+          { required: true, message: "请输入正确的环境域名", trigger: "blur" }
         ],
         reqMethod: [
           { required: true, message: "请选择请求方法", trigger: "blur" }
@@ -142,28 +143,24 @@ export default {
           { required: true, message: "请输入请求描述", trigger: "blur" }
         ]
       },
-      options: [
+      methodOptions: [
         {
-          label: "root",
-          value: 1
+          label: "post",
+          value: "post"
         },
         {
-          label: "qa",
-          value: 2
+          label: "get",
+          value: "get"
         }
       ],
-      inputWidth: "width:460px",
-      imageUrl: "",
-      formLabelWidth: "120px",
-      communityList: [],
-      subdistrictList: []
+      inputWidth: "width:360px",
+      formLabelWidth: "120px"
     };
   },
   created() {
     // this.editStatus = Boolean(this.$route.query.type)
     console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("apiDetail")) || FORM;
-    this.restaurants = this.loadAll();
     this.getfilterMap();
   },
   methods: {
@@ -190,34 +187,15 @@ export default {
         this.form.apiGroup = val[1];
       }
     },
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
-    createFilter(queryString) {
-      return restaurant => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
-      };
-    },
-    loadAll() {
-      return [{ value: "靶场" }, { value: "攻防" }, { value: "演练" }];
+    selectMethod(val) {
+      console.log(val);
+      console.log(this.role);
     },
     handleSelect(item) {
       console.log(item);
     },
     closeDialog() {
       this.$refs["ruleForm"].resetFields();
-    },
-    selectRoles(val) {
-      console.log(val);
-      console.log(this.role);
     },
     goBack() {
       this.$router.go(-1);
@@ -233,47 +211,37 @@ export default {
         }
       });
     },
-    // async createAccount() {
-    //   await createApi({ ...this.form });
-    //   this.$message({
-    //     type: "success",
-    //     message: "创建成功"
-    //   });
-    //   this.$router.push({ path: "/api/list" });
-    // },
     async createAccount() {
-      // sessionStorage.removeItem("userDetail");
       let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      await createApi({ ...this.form, userId });
-      if (this.editStatus === 0) {
+      // let id = JSON.parse(sessionStorage.getItem("apiDetail")).id;
+      // if (this.editStatus === 2) {
+      //   // JSON.parse(sessionStorage.getItem("apiDetail")).id = "";
+      //   const result = await createApi({ ...this.form, id });
+      // } else {
+      //   // const result = await createApi({ ...this.form, userId });
+      //   const result = await createApi({ ...this.form });
+      // }
+      const result = await createApi({ ...this.form, userId });
+      if (this.editStatus === 0 && result.data.code === "00000") {
         this.$message({
           type: "success",
           message: "创建成功"
         });
-      } else {
+      } else if (this.editStatus === 1 && result.data.code === "00000") {
         this.$message({
           type: "success",
           message: "编辑成功"
         });
+      } else if (this.editStatus === 2 && result.data.code === "00000") {
+        this.$message({
+          type: "success",
+          message: "复制成功"
+        });
+      } else {
+        this.$message.error(result.data.message);
       }
       this.$router.push({ path: "/api/list" });
-    },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
-    selectCommunity(val) {},
-    selectSubdistrict(val) {}
+    }
   }
 };
 </script>

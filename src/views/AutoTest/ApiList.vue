@@ -26,7 +26,7 @@
           size="small"
           clearable
           v-model="value"
-          placeholder="请选择接口所属信息"
+          placeholder="请选择业务方法"
           :options="options"
           @change="handleChange"
         ></el-cascader>
@@ -99,8 +99,8 @@
       <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="createApi(scope.row)">复制接口</el-button>
+            <el-button type="text" size="small" @click="editApi(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="copyApi(scope.row)">复制接口</el-button>
             <el-button
               type="text"
               size="small"
@@ -160,9 +160,7 @@ export default {
         }
       ],
       apiGroup: "",
-      // apiGroupOptions: [],
       reqMethod: ""
-      // reqMethodOptions: []
     };
   },
 
@@ -193,14 +191,21 @@ export default {
         this.$message.error(error);
       }
     },
-    // 顶部操作
     // 创建接口
     createApi(row) {
-      if (row) {
-        sessionStorage.setItem("apiDetail", JSON.stringify(row));
-      }
       this.$router.push({ path: "/api/edit", query: { type: 0 } });
     },
+    //编辑接口
+    editApi(row) {
+      sessionStorage.setItem("apiDetail", JSON.stringify(row));
+      this.$router.push({ path: "/api/edit", query: { type: 1 } });
+    },
+    //复制接口
+    copyApi(row) {
+      sessionStorage.setItem("apiDetail", JSON.stringify(row));
+      this.$router.push({ path: "/api/edit", query: { type: 2 } });
+    },
+
     // 列表操作
     onDelete(row) {
       this.$confirm("确定要删除吗?", "提示", {
@@ -222,10 +227,7 @@ export default {
     onCreateCase() {
       this.$router.push({ path: "/case/edit", query: { type: 0 } });
     },
-    onEdit(row) {
-      sessionStorage.setItem("apiDetail", JSON.stringify(row));
-      this.$router.push({ path: "/api/edit", query: { type: 1 } });
-    },
+
     goDetail(row) {
       this.$router.push({ path: "/api/detail", query: { id: row.id } });
     },

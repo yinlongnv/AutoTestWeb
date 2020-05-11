@@ -152,16 +152,11 @@ export default {
         password: ""
       },
       formLabelWidth: "120px",
-      dialogPwdVisible: false,
-      oldInfoObj: {},
-      chartDataObj: {},
-      searchName: "",
       searchObj: {
         userInfo: "",
         role: "",
         startTime: "",
         endTime: ""
-        // userId: sessionStorage.getItem("userInfo").id
       },
       idList: [],
       type: "",
@@ -207,7 +202,6 @@ export default {
     createAccount() {
       this.$router.push({ path: "/user/edit", query: { type: 0 } });
     },
-    // 列表操作
     batchActions() {
       if (this.type === "禁用") {
         this.onDisable(this.idList);

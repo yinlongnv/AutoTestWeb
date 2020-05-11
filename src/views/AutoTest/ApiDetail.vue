@@ -3,16 +3,16 @@
     <div>接口详情</div>
     <div class="user-info">
       <div class="info-item">
+        环境域名:
+        <span>{{ apiInfo.baseUrl }}</span>
+      </div>
+      <div class="info-item">
         所属业务:
         <span>{{ apiInfo.projectName }}</span>
       </div>
       <div class="info-item">
         所属分组:
         <span>{{ apiInfo.apiGroup }}</span>
-      </div>
-      <div class="info-item">
-        环境域名:
-        <span>{{ apiInfo.baseUrl }}</span>
       </div>
       <div class="info-item">
         请求方法:

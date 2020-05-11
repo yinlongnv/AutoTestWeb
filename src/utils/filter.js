@@ -41,3 +41,12 @@ export function executeStatusFilter(val) {
     return "成功";
   }
 }
+export function pageTypeFilter(val) {
+  if (val === 0) {
+    return "创建接口";
+  } else if (val === 1) {
+    return "编辑接口";
+  } else if (val === 2) {
+    return "复制接口";
+  }
+}
