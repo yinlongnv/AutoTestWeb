@@ -1,6 +1,6 @@
 <template>
   <div class="old-info-container">
-    <div>{{ editStatus === 1?'编辑用例':'创建用例' }}</div>
+    <div class="header-line">{{ editStatus === 1?'编辑用例':'创建用例' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
       <el-form-item prop="apiInfo" label="关联接口信息" :label-width="formLabelWidth">
         <el-cascader

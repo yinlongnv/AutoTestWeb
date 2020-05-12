@@ -1,6 +1,6 @@
 <template>
   <div class="record-list">
-    <div style="padding:16px">操作日志</div>
+    <div class="header-line">操作日志</div>
     <div class="flex-box">
       <el-button
         :loading="downloadLoading"

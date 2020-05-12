@@ -1,6 +1,6 @@
 <template>
   <div class="old-manage">
-    <div style="padding:16px">接口管理</div>
+    <div class="header-line">接口管理</div>
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button
@@ -193,6 +193,7 @@ export default {
     },
     // 创建接口
     createApi(row) {
+      sessionStorage.removeItem("apiDetail"); //这里记得验证一下
       this.$router.push({ path: "/api/edit", query: { type: 0 } });
     },
     //编辑接口

@@ -1,6 +1,6 @@
 <template>
   <div class="old-info-container">
-    <div>{{ editStatus === 1?'编辑账号':'创建账号' }}</div>
+    <div class="header-line">{{ editStatus === 1?'编辑账号':'创建账号' }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
       <el-form-item prop="username" label="用户名：" :label-width="formLabelWidth">
         <el-input v-model="form.username" :style="inputWidth" size="small" placeholder="请输入用户名" />

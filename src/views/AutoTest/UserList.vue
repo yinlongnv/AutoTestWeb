@@ -1,6 +1,6 @@
 <template>
   <div class="old-manage">
-    <div style="padding:16px">用户列表</div>
+    <div class="header-line">用户列表</div>
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createAccount">创建账号</el-button>
       <el-select

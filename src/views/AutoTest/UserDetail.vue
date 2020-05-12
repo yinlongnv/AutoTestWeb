@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>账号详情</div>
+    <div class="header-line">账号详情</div>
     <div class="user-info">
       <div class="info-item">
         用户名:
@@ -107,7 +107,6 @@ export default {
       })
         .then(() => {
           this.deleteUsers([this.userInfo.id]).then(() => {
-            this.getUserDetail();
             this.$router.go(-1);
           });
         })

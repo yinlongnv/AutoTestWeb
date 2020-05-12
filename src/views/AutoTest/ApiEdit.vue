@@ -1,6 +1,6 @@
 <template>
   <div class="old-info-container">
-    <div>{{ editStatus|pageTypeFilter }}</div>
+    <div class="header-line">{{ editStatus|pageTypeFilter }}</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
       <el-form-item prop="baseUrl" label="环境域名：" :label-width="formLabelWidth">
         <el-input
@@ -115,14 +115,14 @@ export default {
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        // projectGroup: [
-        //   { required: true, message: "请选择业务分组", trigger: "blur" }
-        // ],
+        projectGroup: [
+          { required: true, message: "请选择业务分组", trigger: "change" }
+        ],
         baseUrl: [
           { required: true, message: "请输入正确的环境域名", trigger: "blur" }
         ],
         reqMethod: [
-          { required: true, message: "请选择请求方法", trigger: "blur" }
+          { required: true, message: "请选择请求方法", trigger: "change" }
         ],
         apiPath: [
           { required: true, message: "请输入正确的接口路径", trigger: "blur" }
@@ -162,6 +162,7 @@ export default {
     console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("apiDetail")) || FORM;
     this.getfilterMap();
+    this.value = [this.form.projectName, this.form.apiGroup];
   },
   methods: {
     async getfilterMap() {
@@ -211,35 +212,30 @@ export default {
         }
       });
     },
-    async createAccount() {
-      let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      // let id = JSON.parse(sessionStorage.getItem("apiDetail")).id;
-      // if (this.editStatus === 2) {
-      //   // JSON.parse(sessionStorage.getItem("apiDetail")).id = "";
-      //   const result = await createApi({ ...this.form, id });
-      // } else {
-      //   // const result = await createApi({ ...this.form, userId });
-      //   const result = await createApi({ ...this.form });
-      // }
-      const result = await createApi({ ...this.form, userId });
-      if (this.editStatus === 0 && result.data.code === "00000") {
+    judgeStatus(result, message) {
+      if (result.data.code === "00000") {
         this.$message({
           type: "success",
-          message: "创建成功"
-        });
-      } else if (this.editStatus === 1 && result.data.code === "00000") {
-        this.$message({
-          type: "success",
-          message: "编辑成功"
-        });
-      } else if (this.editStatus === 2 && result.data.code === "00000") {
-        this.$message({
-          type: "success",
-          message: "复制成功"
+          message: message
         });
       } else {
         this.$message.error(result.data.message);
       }
+    },
+    async createAccount() {
+      let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      if (this.editStatus === 0) {
+        const result = await createApi({ ...this.form, userId });
+        this.judgeStatus(result, "创建成功");
+      } else if (this.editStatus === 1) {
+        const result = await createApi({ ...this.form, userId });
+
+        this.judgeStatus(result, "编辑成功");
+      } else if (this.editStatus === 2) {
+        const result = await createApi({ ...this.form, userId, id: "" });
+        this.judgeStatus(result, "复制成功");
+      }
+
       this.$router.push({ path: "/api/list" });
     }
   }
@@ -248,6 +244,9 @@ export default {
 
 <style lang="scss" scoped>
 .old-info-container {
+  /deep/.el-cascader {
+    width: 500px;
+  }
   .order {
     width: 120px;
     text-align: right;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>用例详情</div>
+    <div class="header-line">用例详情</div>
     <div class="user-info">
       <div class="info-item">
         所属业务:

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <div style="padding:16px">个人中心</div>
+      <div class="header-line">个人中心</div>
       <el-row>
         <el-col :span="3">用户编号</el-col>
         <el-col :span="10" :offset="1">{{ userInfo.userNumber }}</el-col>

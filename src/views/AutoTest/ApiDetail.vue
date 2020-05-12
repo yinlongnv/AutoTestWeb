@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>接口详情</div>
+    <div class="header-line">接口详情</div>
     <div class="user-info">
       <div class="info-item">
         环境域名:
@@ -50,8 +50,6 @@
     <div style="padding:24px 0">
       <el-button size="small" @click="goBack">返回</el-button>
       <el-button type="primary" size="small" @click="goEdit">编辑</el-button>
-      <!-- <el-button v-if="!userInfo.status" type="warning" size="small" @click="disableItem">禁用</el-button>
-      <el-button v-else type="success" size="small" @click="enableItem">启用</el-button>-->
       <el-button type="danger" size="small" @click="deleteItem">删除</el-button>
     </div>
   </div>
@@ -93,51 +91,15 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.deleteUsers([this.apiInfo.id]).then(() => {
-            this.getApiDetail();
+          this.deleteApis([this.apiInfo.id]).then(() => {
             this.$router.go(-1);
           });
         })
         .catch(() => {});
     },
-    disableItem(row) {
-      this.$confirm("确定要禁用吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.disableUsers([this.apiInfo.id]).then(() => {
-            this.getApiDetail();
-          });
-        })
-        .catch(() => {});
-    },
-    enableItem(row) {
-      this.enableUsers([this.apiInfo.id]).then(() => {
-        this.getApiDetail();
-      });
-    },
-    // 接口调用
-    async deleteUsers(userIds) {
+    async deleteApis(apiIds) {
       try {
-        await deleteUsers({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
-      } catch (error) {
-        this.$message.error(error);
-      }
-    },
-    async enableUsers(userIds) {
-      try {
-        await enableUsers({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
-      } catch (error) {
-        this.$message.error(error);
-      }
-    },
-    async disableUsers(userIds) {
-      try {
-        await disableUsers({ userIds: userIds });
+        await deleteApis({ apiIds: apiIds });
         this.$refs.tableRef.onSearch();
       } catch (error) {
         this.$message.error(error);

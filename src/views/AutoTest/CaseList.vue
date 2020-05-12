@@ -1,6 +1,6 @@
 <template>
   <div class="old-manage">
-    <div style="padding:16px">用例管理</div>
+    <div class="header-line">用例管理</div>
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
       <el-button
