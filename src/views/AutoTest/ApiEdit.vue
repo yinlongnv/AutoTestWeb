@@ -108,16 +108,23 @@ const FORM = {
 export default {
   filters: { timeFilter, pageTypeFilter },
   data() {
+    const validateProjectGroup = (rule, value, callback) => {
+      console.log(value);
+      if (value == null || value == "") {
+        callback(new Error("请选择业务分组"));
+      } else {
+        callback();
+      }
+    };
     return {
       value: [],
       options: [],
-      // restaurants: [],
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        projectGroup: [
-          { required: true, message: "请选择业务分组", trigger: "change" }
-        ],
+        // projectGroup: [
+        //   { required: true, validator: validateProjectGroup, trigger: "change" }
+        // ],
         baseUrl: [
           { required: true, message: "请输入正确的环境域名", trigger: "blur" }
         ],
@@ -137,10 +144,10 @@ export default {
           { required: true, message: "请输入正确的响应信息", trigger: "blur" }
         ],
         apiName: [
-          { required: true, message: "请输入请求名称", trigger: "blur" }
+          { required: true, message: "请输入接口名称", trigger: "blur" }
         ],
         apiDescription: [
-          { required: true, message: "请输入请求描述", trigger: "blur" }
+          { required: true, message: "请输入接口描述", trigger: "blur" }
         ]
       },
       methodOptions: [
@@ -159,7 +166,7 @@ export default {
   },
   created() {
     // this.editStatus = Boolean(this.$route.query.type)
-    console.log(this.$route.query.type, this.editStatus);
+    // console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("apiDetail")) || FORM;
     this.getfilterMap();
     this.value = [this.form.projectName, this.form.apiGroup];
@@ -190,10 +197,6 @@ export default {
     },
     selectMethod(val) {
       console.log(val);
-      console.log(this.role);
-    },
-    handleSelect(item) {
-      console.log(item);
     },
     closeDialog() {
       this.$refs["ruleForm"].resetFields();
@@ -245,7 +248,7 @@ export default {
 <style lang="scss" scoped>
 .old-info-container {
   /deep/.el-cascader {
-    width: 500px;
+    width: 360px;
   }
   .order {
     width: 120px;

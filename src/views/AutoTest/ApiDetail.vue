@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header-line">接口详情</div>
-    <div class="user-info">
+    <div class="border-line">
       <div class="info-item">
         环境域名:
         <span>{{ apiInfo.baseUrl }}</span>
@@ -110,12 +110,6 @@ export default {
 </script>
 
 <style scoped>
-.user-info {
-  border: 1px solid #999;
-  border-radius: 5px;
-  padding: 16px 0 0 24px;
-  margin-top: 24px;
-}
 .info-item {
   font-size: 14px;
   padding: 10px 0;
