@@ -12,13 +12,13 @@
       </el-form-item>
       <el-form-item prop="projectGroup" label="业务分组：" :label-width="formLabelWidth">
         <el-cascader
+          v-model="value"
           size="small"
           clearable
-          v-model="value"
           :options="options"
           placeholder="请选择业务分组"
           @change="handleChange"
-        ></el-cascader>
+        />
       </el-form-item>
       <el-form-item prop="reqMethod" label="请求方法：" :label-width="formLabelWidth">
         <el-select
@@ -26,8 +26,8 @@
           :style="inputWidth"
           size="small"
           placeholder="请选择请求方法"
-          @change="selectMethod"
           clearable
+          @change="selectMethod"
         >
           <el-option
             v-for="item in methodOptions"
@@ -92,157 +92,161 @@
 </template>
 
 <script>
-import { timeFilter, pageTypeFilter } from "@/utils/filter";
-import { createApi, getfilterMap } from "@/api/api";
+import { timeFilter, pageTypeFilter } from '@/utils/filter'
+import { createApi, getfilterMap } from '@/api/api'
 const FORM = {
-  projectGroup: "",
-  baseUrl: "",
-  reqMethod: "",
-  reqHeaders: "",
-  reqBody: "",
-  apiResponse: "",
-  apiPath: "",
-  apiName: "",
-  apiDescription: ""
-};
+  projectGroup: '',
+  baseUrl: '',
+  reqMethod: '',
+  reqHeaders: '',
+  reqBody: '',
+  apiResponse: '',
+  apiPath: '',
+  apiName: '',
+  apiDescription: ''
+}
 export default {
   filters: { timeFilter, pageTypeFilter },
   data() {
     const validateProjectGroup = (rule, value, callback) => {
-      console.log(value);
-      if (value == null || value == "") {
-        callback(new Error("请选择业务分组"));
+      console.log(this.value, 'value')
+      if (this.value.length === 0) {
+        callback(new Error('请选择业务分组'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       value: [],
       options: [],
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
-        // projectGroup: [
-        //   { required: true, validator: validateProjectGroup, trigger: "change" }
-        // ],
+        projectGroup: [
+          { required: true, validator: validateProjectGroup, trigger: 'change' }
+        ],
         baseUrl: [
-          { required: true, message: "请输入正确的环境域名", trigger: "blur" }
+          { required: true, message: '请输入正确的环境域名', trigger: 'blur' }
         ],
         reqMethod: [
-          { required: true, message: "请选择请求方法", trigger: "change" }
+          { required: true, message: '请选择请求方法', trigger: 'change' }
         ],
         apiPath: [
-          { required: true, message: "请输入正确的接口路径", trigger: "blur" }
+          { required: true, message: '请输入正确的接口路径', trigger: 'blur' }
         ],
         reqHeaders: [
-          { required: true, message: "请输入正确的请求头", trigger: "blur" }
+          { required: true, message: '请输入正确的请求头', trigger: 'blur' }
         ],
         reqBody: [
-          { required: true, message: "请输入正确的请求体", trigger: "blur" }
+          { required: true, message: '请输入正确的请求体', trigger: 'blur' }
         ],
         apiResponse: [
-          { required: true, message: "请输入正确的响应信息", trigger: "blur" }
+          { required: true, message: '请输入正确的响应信息', trigger: 'blur' }
         ],
         apiName: [
-          { required: true, message: "请输入接口名称", trigger: "blur" }
+          { required: true, message: '请输入接口名称', trigger: 'blur' }
         ],
         apiDescription: [
-          { required: true, message: "请输入接口描述", trigger: "blur" }
+          { required: true, message: '请输入接口描述', trigger: 'blur' }
         ]
       },
       methodOptions: [
         {
-          label: "post",
-          value: "post"
+          label: 'post',
+          value: 'post'
         },
         {
-          label: "get",
-          value: "get"
+          label: 'get',
+          value: 'get'
         }
       ],
-      inputWidth: "width:360px",
-      formLabelWidth: "120px"
-    };
+      inputWidth: 'width:360px',
+      formLabelWidth: '120px'
+    }
   },
   created() {
     // this.editStatus = Boolean(this.$route.query.type)
     // console.log(this.$route.query.type, this.editStatus);
-    this.form = JSON.parse(sessionStorage.getItem("apiDetail")) || FORM;
-    this.getfilterMap();
-    this.value = [this.form.projectName, this.form.apiGroup];
+    this.form = JSON.parse(sessionStorage.getItem('apiDetail')) || FORM
+    this.getfilterMap()
+    if (this.editStatus !== 0) {
+      this.value = [this.form.projectName, this.form.apiGroup]
+    } else {
+      this.value = []
+    }
   },
   methods: {
     async getfilterMap() {
       try {
-        const result = await getfilterMap();
-        let options = result.data.options;
-        for (let i of options) {
-          for (let child of i.children) {
-            delete child.children;
+        const result = await getfilterMap()
+        const options = result.data.options
+        for (const i of options) {
+          for (const child of i.children) {
+            delete child.children
           }
         }
-        this.options = result.data.options;
+        this.options = result.data.options
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     handleChange(val) {
       if (val.length === 0) {
-        this.form.projectName = "";
-        this.form.apiGroup = "";
+        this.form.projectName = ''
+        this.form.apiGroup = ''
       } else {
-        this.form.projectName = val[0];
-        this.form.apiGroup = val[1];
+        this.form.projectName = val[0]
+        this.form.apiGroup = val[1]
       }
     },
     selectMethod(val) {
-      console.log(val);
+      console.log(val)
     },
     closeDialog() {
-      this.$refs["ruleForm"].resetFields();
+      this.$refs['ruleForm'].resetFields()
     },
     goBack() {
-      this.$router.go(-1);
-      sessionStorage.removeItem("apiDetail");
+      this.$router.go(-1)
+      sessionStorage.removeItem('apiDetail')
     },
     confirmEdit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.createAccount();
-          sessionStorage.removeItem("apiDetail");
+          this.createAccount()
+          sessionStorage.removeItem('apiDetail')
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     judgeStatus(result, message) {
-      if (result.data.code === "00000") {
+      if (result.data.code === '00000') {
         this.$message({
-          type: "success",
+          type: 'success',
           message: message
-        });
+        })
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
     },
     async createAccount() {
-      let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
       if (this.editStatus === 0) {
-        const result = await createApi({ ...this.form, userId });
-        this.judgeStatus(result, "创建成功");
+        const result = await createApi({ ...this.form, userId })
+        this.judgeStatus(result, '创建成功')
       } else if (this.editStatus === 1) {
-        const result = await createApi({ ...this.form, userId });
+        const result = await createApi({ ...this.form, userId })
 
-        this.judgeStatus(result, "编辑成功");
+        this.judgeStatus(result, '编辑成功')
       } else if (this.editStatus === 2) {
-        const result = await createApi({ ...this.form, userId, id: "" });
-        this.judgeStatus(result, "复制成功");
+        const result = await createApi({ ...this.form, userId, id: '' })
+        this.judgeStatus(result, '复制成功')
       }
 
-      this.$router.push({ path: "/api/list" });
+      this.$router.push({ path: '/api/list' })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
