@@ -15,22 +15,6 @@
         <span>{{ apiInfo.apiGroup }}</span>
       </div>
       <div class="info-item">
-        请求方法:
-        <span>{{ apiInfo.reqMethod }}</span>
-      </div>
-      <div class="info-item">
-        请求头:
-        <span>{{ apiInfo.reqHeaders }}</span>
-      </div>
-      <div class="info-item">
-        请求体:
-        <span>{{ apiInfo.reqBody }}</span>
-      </div>
-      <div class="info-item">
-        响应信息:
-        <span>{{ apiInfo.apiResponse }}</span>
-      </div>
-      <div class="info-item">
         接口名称:
         <span>{{ apiInfo.apiName }}</span>
       </div>
@@ -39,8 +23,28 @@
         <span>{{ apiInfo.apiPath }}</span>
       </div>
       <div class="info-item">
+        请求方法:
+        <span>{{ apiInfo.reqMethod }}</span>
+      </div>
+      <div class="info-item">
         接口描述:
         <span>{{ apiInfo.apiDescription }}</span>
+      </div>
+      <div class="info-item">
+        请求头:
+        <span>{{ apiInfo.reqHeaders }}</span>
+      </div>
+      <div class="info-item">
+        请求参数:
+        <span>{{ apiInfo.reqQuery }}</span>
+      </div>
+      <div class="info-item">
+        请求体:
+        <span>{{ apiInfo.reqBody }}</span>
+      </div>
+      <div class="info-item">
+        响应信息:
+        <span>{{ apiInfo.apiResponse }}</span>
       </div>
       <div class="info-item">
         创建人:

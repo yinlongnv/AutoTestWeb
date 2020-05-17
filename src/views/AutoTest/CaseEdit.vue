@@ -11,6 +11,16 @@
           @change="handleChange"
         ></el-cascader>
       </el-form-item>
+      <el-form-item prop="caseRules" label="用例规则" :label-width="formLabelWidth">
+        <el-input
+          v-model="form.caseRules"
+          type="textarea"
+          rows="3"
+          :style="inputWidth"
+          size="small"
+          placeholder="用例规则预置文字待定"
+        />
+      </el-form-item>
       <el-form-item prop="caseBody" label="用例内容" :label-width="formLabelWidth">
         <el-input
           v-model="form.caseBody"
@@ -18,7 +28,7 @@
           rows="3"
           :style="inputWidth"
           size="small"
-          placeholder="请输入用例内容"
+          placeholder="用例内容预置文字待定"
         />
       </el-form-item>
       <el-form-item prop="caseDescription" label="用例描述" :label-width="formLabelWidth">
@@ -28,7 +38,17 @@
           rows="3"
           :style="inputWidth"
           size="small"
-          placeholder="请输入用例描述"
+          placeholder="用例描述预置文字待定"
+        />
+      </el-form-item>
+      <el-form-item prop="caseResponse" label="预期响应" :label-width="formLabelWidth">
+        <el-input
+          v-model="form.caseResponse"
+          type="textarea"
+          rows="3"
+          :style="inputWidth"
+          size="small"
+          placeholder="预期响应预置文字待定"
         />
       </el-form-item>
     </el-form>
@@ -46,27 +66,39 @@ const FORM = {
   projectName: "",
   apiGroup: "",
   apiMerge: "",
+  caseRules: "",
   caseBody: "",
-  caseDescription: ""
+  caseDescription: "",
+  caseResponse: ""
 };
 export default {
   filters: { timeFilter },
   data() {
+    const validateProjectGroup = (rule, value, callback) => {
+      console.log(this.value, "value");
+      if (this.value.length === 0) {
+        callback(new Error("请选择关联接口信息"));
+      } else {
+        callback();
+      }
+    };
     return {
       value: [],
       options: [],
-      // restaurants: [],
       editStatus: Number(this.$route.query.type),
       form: FORM,
       rules: {
         apiInfo: [
-          { required: true, message: "请选择关联接口信息", trigger: "blur" }
+          { required: true, validator: validateProjectGroup, trigger: "change" }
         ],
         caseBody: [
           { required: true, message: "请输入用例内容", trigger: "blur" }
         ],
         caseDescription: [
           { required: true, message: "请输入用例描述", trigger: "blur" }
+        ],
+        caseResponse: [
+          { required: true, message: "请输入预期响应", trigger: "blur" }
         ]
       },
       inputWidth: "width:460px",
@@ -79,18 +111,9 @@ export default {
     // this.editStatus = Boolean(this.$route.query.type)
     console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("caseDetail")) || FORM;
-    // this.restaurants = this.loadAll();
     this.getfilterMap();
   },
   methods: {
-    // querySearch(queryString, cb) {
-    //   var restaurants = this.restaurants;
-    //   var results = queryString
-    //     ? restaurants.filter(this.createFilter(queryString))
-    //     : restaurants;
-    //   // 调用 callback 返回建议列表的数据
-    //   cb(results);
-    // },
     async getfilterMap() {
       try {
         const result = await getfilterMap();
@@ -117,19 +140,6 @@ export default {
           0
         );
       };
-    },
-    // loadAll() {
-    //   return [{ value: "靶场" }, { value: "攻防" }, { value: "演练" }];
-    // },
-    handleSelect(item) {
-      console.log(item);
-    },
-    closeDialog() {
-      this.$refs["ruleForm"].resetFields();
-    },
-    selectRoles(val) {
-      console.log(val);
-      console.log(this.role);
     },
     goBack() {
       this.$router.go(-1);

@@ -97,7 +97,6 @@
           </el-form-item>
         </div>
       </el-form>
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confrimChange">确 定</el-button>

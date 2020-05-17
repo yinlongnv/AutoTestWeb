@@ -168,18 +168,8 @@ export default {
       value: [],
       options: [],
       downloadLoading: false,
-      rules: {
-        name: [
-          { required: true, message: "请输入正确的新密码", trigger: "blur" }
-        ]
-      },
       timeArray: [],
-      form: {
-        password: ""
-      },
       formLabelWidth: "120px",
-      oldInfoObj: {},
-      chartDataObj: {},
       apiName: "",
       searchObj: {
         caseDescription: "",
@@ -218,7 +208,6 @@ export default {
     };
   },
   created() {
-    this.restaurants = this.loadAll();
     this.getfilterMap();
   },
   methods: {
@@ -241,14 +230,12 @@ export default {
         this.$message.error(error);
       }
     },
-    // 顶部操作
-    // 创建用例
     createCase(row) {
       if (row) {
         sessionStorage.setItem("caseDetail", JSON.stringify(row));
       }
       this.$router.push({ path: "/case/edit", query: { type: 0 } });
-    }, // 列表操作
+    },
     batchActions() {
       if (this.type === "删除") {
         this.onDelete(this.idList);
@@ -298,27 +285,6 @@ export default {
         })
       );
     },
-    // 搜索+选择
-    handleSelect() {},
-    loadAll() {
-      return [{ value: "全部" }, { value: "2" }, { value: "3" }];
-    },
-    createFilter(queryString) {
-      return restaurant => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
-      };
-    },
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
     goApiDetail(row) {
       this.$router.push({ path: "/api/detail", query: { id: row.id } });
     },
@@ -349,7 +315,6 @@ export default {
       this.idList = row.map(f => f.id);
       console.log(this.idList);
     },
-    // 接口调用
     async deleteCases(caseIds) {
       try {
         await deleteCases({ caseIds: caseIds });

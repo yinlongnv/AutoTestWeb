@@ -29,3 +29,17 @@ export function getfilterMap(data) {
     param: data
   });
 }
+export function getfilterBaseUrl(data) {
+  return request({
+    url: "/api/filterBaseUrl",
+    method: "get",
+    param: data
+  });
+}
+export function handleUpload(data) {
+  return request({
+    url: "/api/upload",
+    method: "post",
+    data: { userId, ...data }
+  });
+}

@@ -70,7 +70,7 @@ export default {
       }
     };
     return {
-      remember: 1,
+      // remember: 1,
       loginForm: {
         username: "大大龙",
         password: "123456"
@@ -112,7 +112,7 @@ export default {
       let lastIp = returnCitySN["cip"];
       const result = await login({
         ...this.loginForm,
-        remember: this.remember,
+        // remember: this.remember,
         lastIp
       });
       if (result.data.code === "00000") {

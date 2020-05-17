@@ -3,16 +3,16 @@
     <div class="header-line">用例详情</div>
     <div class="border-line">
       <div class="info-item">
-        所属业务:
-        <span>{{ caseInfo.projectName }}</span>
-      </div>
-      <div class="info-item">
-        所属分组:
-        <span>{{ caseInfo.apiGroup }}</span>
-      </div>
-      <div class="info-item">
         环境域名:
         <span>{{ caseInfo.baseUrl }}</span>
+      </div>
+      <div class="info-item">
+        接口路径:
+        <span>{{ caseInfo.apiPath }}</span>
+      </div>
+      <div class="info-item">
+        接口名称:
+        <span>{{ caseInfo.apiName }}</span>
       </div>
       <div class="info-item">
         请求方法:
@@ -23,36 +23,36 @@
         <span>{{ caseInfo.reqHeaders }}</span>
       </div>
       <div class="info-item">
+        请求参数:
+        <span>{{ caseInfo.reqQuery }}</span>
+      </div>
+      <div class="info-item">
         请求体:
         <span>{{ caseInfo.reqBody }}</span>
       </div>
       <div class="info-item">
-        响应信息:
-        <span>{{ caseInfo.apiResponse }}</span>
-      </div>
-      <div class="info-item">
-        接口名称:
-        <span>{{ caseInfo.apiName }}</span>
-      </div>
-      <div class="info-item">
-        接口路径:
-        <span>{{ caseInfo.apiPath }}</span>
-      </div>
-      <div class="info-item">
-        接口描述:
-        <span>{{ caseInfo.apiDescription }}</span>
+        用例规则:
+        <span>{{ caseInfo.caseRules }}</span>
       </div>
       <div class="info-item">
         用例内容:
         <span>{{ caseInfo.caseBody }}</span>
       </div>
       <div class="info-item">
-        执行人:
-        <span>{{ caseInfo.username }}</span>
+        用例描述:
+        <span>{{ caseInfo.caseDescription }}</span>
       </div>
       <div class="info-item">
-        执行时间:
-        <span>{{ caseInfo.lastExecuteTime }}</span>
+        预期响应:
+        <span>{{ caseInfo.caseResponse }}</span>
+      </div>
+      <div class="info-item">
+        创建人:
+        <span>{{ caseInfo.createdBy }}</span>
+      </div>
+      <div class="info-item">
+        执行人:
+        <span>{{ caseInfo.username }}</span>
       </div>
       <div class="info-item">
         执行状态:
@@ -70,12 +70,8 @@
         >{{ caseInfo.executeStatus|executeStatusFilter }}</el-tag>
       </div>
       <div class="info-item">
-        创建人:
-        <span>{{ caseInfo.createdBy }}</span>
-      </div>
-      <div class="info-item">
-        用例描述:
-        <span>{{ caseInfo.caseDescription }}</span>
+        执行时间:
+        <span>{{ caseInfo.lastExecuteTime }}</span>
       </div>
     </div>
     <div style="padding:24px 0">
@@ -132,7 +128,6 @@ export default {
         })
         .catch(() => {});
     },
-    // 接口调用
     async deleteCases(caseIds) {
       try {
         await deleteCases({ caseIds: caseIds });

@@ -3,24 +3,15 @@
     <div class="header-line">接口管理</div>
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
+      <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
+      <!-- <el-button icon="el-icon-upload2" size="small" @click="handleUpload">批量导入</el-button> -->
       <el-button
-        :loading="downloadLoading"
-        icon="el-icon-download"
-        size="small"
-        @click="handleDownload"
-      >下载模板</el-button>
-      <el-button
-        :loading="downloadLoading"
         icon="el-icon-upload2"
         size="small"
-        @click="handleDownload"
+        type="text"
+        @click="dialogFormVisible = true"
       >批量导入</el-button>
-      <el-button
-        :loading="downloadLoading"
-        icon="el-icon-delete"
-        size="small"
-        @click="onDelete(idList)"
-      >批量删除</el-button>
+      <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
       <div style="text-align:right;width:100%">
         <el-cascader
           size="small"
@@ -39,7 +30,7 @@
           clearable
         >
           <el-option
-            v-for="item in roleOptions"
+            v-for="item in methodOptions"
             :key="item.value"
             :label="item.name"
             :value="item.value"
@@ -61,11 +52,7 @@
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-
       <el-table-column label="接口名称" width="120">
-        <!-- <template slot-scope="scope">
-          <div>{{ scope.row.apiName }}</div>
-        </template>-->
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.apiName }}</el-button>
         </template>
@@ -75,7 +62,6 @@
           <div>{{ scope.row.apiPath }}</div>
         </template>
       </el-table-column>
-
       <el-table-column label="请求方法" width="100" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.reqMethod }}</div>
@@ -118,13 +104,59 @@
         </template>
       </el-table-column>
     </base-table>
+
+    <el-dialog title="批量导入" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="环境域名" :label-width="formLabelWidth">
+          <el-select
+            size="small"
+            v-model="baseUrlOption"
+            multiple
+            filterable
+            allow-create
+            clearable
+            default-first-option
+            placeholder="例如：'http://localhost:8080'"
+          >
+            <el-option
+              v-for="item in baseUrlOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="上传文件" :label-width="formLabelWidth">
+          <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+          ></el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="handleUpload">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from "@/components/BaseTable";
 import { statusFilter, reqMethodFilter } from "@/utils/filter";
-import { deleteApis, createApi, getApiDetail, getfilterMap } from "@/api/api";
+import {
+  deleteApis,
+  createApi,
+  getApiDetail,
+  getfilterMap,
+  getfilterBaseUrl,
+  handleUpload
+} from "@/api/api";
 export default {
   components: { BaseTable },
   filters: {
@@ -133,12 +165,12 @@ export default {
   },
   data() {
     return {
+      baseUrlOptions: [],
       value: [],
       options: [],
-      downloadLoading: false,
-      form: {
-        password: ""
-      },
+      // form: {
+      //   password: ""
+      // },
       formLabelWidth: "120px",
       searchObj: {
         projectName: "",
@@ -148,8 +180,7 @@ export default {
       },
       idList: [],
       type: "",
-      role: "",
-      roleOptions: [
+      methodOptions: [
         {
           value: "get",
           name: "get"
@@ -158,14 +189,15 @@ export default {
           value: "post",
           name: "post"
         }
-      ],
-      apiGroup: "",
-      reqMethod: ""
+      ]
+      // apiGroup: "",
+      // reqMethod: ""
     };
   },
 
   created() {
     this.getfilterMap();
+    this.getfilterBaseUrl();
   },
   methods: {
     handleChange(val) {
@@ -187,6 +219,14 @@ export default {
           }
         }
         this.options = result.data.options;
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
+    async getfilterBaseUrl() {
+      try {
+        const result = await getfilterBaseUrl();
+        this.baseUrlOptions = result.data.options;
       } catch (error) {
         this.$message.error(error);
       }
@@ -224,9 +264,28 @@ export default {
         })
         .catch(() => {});
     },
-
+    async handleUpload() {
+      console.log(baseUrlOption);
+      const result = await handleUpload({
+        baseUrlOption
+      });
+      if (result.data.code === "00000") {
+        console.log(result.data);
+        sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
+        if (result.data.data.role) {
+          this.$router.push({ path: "/user/list" });
+        } else {
+          this.$router.push({ path: "/api/list" });
+        }
+      } else {
+        this.$message.error(result.data.message);
+      }
+    },
     onCreateCase() {
-      this.$router.push({ path: "/case/edit", query: { type: 0 } });
+      this.$router.push({
+        path: "/case/edit",
+        query: { type: 0, apiId: row.id }
+      });
     },
 
     goDetail(row) {
@@ -234,7 +293,7 @@ export default {
     },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);
-      console.log(this.idList);
+      // console.log(this.idList);
     },
     async deleteApis(apiIds) {
       try {
