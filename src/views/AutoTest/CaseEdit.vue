@@ -1,31 +1,22 @@
 <template>
   <div class="old-info-container">
-    <div class="header-line">{{ editStatus === 1?'编辑用例':'创建用例' }}</div>
+    <div class="header-line">{{ editStatus|pageTypeFilter }}用例</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
       <el-form-item prop="apiInfo" label="关联接口信息" :label-width="formLabelWidth">
         <el-cascader
+          v-model="value"
           size="small"
           clearable
-          v-model="value"
           :options="options"
           @change="handleChange"
-        ></el-cascader>
-      </el-form-item>
-      <el-form-item prop="caseRules" label="用例规则" :label-width="formLabelWidth">
-        <el-input
-          v-model="form.caseRules"
-          type="textarea"
-          rows="3"
-          :style="inputWidth"
-          size="small"
-          placeholder="用例规则预置文字待定"
+          placeholder="请选择关联接口信息"
         />
       </el-form-item>
       <el-form-item prop="caseBody" label="用例内容" :label-width="formLabelWidth">
         <el-input
           v-model="form.caseBody"
           type="textarea"
-          rows="3"
+          rows="6"
           :style="inputWidth"
           size="small"
           placeholder="用例内容预置文字待定"
@@ -45,7 +36,7 @@
         <el-input
           v-model="form.caseResponse"
           type="textarea"
-          rows="3"
+          rows="6"
           :style="inputWidth"
           size="small"
           placeholder="预期响应预置文字待定"
@@ -60,19 +51,18 @@
 </template>
 
 <script>
-import { timeFilter } from "@/utils/filter";
+import { timeFilter, pageTypeFilter } from "@/utils/filter";
 import { createCase, getfilterMap } from "@/api/case";
 const FORM = {
   projectName: "",
   apiGroup: "",
   apiMerge: "",
-  caseRules: "",
   caseBody: "",
   caseDescription: "",
   caseResponse: ""
 };
 export default {
-  filters: { timeFilter },
+  filters: { timeFilter, pageTypeFilter },
   data() {
     const validateProjectGroup = (rule, value, callback) => {
       console.log(this.value, "value");
@@ -109,9 +99,20 @@ export default {
   },
   created() {
     // this.editStatus = Boolean(this.$route.query.type)
-    console.log(this.$route.query.type, this.editStatus);
+    // console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("caseDetail")) || FORM;
     this.getfilterMap();
+    if (this.editStatus !== 0) {
+      console.log("hhhhhhh");
+      console.log(this.form.apiMerge);
+      this.value = [
+        this.form.projectName,
+        this.form.apiGroup,
+        this.form.apiMerge
+      ];
+    } else {
+      this.value = [];
+    }
   },
   methods: {
     async getfilterMap() {
@@ -155,21 +156,46 @@ export default {
         }
       });
     },
-    async createAccount() {
-      // sessionStorage.removeItem("userDetail");
-      let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      await createCase({ ...this.form, userId });
-      if (this.editStatus === 0) {
+    // async createAccount() {
+    //   // sessionStorage.removeItem("userDetail");
+    //   let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+    //   await createCase({ ...this.form, userId });
+    //   if (this.editStatus === 0) {
+    //     this.$message({
+    //       type: "success",
+    //       message: "创建成功"
+    //     });
+    //   } else {
+    //     this.$message({
+    //       type: "success",
+    //       message: "编辑成功"
+    //     });
+    //   }
+    //   this.$router.push({ path: "/case/list" });
+    // }
+    judgeStatus(result, message) {
+      if (result.data.code === "00000") {
         this.$message({
           type: "success",
-          message: "创建成功"
+          message: message
         });
       } else {
-        this.$message({
-          type: "success",
-          message: "编辑成功"
-        });
+        this.$message.error(result.data.message);
       }
+    },
+    async createAccount() {
+      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      if (this.editStatus === 0) {
+        const result = await createCase({ ...this.form, userId });
+        this.judgeStatus(result, "创建成功");
+      } else if (this.editStatus === 1) {
+        const result = await createCase({ ...this.form, userId });
+        this.judgeStatus(result, "编辑成功");
+      } else if (this.editStatus === 2) {
+        const result = await createCase({ ...this.form, userId, id: "" });
+        this.judgeStatus(result, "复制成功");
+      }
+
       this.$router.push({ path: "/case/list" });
     }
   }
@@ -178,6 +204,9 @@ export default {
 
 <style lang="scss" scoped>
 .old-info-container {
+  /deep/.el-cascader {
+    width: 460px;
+  }
   .order {
     width: 120px;
     text-align: right;

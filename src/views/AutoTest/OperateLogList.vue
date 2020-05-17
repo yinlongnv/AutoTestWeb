@@ -91,10 +91,11 @@
 import BaseTable from "@/components/BaseTable";
 import { timeFilter, roleFilter } from "@/utils/filter";
 import { parseTime } from "@/utils";
-import { getfilterUserName } from "@/api/operateLog";
+import { getfilterUserName, exportAllLogs } from "@/api/operateLog";
 export default {
   created() {
     this.getfilterUserName();
+    this.exportAllLogs();
   },
   components: { BaseTable },
   filters: {
@@ -130,6 +131,8 @@ export default {
   },
   methods: {
     getTableData(data) {
+      console.log("操作日志list");
+      console.log(data);
       this.list = data;
     },
     async getfilterUserName() {
@@ -148,8 +151,8 @@ export default {
           "用户名",
           "用户编号",
           "账号角色",
-          "登入IP",
-          "账号操作",
+          "最后登录IP",
+          "账号操作内容",
           "操作界面",
           "操作时间"
         ];
@@ -162,7 +165,8 @@ export default {
           "operatePath",
           "createdAt"
         ];
-        const list = this.list;
+        // const list = this.list;
+        const list = exportAllLogs();
         const data = this.formatJson(filterVal, list);
         excel.export_json_to_excel({
           header: tHeader,

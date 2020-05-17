@@ -31,10 +31,6 @@
         <span>{{ caseInfo.reqBody }}</span>
       </div>
       <div class="info-item">
-        用例规则:
-        <span>{{ caseInfo.caseRules }}</span>
-      </div>
-      <div class="info-item">
         用例内容:
         <span>{{ caseInfo.caseBody }}</span>
       </div>
@@ -57,16 +53,18 @@
       <div class="info-item">
         执行状态:
         <el-tag
-          v-if="caseInfo.status === 0 "
-          type="success"
-          style="color:#67c23a"
-          size="small"
+          v-if="caseInfo.executeStatus == 1 "
+          style="color:#409EFF"
         >{{ caseInfo.executeStatus|executeStatusFilter }}</el-tag>
         <el-tag
-          v-else
-          type="warning"
-          style="color:#e6a23c"
-          size="small"
+          v-else-if="caseInfo.executeStatus == 2 "
+          style="color:#67C23A"
+          type="success"
+        >{{ caseInfo.executeStatus|executeStatusFilter }}</el-tag>
+        <el-tag
+          v-else-if="caseInfo.executeStatus == 3 "
+          style="color:#F56C6C"
+          type="danger"
         >{{ caseInfo.executeStatus|executeStatusFilter }}</el-tag>
       </div>
       <div class="info-item">

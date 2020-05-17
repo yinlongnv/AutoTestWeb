@@ -5,12 +5,7 @@
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
       <!-- <el-button icon="el-icon-upload2" size="small" @click="handleUpload">批量导入</el-button> -->
-      <el-button
-        icon="el-icon-upload2"
-        size="small"
-        type="text"
-        @click="dialogFormVisible = true"
-      >批量导入</el-button>
+      <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
       <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
       <div style="text-align:right;width:100%">
         <el-cascader
@@ -168,9 +163,6 @@ export default {
       baseUrlOptions: [],
       value: [],
       options: [],
-      // form: {
-      //   password: ""
-      // },
       formLabelWidth: "120px",
       searchObj: {
         projectName: "",
@@ -190,8 +182,6 @@ export default {
           name: "post"
         }
       ]
-      // apiGroup: "",
-      // reqMethod: ""
     };
   },
 
@@ -233,7 +223,7 @@ export default {
     },
     // 创建接口
     createApi(row) {
-      sessionStorage.removeItem("apiDetail"); //这里记得验证一下
+      sessionStorage.removeItem("apiDetail");
       this.$router.push({ path: "/api/edit", query: { type: 0 } });
     },
     //编辑接口
@@ -246,7 +236,6 @@ export default {
       sessionStorage.setItem("apiDetail", JSON.stringify(row));
       this.$router.push({ path: "/api/edit", query: { type: 2 } });
     },
-
     // 列表操作
     onDelete(row) {
       this.$confirm("确定要删除吗?", "提示", {
@@ -281,7 +270,9 @@ export default {
         this.$message.error(result.data.message);
       }
     },
-    onCreateCase() {
+    onCreateCase(row) {
+      console.log("row.id是什么");
+      console.log(row.id);
       this.$router.push({
         path: "/case/edit",
         query: { type: 0, apiId: row.id }

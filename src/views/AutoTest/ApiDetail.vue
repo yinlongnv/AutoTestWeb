@@ -43,6 +43,10 @@
         <span>{{ apiInfo.reqBody }}</span>
       </div>
       <div class="info-item">
+        用例规则:
+        <span>{{ apiInfo.caseRules }}</span>
+      </div>
+      <div class="info-item">
         响应信息:
         <span>{{ apiInfo.apiResponse }}</span>
       </div>

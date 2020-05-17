@@ -35,18 +35,20 @@ export function reqMethodFilter(val) {
   }
 }
 export function executeStatusFilter(val) {
-  if (val) {
-    return "失败";
-  } else {
+  if (val == 1) {
+    return "未执行";
+  } else if (val == 2) {
     return "成功";
+  } else if (val == 3) {
+    return "失败";
   }
 }
 export function pageTypeFilter(val) {
   if (val === 0) {
-    return "创建接口";
+    return "创建";
   } else if (val === 1) {
-    return "编辑接口";
+    return "编辑";
   } else if (val === 2) {
-    return "复制接口";
+    return "复制";
   }
 }

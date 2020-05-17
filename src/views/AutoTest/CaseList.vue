@@ -3,24 +3,8 @@
     <div class="header-line">用例管理</div>
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
-      <el-button
-        :loading="downloadLoading"
-        icon="el-icon-download"
-        size="small"
-        @click="handleDownload"
-      >下载模板</el-button>
-      <el-button
-        :loading="downloadLoading"
-        icon="el-icon-upload2"
-        size="small"
-        @click="handleDownload"
-      >批量导入</el-button>
-      <!-- <el-button
-        :loading="downloadLoading"
-        icon="el-icon-delete"
-        size="small"
-        @click="onDelete(idList)"
-      >批量删除</el-button>-->
+      <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
+      <el-button icon="el-icon-upload2" size="small" @click="handleDownload">批量导入</el-button>
       <el-select
         v-model="type"
         style="width:150px;margin-left:16px"
@@ -114,14 +98,17 @@
       <el-table-column label="执行状态" align="center" width="80">
         <template slot-scope="scope">
           <el-tag
-            v-if="scope.row.executeStatus"
-            type="warning"
+            v-if="scope.row.executeStatus == 1"
           >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
-          <el-tag v-else type="success">{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
+          <el-tag
+            v-else-if="scope.row.executeStatus == 2"
+            type="success"
+          >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
+          <el-tag
+            v-else-if="scope.row.executeStatus == 3"
+            type="danger"
+          >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
         </template>
-        <!-- <template slot-scope="scope">
-          <div>{{ scope.row.executeStatus|executeStatusFilter }}</div>
-        </template>-->
       </el-table-column>
       <el-table-column label="执行次数" align="center" width="80">
         <template slot-scope="scope">
@@ -132,8 +119,13 @@
         <template slot-scope="scope">
           <div style="display:flex">
             <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="createCase(scope.row)">复制用例</el-button>
-            <el-button type="text" style="color:#67c23a" size="small" @click="onRun(scope.row)">执行</el-button>
+            <el-button type="text" size="small" @click="copyCase(scope.row)">复制用例</el-button>
+            <el-button
+              type="text"
+              style="color:#67c23a"
+              size="small"
+              @click="onExecute(scope.row)"
+            >执行</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
@@ -149,7 +141,7 @@
 
 <script>
 import BaseTable from "@/components/BaseTable";
-import { statusFilter, roleFilter, executeStatusFilter } from "@/utils/filter";
+import { executeStatusFilter } from "@/utils/filter";
 import {
   deleteCases,
   createCase,
@@ -159,15 +151,12 @@ import {
 export default {
   components: { BaseTable },
   filters: {
-    statusFilter,
-    roleFilter,
     executeStatusFilter
   },
   data() {
     return {
       value: [],
       options: [],
-      downloadLoading: false,
       timeArray: [],
       formLabelWidth: "120px",
       apiName: "",
@@ -193,12 +182,16 @@ export default {
       role: "",
       roleOptions: [
         {
-          name: "失败",
+          name: "未执行",
           value: 1
         },
         {
           name: "成功",
-          value: 0
+          value: 2
+        },
+        {
+          name: "失败",
+          value: 3
         }
       ],
       apiGroup: "",
@@ -230,23 +223,16 @@ export default {
         this.$message.error(error);
       }
     },
-    createCase(row) {
-      if (row) {
-        sessionStorage.setItem("caseDetail", JSON.stringify(row));
-      }
-      this.$router.push({ path: "/case/edit", query: { type: 0 } });
-    },
     batchActions() {
       if (this.type === "删除") {
         this.onDelete(this.idList);
       } else {
-        this.onRun(this.idList);
+        this.onExecute(this.idList);
       }
       this.type = "";
     },
     // 下载模板
     handleDownload() {
-      this.downloadLoading = true;
       import("@/utils/Export2Excel").then(excel => {
         const tHeader = [
           "用户名",
@@ -275,7 +261,6 @@ export default {
           autoWidth: this.autoWidth,
           bookType: this.bookType
         });
-        this.downloadLoading = false;
       });
     },
     formatJson(filterVal, jsonData) {
@@ -291,9 +276,20 @@ export default {
     goCaseDetail(row) {
       this.$router.push({ path: "/case/detail", query: { id: row.id } });
     },
+    //创建用例
+    createCase(row) {
+      sessionStorage.removeItem("caseDetail");
+      this.$router.push({ path: "/case/edit", query: { type: 0 } });
+    },
+    //编辑用例
     onEdit(row) {
-      sessionStorage.setItem("createCase", JSON.stringify(row));
+      sessionStorage.setItem("caseDetail", JSON.stringify(row));
       this.$router.push({ path: "/case/edit", query: { type: 1 } });
+    },
+    //复制用例
+    copyCase(row) {
+      sessionStorage.setItem("caseDetail", JSON.stringify(row));
+      this.$router.push({ path: "/case/edit", query: { type: 2 } });
     },
     onDelete(row) {
       this.$confirm("确定要删除吗?", "提示", {

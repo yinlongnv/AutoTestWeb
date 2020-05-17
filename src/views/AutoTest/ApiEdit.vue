@@ -1,6 +1,6 @@
 <template>
   <div class="old-info-container">
-    <div class="header-line">{{ editStatus|pageTypeFilter }}</div>
+    <div class="header-line">{{ editStatus|pageTypeFilter }}接口</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
       <el-form-item prop="baseUrl" label="环境域名：" :label-width="formLabelWidth">
         <el-input
@@ -83,6 +83,16 @@
           placeholder="请输入请求体，例如：[{'name': 'relationId', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}, {'name': 'relationType', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}]"
         />
       </el-form-item>
+      <el-form-item prop="caseRules" label="用例规则" :label-width="formLabelWidth">
+        <el-input
+          v-model="form.caseRules"
+          type="textarea"
+          rows="6"
+          :style="inputWidth"
+          size="small"
+          placeholder="用例规则预置文字待定"
+        />
+      </el-form-item>
       <el-form-item prop="apiResponse" label="响应信息：" :label-width="formLabelWidth">
         <el-input
           v-model="form.apiResponse"
@@ -114,6 +124,7 @@ const FORM = {
   reqHeaders: "",
   reqBody: "",
   reqQuery: "",
+  caseRules: "",
   apiResponse: ""
 };
 export default {
@@ -151,12 +162,12 @@ export default {
       },
       methodOptions: [
         {
-          label: "post",
-          value: "post"
+          label: "POST",
+          value: "POST"
         },
         {
-          label: "get",
-          value: "get"
+          label: "GET",
+          value: "GET"
         }
       ],
       inputWidth: "width:360px",
@@ -164,8 +175,6 @@ export default {
     };
   },
   created() {
-    // this.editStatus = Boolean(this.$route.query.type)
-    // console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem("apiDetail")) || FORM;
     this.getfilterMap();
     if (this.editStatus !== 0) {
