@@ -106,7 +106,6 @@
           <el-select
             size="small"
             v-model="baseUrlOption"
-            multiple
             filterable
             allow-create
             clearable
@@ -125,12 +124,13 @@
           <el-upload
             class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
             :on-exceed="handleExceed"
+            :on-change="handleFileChange"
             :file-list="fileList"
-          ></el-upload>
+            :limit="1"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -160,6 +160,10 @@ export default {
   },
   data() {
     return {
+      form: {},
+      fileList: [],
+      baseUrlOption: "",
+      dialogFormVisible: false,
       baseUrlOptions: [],
       value: [],
       options: [],
@@ -190,6 +194,47 @@ export default {
     this.getfilterBaseUrl();
   },
   methods: {
+    handleDownload() {
+      import("@/utils/Export2Excel").then(excel => {
+        const tHeader = [
+          "用户名",
+          "用户编号",
+          "账号角色",
+          "最后登录IP",
+          "账号操作内容",
+          "操作界面",
+          "操作时间"
+        ];
+        const filterVal = [
+          "username",
+          "userNumber",
+          "role",
+          "lastIp",
+          "logContent",
+          "operatePath",
+          "createdAt"
+        ];
+        let list = [
+          {
+            username: "222",
+            userNumber: `[{'name': 'Content-Type', 'value': 'application/x-www-form-urlencoded', 'required': '1', 'example': '', 'desc': ''}, {'name': 'Authorization', 'value': 'bearer aklpsdjfl;kasdgponcvbpn', 'required': '1', 'example': '', 'desc': 'jwt'}]`
+          }
+        ];
+        const data = this.formatJson(filterVal, list);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: "接口模板"
+        });
+      });
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning("当前限制选择 1个文件");
+    },
+    handleFileChange(file, fileList) {
+      this.fileList = fileList;
+      console.log("filefile", file);
+    },
     handleChange(val) {
       if (val.length === 0) {
         this.searchObj.projectName = "";
@@ -216,7 +261,7 @@ export default {
     async getfilterBaseUrl() {
       try {
         const result = await getfilterBaseUrl();
-        this.baseUrlOptions = result.data.options;
+        this.baseUrlOptions = result.data.baseUrlOptions;
       } catch (error) {
         this.$message.error(error);
       }
@@ -254,9 +299,13 @@ export default {
         .catch(() => {});
     },
     async handleUpload() {
-      console.log(baseUrlOption);
+      console.log(this.fileList[0], "filelist");
+      console.log(this.baseUrlOption);
+      let file = new FormData();
+      file.append("file", this.fileList[0]);
       const result = await handleUpload({
-        baseUrlOption
+        baseUrl: this.baseUrlOption,
+        file
       });
       if (result.data.code === "00000") {
         console.log(result.data);

@@ -39,7 +39,7 @@
           :no-data-text="'暂无数据'"
         >
           <el-option
-            v-for="item in roleOptions"
+            v-for="item in executeStatusOptions"
             :key="item.value"
             :label="item.name"
             :value="item.value"
@@ -180,7 +180,7 @@ export default {
         }
       ],
       role: "",
-      roleOptions: [
+      executeStatusOptions: [
         {
           name: "未执行",
           value: 1

@@ -2,12 +2,7 @@
   <div class="record-list">
     <div class="header-line">操作日志</div>
     <div class="flex-box">
-      <el-button
-        :loading="downloadLoading"
-        icon="el-icon-download"
-        size="small"
-        @click="handleDownload"
-      >导出全部日志</el-button>
+      <el-button icon="el-icon-download" size="small" @click="handleDownload">导出全部日志</el-button>
       <div style="text-align:right;width:100%">
         <el-select
           v-model="searchObj.user"
@@ -95,7 +90,6 @@ import { getfilterUserName, exportAllLogs } from "@/api/operateLog";
 export default {
   created() {
     this.getfilterUserName();
-    this.exportAllLogs();
   },
   components: { BaseTable },
   filters: {
@@ -115,7 +109,6 @@ export default {
   },
   data() {
     return {
-      downloadLoading: false,
       timeArray: [],
       searchName: "",
       searchObj: {
@@ -145,7 +138,6 @@ export default {
     },
     // 批量导出
     handleDownload() {
-      this.downloadLoading = true;
       import("@/utils/Export2Excel").then(excel => {
         const tHeader = [
           "用户名",
@@ -165,17 +157,17 @@ export default {
           "operatePath",
           "createdAt"
         ];
-        // const list = this.list;
-        const list = exportAllLogs();
-        const data = this.formatJson(filterVal, list);
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
+        let list = [];
+        exportAllLogs().then(res => {
+          list = res.data;
+          console.log("res", list);
+          const data = this.formatJson(filterVal, list);
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: "操作日志模板"
+          });
         });
-        this.downloadLoading = false;
       });
     },
     formatJson(filterVal, jsonData) {

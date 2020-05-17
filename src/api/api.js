@@ -40,6 +40,9 @@ export function handleUpload(data) {
   return request({
     url: "/api/upload",
     method: "post",
-    data: { userId, ...data }
+    data: { userId, ...data },
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   });
 }

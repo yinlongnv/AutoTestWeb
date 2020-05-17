@@ -5,8 +5,10 @@ Vue.use(Router);
 
 /* Layout */
 import Layout from "@/layout";
- let userInfo = sessionStorage.getItem('userInfo')
- let hasAuthority = userInfo?JSON.parse(sessionStorage.getItem('userInfo')).role:''
+let userInfo = sessionStorage.getItem("userInfo");
+let hasAuthority = userInfo
+  ? JSON.parse(sessionStorage.getItem("userInfo")).role
+  : "";
 export const constantRoutes = [
   {
     path: "/",
@@ -20,8 +22,8 @@ export const constantRoutes = [
   {
     path: "/user",
     component: Layout,
-    meta: { title: "用户管理" },
-    hidden:!hasAuthority,
+    meta: { title: "用户管理", icon: "dashboard" },
+    hidden: !hasAuthority,
     children: [
       {
         path: "/user/list",
