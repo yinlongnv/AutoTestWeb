@@ -1,6 +1,7 @@
 import request from "@/utils/request";
-let userInfo = sessionStorage.getItem("userInfo")
-let userId = userInfo?JSON.parse(sessionStorage.getItem("userInfo")).id:''
+let userInfo = sessionStorage.getItem("userInfo");
+let userId = userInfo ? JSON.parse(sessionStorage.getItem("userInfo")).id : "";
+// 用户登录
 export function login(data) {
   return request({
     url: "/user/login",
@@ -8,6 +9,7 @@ export function login(data) {
     data
   });
 }
+// 创建/编辑用户信息
 export function createUser(data) {
   return request({
     url: "/user/createOrEdit",
@@ -15,6 +17,7 @@ export function createUser(data) {
     data: { userId, ...data }
   });
 }
+// (批量)删除用户
 export function deleteUsers(data) {
   return request({
     url: "/user/delete",
@@ -22,6 +25,7 @@ export function deleteUsers(data) {
     data: { userId, ...data }
   });
 }
+// (批量)启用用户
 export function enableUsers(data) {
   return request({
     url: "/user/enable",
@@ -29,6 +33,7 @@ export function enableUsers(data) {
     data: { userId, ...data }
   });
 }
+// (批量)禁用用户
 export function disableUsers(data) {
   return request({
     url: "/user/disable",
@@ -36,6 +41,7 @@ export function disableUsers(data) {
     data: { userId, ...data }
   });
 }
+// 根据id获取用户详情信息
 export function getUserDetail(data) {
   return request({
     url: "/user/detail",
@@ -43,26 +49,3 @@ export function getUserDetail(data) {
     params: { ...data, userId }
   });
 }
-
-// export function login(data) {
-//   return request({
-//     url: '/vue-admin-template/user/login',
-//     method: 'post',
-//     data
-//   })
-// }
-
-// export function getInfo(token) {
-//   return request({
-//     url: '/vue-admin-template/user/info',
-//     method: 'get',
-//     params: { token }
-//   })
-// }
-
-// export function logout() {
-//   return request({
-//     url: '/vue-admin-template/user/logout',
-//     method: 'post'
-//   })
-// }

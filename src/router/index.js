@@ -22,7 +22,7 @@ export const constantRoutes = [
   {
     path: "/user",
     component: Layout,
-    meta: { title: "用户管理", icon: "dashboard" },
+    meta: { title: "用户管理", icon: "user" },
     hidden: !hasAuthority,
     children: [
       {
@@ -54,7 +54,7 @@ export const constantRoutes = [
   {
     path: "/api",
     component: Layout,
-    meta: { title: "接口管理" },
+    meta: { title: "接口管理", icon: "example" },
     children: [
       {
         path: "/api/list",
@@ -79,7 +79,7 @@ export const constantRoutes = [
   {
     path: "/case",
     component: Layout,
-    meta: { title: "用例管理" },
+    meta: { title: "用例管理", icon: "form" },
     children: [
       {
         path: "/case/list",
@@ -103,7 +103,7 @@ export const constantRoutes = [
   {
     path: "/operateLog",
     component: Layout,
-    meta: { title: "日志管理" },
+    meta: { title: "日志管理", icon: "table" },
     children: [
       {
         path: "/operateLog/list",

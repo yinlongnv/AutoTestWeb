@@ -1,6 +1,7 @@
 import request from "@/utils/request";
 let userInfo = sessionStorage.getItem("userInfo");
 let userId = userInfo ? JSON.parse(sessionStorage.getItem("userInfo")).id : "";
+// 创建/编辑接口
 export function createApi(data) {
   return request({
     url: "/api/createOrEdit",
@@ -8,6 +9,7 @@ export function createApi(data) {
     data: { userId, ...data }
   });
 }
+// 获取接口详情信息
 export function getApiDetail(data) {
   return request({
     url: "/api/detail",
@@ -15,6 +17,7 @@ export function getApiDetail(data) {
     params: { ...data, userId }
   });
 }
+// (批量)删除接口
 export function deleteApis(data) {
   return request({
     url: "/api/delete",
@@ -22,6 +25,7 @@ export function deleteApis(data) {
     data: { userId, ...data }
   });
 }
+// 获取业务分组下拉筛选框内容
 export function getfilterMap(data) {
   return request({
     url: "/api/filterMap",
@@ -29,6 +33,7 @@ export function getfilterMap(data) {
     param: data
   });
 }
+// 获取环境域名下拉筛选内容
 export function getfilterBaseUrl(data) {
   return request({
     url: "/api/filterBaseUrl",
@@ -36,6 +41,7 @@ export function getfilterBaseUrl(data) {
     param: data
   });
 }
+// 批量导入接口数据
 export function handleUpload(data) {
   return request({
     url: "/api/upload",

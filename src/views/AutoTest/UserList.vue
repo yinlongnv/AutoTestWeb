@@ -188,7 +188,6 @@ export default {
   },
   watch: {
     timeArray(val) {
-      // console.log(val);
       if (!val) {
         this.searchObj.startTime = "";
         this.searchObj.endTime = "";
