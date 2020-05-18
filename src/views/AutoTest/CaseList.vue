@@ -23,13 +23,13 @@
 
       <div style="text-align:right;width:100%">
         <el-cascader
+          v-model="value"
           size="small"
           clearable
-          v-model="value"
           placeholder="请选择关联接口信息"
           :options="options"
           @change="handleChange"
-        ></el-cascader>
+        />
         <el-select
           v-model="searchObj.executeStatus"
           style="width:150px"
@@ -140,14 +140,12 @@
 </template>
 
 <script>
-import BaseTable from "@/components/BaseTable";
-import { executeStatusFilter } from "@/utils/filter";
+import BaseTable from '@/components/BaseTable'
+import { executeStatusFilter } from '@/utils/filter'
 import {
   deleteCases,
-  createCase,
-  getCaseDetail,
   getfilterMap
-} from "@/api/case";
+} from '@/api/case'
 export default {
   components: { BaseTable },
   filters: {
@@ -158,169 +156,169 @@ export default {
       value: [],
       options: [],
       timeArray: [],
-      formLabelWidth: "120px",
-      apiName: "",
+      formLabelWidth: '120px',
+      apiName: '',
       searchObj: {
-        caseDescription: "",
-        executeStatus: "",
-        projectName: "",
-        apiGroup: "",
-        apiMerge: ""
+        caseDescription: '',
+        executeStatus: '',
+        projectName: '',
+        apiGroup: '',
+        apiMerge: ''
       },
       idList: [],
-      type: "",
+      type: '',
       typeOptions: [
         {
-          name: "批量执行",
-          value: "执行"
+          name: '批量执行',
+          value: '执行'
         },
         {
-          name: "批量删除",
-          value: "删除"
+          name: '批量删除',
+          value: '删除'
         }
       ],
-      role: "",
+      role: '',
       executeStatusOptions: [
         {
-          name: "未执行",
+          name: '未执行',
           value: 1
         },
         {
-          name: "成功",
+          name: '成功',
           value: 2
         },
         {
-          name: "失败",
+          name: '失败',
           value: 3
         }
       ],
-      apiGroup: "",
+      apiGroup: '',
       apiGroupOptions: [],
-      reqMethod: "",
+      reqMethod: '',
       reqMethodOptions: []
-    };
+    }
   },
   created() {
-    this.getfilterMap();
+    this.getfilterMap()
   },
   methods: {
     handleChange(val) {
       if (val.length === 0) {
-        this.searchObj.projectName = "";
-        this.searchObj.apiGroup = "";
-        this.searchObj.apiMerge = "";
+        this.searchObj.projectName = ''
+        this.searchObj.apiGroup = ''
+        this.searchObj.apiMerge = ''
       } else {
-        this.searchObj.projectName = val[0];
-        this.searchObj.apiGroup = val[1];
-        this.searchObj.apiMerge = val[2];
+        this.searchObj.projectName = val[0]
+        this.searchObj.apiGroup = val[1]
+        this.searchObj.apiMerge = val[2]
       }
     },
     async getfilterMap() {
       try {
-        const result = await getfilterMap();
-        this.options = result.data.options;
+        const result = await getfilterMap()
+        this.options = result.data.options
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     batchActions() {
-      if (this.type === "删除") {
-        this.onDelete(this.idList);
+      if (this.type === '删除') {
+        this.onDelete(this.idList)
       } else {
-        this.onExecute(this.idList);
+        this.onExecute(this.idList)
       }
-      this.type = "";
+      this.type = ''
     },
     // 下载模板
     handleDownload() {
-      import("@/utils/Export2Excel").then(excel => {
+      import('@/utils/Export2Excel').then(excel => {
         const tHeader = [
-          "用户名",
-          "身份证号",
-          "账号角色",
-          "登入IP",
-          "账号操作",
-          "操作界面",
-          "操作时间"
-        ];
+          '用户名',
+          '身份证号',
+          '账号角色',
+          '登入IP',
+          '账号操作',
+          '操作界面',
+          '操作时间'
+        ]
         const filterVal = [
-          "username",
-          "id_number",
-          "role",
-          "login_ip",
-          "action",
-          "page",
-          "time"
-        ];
-        const list = this.list;
-        const data = this.formatJson(filterVal, list);
+          'username',
+          'id_number',
+          'role',
+          'login_ip',
+          'action',
+          'page',
+          'time'
+        ]
+        const list = this.list
+        const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
           filename: this.filename,
           autoWidth: this.autoWidth,
           bookType: this.bookType
-        });
-      });
+        })
+      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          return v[j];
+          return v[j]
         })
-      );
+      )
     },
     goApiDetail(row) {
-      this.$router.push({ path: "/api/detail", query: { id: row.id } });
+      this.$router.push({ path: '/api/detail', query: { id: row.id }})
     },
     goCaseDetail(row) {
-      this.$router.push({ path: "/case/detail", query: { id: row.id } });
+      this.$router.push({ path: '/case/detail', query: { id: row.id }})
     },
-    //创建用例
+    // 创建用例
     createCase(row) {
-      sessionStorage.removeItem("caseDetail");
-      this.$router.push({ path: "/case/edit", query: { type: 0 } });
+      sessionStorage.removeItem('caseDetail')
+      this.$router.push({ path: '/case/edit', query: { type: 0 }})
     },
-    //编辑用例
+    // 编辑用例
     onEdit(row) {
-      sessionStorage.setItem("caseDetail", JSON.stringify(row));
-      this.$router.push({ path: "/case/edit", query: { type: 1 } });
+      sessionStorage.setItem('caseDetail', JSON.stringify(row))
+      this.$router.push({ path: '/case/edit', query: { type: 1 }})
     },
-    //复制用例
+    // 复制用例
     copyCase(row) {
-      sessionStorage.setItem("caseDetail", JSON.stringify(row));
-      this.$router.push({ path: "/case/edit", query: { type: 2 } });
+      sessionStorage.setItem('caseDetail', JSON.stringify(row))
+      this.$router.push({ path: '/case/edit', query: { type: 2 }})
     },
     onDelete(row) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           if (Array.isArray(row)) {
-            this.deleteCases(row);
+            this.deleteCases(row)
           } else {
-            const ids = [row.id];
-            this.deleteCases(ids);
+            const ids = [row.id]
+            this.deleteCases(ids)
           }
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id);
-      console.log(this.idList);
+      this.idList = row.map(f => f.id)
+      console.log(this.idList)
     },
     async deleteCases(caseIds) {
       try {
-        await deleteCases({ caseIds: caseIds });
-        this.$refs.tableRef.onSearch();
+        await deleteCases({ caseIds: caseIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

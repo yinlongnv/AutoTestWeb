@@ -9,13 +9,13 @@
       <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
       <div style="text-align:right;width:100%">
         <el-cascader
+          v-model="value"
           size="small"
           clearable
-          v-model="value"
           placeholder="请选择业务方法"
           :options="options"
           @change="handleChange"
-        ></el-cascader>
+        />
         <el-select
           v-model="searchObj.reqMethod"
           style="width:150px"
@@ -104,8 +104,8 @@
       <el-form :model="form">
         <el-form-item label="环境域名" :label-width="formLabelWidth">
           <el-select
-            size="small"
             v-model="baseUrlOption"
+            size="small"
             filterable
             allow-create
             clearable
@@ -117,7 +117,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="上传文件" :label-width="formLabelWidth">
@@ -142,16 +142,14 @@
 </template>
 
 <script>
-import BaseTable from "@/components/BaseTable";
-import { statusFilter, reqMethodFilter } from "@/utils/filter";
+import BaseTable from '@/components/BaseTable'
+import { statusFilter, reqMethodFilter } from '@/utils/filter'
 import {
   deleteApis,
-  createApi,
-  getApiDetail,
   getfilterMap,
   getfilterBaseUrl,
   handleUpload
-} from "@/api/api";
+} from '@/api/api'
 export default {
   components: { BaseTable },
   filters: {
@@ -162,189 +160,189 @@ export default {
     return {
       form: {},
       fileList: [],
-      baseUrlOption: "",
+      baseUrlOption: '',
       dialogFormVisible: false,
       baseUrlOptions: [],
       value: [],
       options: [],
-      formLabelWidth: "120px",
+      formLabelWidth: '120px',
       searchObj: {
-        projectName: "",
-        apiGroup: "",
-        reqMethod: "",
-        apiName: ""
+        projectName: '',
+        apiGroup: '',
+        reqMethod: '',
+        apiName: ''
       },
       idList: [],
-      type: "",
+      type: '',
       methodOptions: [
         {
-          value: "get",
-          name: "get"
+          value: 'get',
+          name: 'get'
         },
         {
-          value: "post",
-          name: "post"
+          value: 'post',
+          name: 'post'
         }
       ]
-    };
+    }
   },
 
   created() {
-    this.getfilterMap();
-    this.getfilterBaseUrl();
+    this.getfilterMap()
+    this.getfilterBaseUrl()
   },
   methods: {
     handleDownload() {
-      import("@/utils/Export2Excel").then(excel => {
+      import('@/utils/Export2Excel').then(excel => {
         const tHeader = [
-          "用户名",
-          "用户编号",
-          "账号角色",
-          "最后登录IP",
-          "账号操作内容",
-          "操作界面",
-          "操作时间"
-        ];
+          '用户名',
+          '用户编号',
+          '账号角色',
+          '最后登录IP',
+          '账号操作内容',
+          '操作界面',
+          '操作时间'
+        ]
         const filterVal = [
-          "username",
-          "userNumber",
-          "role",
-          "lastIp",
-          "logContent",
-          "operatePath",
-          "createdAt"
-        ];
-        let list = [
+          'username',
+          'userNumber',
+          'role',
+          'lastIp',
+          'logContent',
+          'operatePath',
+          'createdAt'
+        ]
+        const list = [
           {
-            username: "222",
+            username: '222',
             userNumber: `[{'name': 'Content-Type', 'value': 'application/x-www-form-urlencoded', 'required': '1', 'example': '', 'desc': ''}, {'name': 'Authorization', 'value': 'bearer aklpsdjfl;kasdgponcvbpn', 'required': '1', 'example': '', 'desc': 'jwt'}]`
           }
-        ];
-        const data = this.formatJson(filterVal, list);
+        ]
+        const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "接口模板"
-        });
-      });
+          filename: '接口模板'
+        })
+      })
     },
     handleExceed(files, fileList) {
-      this.$message.warning("当前限制选择 1个文件");
+      this.$message.warning('当前限制选择 1个文件')
     },
     handleFileChange(file, fileList) {
-      this.fileList = fileList;
-      console.log("filefile", file);
+      this.fileList = fileList
+      console.log('filefile', file)
     },
     handleChange(val) {
       if (val.length === 0) {
-        this.searchObj.projectName = "";
-        this.searchObj.apiGroup = "";
+        this.searchObj.projectName = ''
+        this.searchObj.apiGroup = ''
       } else {
-        this.searchObj.projectName = val[0];
-        this.searchObj.apiGroup = val[1];
+        this.searchObj.projectName = val[0]
+        this.searchObj.apiGroup = val[1]
       }
     },
     async getfilterMap() {
       try {
-        const result = await getfilterMap();
-        let options = result.data.options;
-        for (let i of options) {
-          for (let child of i.children) {
-            delete child.children;
+        const result = await getfilterMap()
+        const options = result.data.options
+        for (const i of options) {
+          for (const child of i.children) {
+            delete child.children
           }
         }
-        this.options = result.data.options;
+        this.options = result.data.options
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     async getfilterBaseUrl() {
       try {
-        const result = await getfilterBaseUrl();
-        this.baseUrlOptions = result.data.baseUrlOptions;
+        const result = await getfilterBaseUrl()
+        this.baseUrlOptions = result.data.baseUrlOptions
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     // 创建接口
     createApi(row) {
-      sessionStorage.removeItem("apiDetail");
-      this.$router.push({ path: "/api/edit", query: { type: 0 } });
+      sessionStorage.removeItem('apiDetail')
+      this.$router.push({ path: '/api/edit', query: { type: 0 }})
     },
-    //编辑接口
+    // 编辑接口
     editApi(row) {
-      sessionStorage.setItem("apiDetail", JSON.stringify(row));
-      this.$router.push({ path: "/api/edit", query: { type: 1 } });
+      sessionStorage.setItem('apiDetail', JSON.stringify(row))
+      this.$router.push({ path: '/api/edit', query: { type: 1 }})
     },
-    //复制接口
+    // 复制接口
     copyApi(row) {
-      sessionStorage.setItem("apiDetail", JSON.stringify(row));
-      this.$router.push({ path: "/api/edit", query: { type: 2 } });
+      sessionStorage.setItem('apiDetail', JSON.stringify(row))
+      this.$router.push({ path: '/api/edit', query: { type: 2 }})
     },
     // 列表操作
     onDelete(row) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           if (Array.isArray(row)) {
-            this.deleteApis(row);
+            this.deleteApis(row)
           } else {
-            const ids = [row.id];
-            this.deleteApis(ids);
+            const ids = [row.id]
+            this.deleteApis(ids)
           }
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     async handleUpload() {
-      console.log(this.fileList[0], "filelist");
-      console.log(this.baseUrlOption);
-      let file = new FormData();
-      file.append("file", this.fileList[0]);
+      console.log(this.fileList[0], 'filelist')
+      console.log(this.baseUrlOption)
+      const file = new FormData()
+      file.append('file', this.fileList[0])
       const result = await handleUpload({
         baseUrl: this.baseUrlOption,
         file
-      });
-      if (result.data.code === "00000") {
-        console.log(result.data);
-        sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
+      })
+      if (result.data.code === '00000') {
+        console.log(result.data)
+        sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
         if (result.data.data.role) {
-          this.$router.push({ path: "/user/list" });
+          this.$router.push({ path: '/user/list' })
         } else {
-          this.$router.push({ path: "/api/list" });
+          this.$router.push({ path: '/api/list' })
         }
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
     },
     onCreateCase(row) {
-      console.log("row.id是什么");
-      console.log(row.id);
+      console.log('row.id是什么')
+      console.log(row.id)
       this.$router.push({
-        path: "/case/edit",
+        path: '/case/edit',
         query: { type: 0, apiId: row.id }
-      });
+      })
     },
 
     goDetail(row) {
-      this.$router.push({ path: "/api/detail", query: { id: row.id } });
+      this.$router.push({ path: '/api/detail', query: { id: row.id }})
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id);
+      this.idList = row.map(f => f.id)
       // console.log(this.idList);
     },
     async deleteApis(apiIds) {
       try {
-        await deleteApis({ apiIds: apiIds });
-        this.$refs.tableRef.onSearch();
+        await deleteApis({ apiIds: apiIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

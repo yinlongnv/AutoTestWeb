@@ -70,93 +70,95 @@ import {
   enableUsers,
   disableUsers,
   deleteUsers
-} from "@/api/user";
-import { statusFilter, roleFilter } from "@/utils/filter";
+} from '@/api/user'
+import { statusFilter, roleFilter } from '@/utils/filter'
 export default {
-  data() {
-    return {
-      userInfo: {}
-    };
-  },
-  created() {
-    this.getUserDetail();
-  },
   filters: {
     statusFilter,
     roleFilter
   },
+  data() {
+    return {
+      userInfo: {}
+    }
+  },
+  created() {
+    this.getUserDetail()
+  },
   methods: {
     async getUserDetail() {
       try {
-        let result = await getUserDetail({ id: this.$route.query.id });
-        this.userInfo = result.data.data;
-        sessionStorage.setItem("userDetail", JSON.stringify(this.userInfo));
-      } catch (error) {}
+        const result = await getUserDetail({ id: this.$route.query.id })
+        this.userInfo = result.data.data
+        sessionStorage.setItem('userDetail', JSON.stringify(this.userInfo))
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     goEdit() {
-      this.$router.push({ path: "/user/edit", query: { type: 1 } });
+      this.$router.push({ path: '/user/edit', query: { type: 1 }})
     },
     deleteItem(row) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           this.deleteUsers([this.userInfo.id]).then(() => {
-            this.$router.go(-1);
-          });
+            this.$router.go(-1)
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     disableItem(row) {
-      this.$confirm("确定要禁用吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要禁用吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           this.disableUsers([this.userInfo.id]).then(() => {
-            this.getUserDetail();
-          });
+            this.getUserDetail()
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     enableItem(row) {
       this.enableUsers([this.userInfo.id]).then(() => {
-        this.getUserDetail();
-      });
+        this.getUserDetail()
+      })
     },
     // 接口调用
     async deleteUsers(userIds) {
       try {
-        await deleteUsers({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
+        await deleteUsers({ userIds: userIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     async enableUsers(userIds) {
       try {
-        await enableUsers({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
+        await enableUsers({ userIds: userIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     async disableUsers(userIds) {
       try {
-        await disableUsers({ userIds: userIds });
-        this.$refs.tableRef.onSearch();
+        await disableUsers({ userIds: userIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     }
   }
-};
+}
 </script>
 
 <style scoped>

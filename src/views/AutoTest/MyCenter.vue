@@ -108,112 +108,114 @@
 <script>
 const DIALOGTITLES = {
   username() {
-    return "修改用户名";
+    return '修改用户名'
   },
   idNumber() {
-    return "修改身份证号";
+    return '修改身份证号'
   },
   phoneNumber() {
-    return "修改手机号";
+    return '修改手机号'
   },
   email() {
-    return "修改邮箱地址";
+    return '修改邮箱地址'
   },
   password() {
-    return "修改密码";
+    return '修改密码'
   }
-};
-import { createUser, getUserDetail } from "@/api/user";
-import { statusFilter, roleFilter } from "@/utils/filter";
+}
+import { createUser, getUserDetail } from '@/api/user'
+import { statusFilter, roleFilter } from '@/utils/filter'
 export default {
-  data() {
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error("密码不能小于6位"));
-      } else {
-        callback();
-      }
-    };
-    return {
-      rules: {
-        username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
-        ],
-        password: [
-          { required: true, validator: validatePassword, trigger: "blur" }
-        ]
-      },
-      dialogTitle: "修改密码",
-      dialogVisible: false,
-      userInfo: {},
-      form: {
-        username: "",
-        idNumber: "",
-        phoneNumber: "",
-        email: "",
-        password: ""
-      },
-      formLabelWidth: "120px"
-    };
-  },
-  created() {
-    this.getUserDetail();
-  },
   filters: {
     statusFilter,
     roleFilter
   },
+  data() {
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('密码不能小于6位'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      rules: {
+        username: [
+          { required: true, message: '用户名不能为空', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, validator: validatePassword, trigger: 'blur' }
+        ]
+      },
+      dialogTitle: '修改密码',
+      dialogVisible: false,
+      userInfo: {},
+      form: {
+        username: '',
+        idNumber: '',
+        phoneNumber: '',
+        email: '',
+        password: ''
+      },
+      formLabelWidth: '120px'
+    }
+  },
   watch: {
     form: {
       handler(val) {
-        console.log(val, "form");
-        console.log(this.userInfo, "userInfo");
+        console.log(val, 'form')
+        console.log(this.userInfo, 'userInfo')
       },
       deep: true
     }
   },
+  created() {
+    this.getUserDetail()
+  },
   methods: {
     async getUserDetail() {
       try {
-        let id = JSON.parse(sessionStorage.getItem("userInfo")).id;
-        let result = await getUserDetail({ id });
-        let data = JSON.stringify(result.data.data);
-        sessionStorage.setItem("centerInfo", data);
-        this.userInfo = JSON.parse(data);
-        this.form = JSON.parse(data);
-      } catch (error) {}
+        const id = JSON.parse(sessionStorage.getItem('userInfo')).id
+        const result = await getUserDetail({ id })
+        const data = JSON.stringify(result.data.data)
+        sessionStorage.setItem('centerInfo', data)
+        this.userInfo = JSON.parse(data)
+        this.form = JSON.parse(data)
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
     async createAccount() {
-      let id = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      await createUser({ ...this.form, id });
+      const id = JSON.parse(sessionStorage.getItem('userInfo')).id
+      await createUser({ ...this.form, id })
       this.$message({
-        type: "success",
-        message: "编辑成功"
-      });
+        type: 'success',
+        message: '编辑成功'
+      })
     },
     confrimChange() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
           this.createAccount().then(() => {
-            this.getUserDetail();
-          });
-          this.dialogVisible = false;
+            this.getUserDetail()
+          })
+          this.dialogVisible = false
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     openDialog(type) {
-      this.dialogTitle = DIALOGTITLES[type]();
-      console.log(this.dialogTitle, this.form);
-      this.dialogVisible = true;
+      this.dialogTitle = DIALOGTITLES[type]()
+      console.log(this.dialogTitle, this.form)
+      this.dialogVisible = true
     },
     closeDialog() {
-      this.form = JSON.parse(sessionStorage.getItem("centerInfo"));
+      this.form = JSON.parse(sessionStorage.getItem('centerInfo'))
     }
   }
-};
+}
 </script>
 
 <style scoped>

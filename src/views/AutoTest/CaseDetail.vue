@@ -84,58 +84,60 @@
 </template>
 
 <script>
-import { getCaseDetail, deleteCases } from "@/api/case";
-import { executeStatusFilter } from "@/utils/filter";
+import { getCaseDetail, deleteCases } from '@/api/case'
+import { executeStatusFilter } from '@/utils/filter'
 export default {
+  filters: {
+    executeStatusFilter
+  },
   data() {
     return {
       caseInfo: {}
-    };
+    }
   },
   created() {
-    this.getCaseDetail();
-  },
-  filters: {
-    executeStatusFilter
+    this.getCaseDetail()
   },
   methods: {
     async getCaseDetail() {
       try {
-        let result = await getCaseDetail({ id: this.$route.query.id });
-        this.caseInfo = result.data.data;
-        sessionStorage.setItem("caseDetail", JSON.stringify(this.caseInfo));
-      } catch (error) {}
+        const result = await getCaseDetail({ id: this.$route.query.id })
+        this.caseInfo = result.data.data
+        sessionStorage.setItem('caseDetail', JSON.stringify(this.caseInfo))
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     goEdit() {
-      this.$router.push({ path: "/case/edit", query: { type: 1 } });
+      this.$router.push({ path: '/case/edit', query: { type: 1 }})
     },
     deleteItem(row) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           this.deleteCases([this.caseInfo.id]).then(() => {
-            this.getCaseDetail();
-            this.$router.go(-1);
-          });
+            this.getCaseDetail()
+            this.$router.go(-1)
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     async deleteCases(caseIds) {
       try {
-        await deleteCases({ caseIds: caseIds });
-        this.$refs.tableRef.onSearch();
+        await deleteCases({ caseIds: caseIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     }
   }
-};
+}
 </script>
 
 <style scoped>

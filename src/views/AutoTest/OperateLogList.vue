@@ -17,7 +17,7 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
+          />
         </el-select>
         <el-date-picker
           v-model="timeArray"
@@ -39,9 +39,9 @@
       </div>
     </div>
     <base-table
-      @tableLoaded="getTableData"
       :url="'/operateLog/listWithSearch'"
       :search-param="searchObj"
+      @tableLoaded="getTableData"
     >
       <el-table-column label="用户名">
         <template slot-scope="scope">
@@ -83,106 +83,106 @@
 </template>
 
 <script>
-import BaseTable from "@/components/BaseTable";
-import { timeFilter, roleFilter } from "@/utils/filter";
-import { parseTime } from "@/utils";
-import { getfilterUserName, exportAllLogs } from "@/api/operateLog";
+import BaseTable from '@/components/BaseTable'
+import { timeFilter, roleFilter } from '@/utils/filter'
+import { parseTime } from '@/utils'
+import { getfilterUserName, exportAllLogs } from '@/api/operateLog'
 export default {
-  created() {
-    this.getfilterUserName();
-  },
   components: { BaseTable },
   filters: {
     timeFilter,
     roleFilter
   },
-  watch: {
-    timeArray(val) {
-      if (!val) {
-        this.searchObj.startTime = "";
-        this.searchObj.endTime = "";
-      } else {
-        this.searchObj.startTime = val[0];
-        this.searchObj.endTime = val[1];
-      }
-    }
-  },
   data() {
     return {
       timeArray: [],
-      searchName: "",
+      searchName: '',
       searchObj: {
-        user: "",
-        startTime: "",
-        endTime: "",
-        logInfo: ""
+        user: '',
+        startTime: '',
+        endTime: '',
+        logInfo: ''
       },
       list: [],
       options: [],
-      value: ""
-    };
+      value: ''
+    }
+  },
+  watch: {
+    timeArray(val) {
+      if (!val) {
+        this.searchObj.startTime = ''
+        this.searchObj.endTime = ''
+      } else {
+        this.searchObj.startTime = val[0]
+        this.searchObj.endTime = val[1]
+      }
+    }
+  },
+  created() {
+    this.getfilterUserName()
   },
   methods: {
     getTableData(data) {
-      console.log("操作日志list");
-      console.log(data);
-      this.list = data;
+      console.log('操作日志list')
+      console.log(data)
+      this.list = data
     },
     async getfilterUserName() {
       try {
-        const result = await getfilterUserName();
-        this.options = result.data.userNameOptions;
+        const result = await getfilterUserName()
+        this.options = result.data.userNameOptions
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     // 批量导出
     handleDownload() {
-      import("@/utils/Export2Excel").then(excel => {
+      import('@/utils/Export2Excel').then(excel => {
         const tHeader = [
-          "用户名",
-          "用户编号",
-          "账号角色",
-          "最后登录IP",
-          "账号操作内容",
-          "操作界面",
-          "操作时间"
-        ];
+          '用户名',
+          '用户编号',
+          '账号角色',
+          '最后登录IP',
+          '账号操作内容',
+          '操作界面',
+          '操作时间'
+        ]
         const filterVal = [
-          "username",
-          "userNumber",
-          "role",
-          "lastIp",
-          "logContent",
-          "operatePath",
-          "createdAt"
-        ];
-        let list = [];
+          'username',
+          'userNumber',
+          'role',
+          'lastIp',
+          'logContent',
+          'operatePath',
+          'createdAt'
+        ]
+        let list = []
         exportAllLogs().then(res => {
-          list = res.data;
-          console.log("res", list);
-          const data = this.formatJson(filterVal, list);
+          list = res.data
+          console.log('res', list)
+          const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: "操作日志模板"
-          });
-        });
-      });
+            filename: '操作日志模板'
+          })
+        })
+      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          if (j === "timestamp") {
-            return parseTime(v[j]);
+          if (j === 'timestamp') {
+            return parseTime(v[j])
           } else {
-            return v[j];
+            return v[j]
           }
         })
-      );
+      )
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -20,8 +20,8 @@
           :style="inputWidth"
           size="small"
           placeholder="请选择账号角色"
-          @change="selectRoles"
           clearable
+          @change="selectRoles"
         >
           <el-option
             v-for="item in options"
@@ -52,107 +52,106 @@
 </template>
 
 <script>
-import { timeFilter } from "@/utils/filter";
-import { createUser } from "@/api/user";
-import { Form } from "element-ui";
+import { timeFilter } from '@/utils/filter'
+import { createUser } from '@/api/user'
 export default {
   filters: { timeFilter },
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("密码不能小于6位"));
+        callback(new Error('密码不能小于6位'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       editStatus: Number(this.$route.query.type),
       form: {
-        username: "",
-        idNumber: "",
-        phoneNumber: "",
-        email: "",
-        role: "",
-        password: ""
+        username: '',
+        idNumber: '',
+        phoneNumber: '',
+        email: '',
+        role: '',
+        password: ''
       },
       rules: {
         username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
+          { required: true, message: '用户名不能为空', trigger: 'blur' }
         ],
         role: [
-          { required: true, message: "账号角色不能为空", trigger: "blur" }
+          { required: true, message: '账号角色不能为空', trigger: 'blur' }
         ],
         password: [
-          { required: true, validator: validatePassword, trigger: "blur" }
+          { required: true, validator: validatePassword, trigger: 'blur' }
         ]
       },
       options: [
         {
-          label: "root",
+          label: 'root',
           value: 1
         },
         {
-          label: "QA",
+          label: 'QA',
           value: 0
         }
       ],
-      inputWidth: "width:360px",
-      formLabelWidth: "120px"
-    };
+      inputWidth: 'width:360px',
+      formLabelWidth: '120px'
+    }
   },
   created() {
-    let initForm = {
-      username: "",
-      idNumber: "",
-      phoneNumber: "",
-      email: "",
-      role: "",
-      password: ""
-    };
-    this.form = JSON.parse(sessionStorage.getItem("userDetail")) || initForm;
+    const initForm = {
+      username: '',
+      idNumber: '',
+      phoneNumber: '',
+      email: '',
+      role: '',
+      password: ''
+    }
+    this.form = JSON.parse(sessionStorage.getItem('userDetail')) || initForm
   },
   methods: {
     closeDialog() {
-      this.$refs["ruleForm"].resetFields();
+      this.$refs['ruleForm'].resetFields()
     },
     selectRoles(val) {
-      console.log(val);
-      console.log(this.role);
+      console.log(val)
+      console.log(this.role)
     },
     goBack() {
-      this.$router.go(-1);
-      sessionStorage.removeItem("userDetail");
+      this.$router.go(-1)
+      sessionStorage.removeItem('userDetail')
     },
     confirmEdit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.createAccount();
+          this.createAccount()
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     async createAccount() {
-      sessionStorage.removeItem("userDetail");
-      let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      const result = await createUser({ ...this.form, userId });
-      if (this.editStatus === 0 && result.data.code === "00000") {
+      sessionStorage.removeItem('userDetail')
+      const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
+      const result = await createUser({ ...this.form, userId })
+      if (this.editStatus === 0 && result.data.code === '00000') {
         this.$message({
-          type: "success",
-          message: "创建成功"
-        });
-      } else if (this.editStatus === 1 && result.data.code === "00000") {
+          type: 'success',
+          message: '创建成功'
+        })
+      } else if (this.editStatus === 1 && result.data.code === '00000') {
         this.$message({
-          type: "success",
-          message: "编辑成功"
-        });
+          type: 'success',
+          message: '编辑成功'
+        })
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
-      this.$router.push({ path: "/user/list" });
+      this.$router.push({ path: '/user/list' })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

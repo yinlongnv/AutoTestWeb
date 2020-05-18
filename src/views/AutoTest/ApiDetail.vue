@@ -64,57 +64,59 @@
 </template>
 
 <script>
-import { getApiDetail, deleteApis } from "@/api/api";
-import { statusFilter } from "@/utils/filter";
+import { getApiDetail, deleteApis } from '@/api/api'
+import { statusFilter } from '@/utils/filter'
 export default {
+  filters: {
+    statusFilter
+  },
   data() {
     return {
       apiInfo: {}
-    };
+    }
   },
   created() {
-    this.getApiDetail();
-  },
-  filters: {
-    statusFilter
+    this.getApiDetail()
   },
   methods: {
     async getApiDetail() {
       try {
-        let result = await getApiDetail({ id: this.$route.query.id });
-        this.apiInfo = result.data.data;
-        sessionStorage.setItem("apiDetail", JSON.stringify(this.apiInfo));
-      } catch (error) {}
+        const result = await getApiDetail({ id: this.$route.query.id })
+        this.apiInfo = result.data.data
+        sessionStorage.setItem('apiDetail', JSON.stringify(this.apiInfo))
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     goEdit() {
-      this.$router.push({ path: "/api/edit", query: { type: 1 } });
+      this.$router.push({ path: '/api/edit', query: { type: 1 }})
     },
     deleteItem(row) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           this.deleteApis([this.apiInfo.id]).then(() => {
-            this.$router.go(-1);
-          });
+            this.$router.go(-1)
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     async deleteApis(apiIds) {
       try {
-        await deleteApis({ apiIds: apiIds });
-        this.$refs.tableRef.onSearch();
+        await deleteApis({ apiIds: apiIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     }
   }
-};
+}
 </script>
 
 <style scoped>
