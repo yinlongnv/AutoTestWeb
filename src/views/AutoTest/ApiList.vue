@@ -4,7 +4,6 @@
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
-      <!-- <el-button icon="el-icon-upload2" size="small" @click="handleUpload">批量导入</el-button> -->
       <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
       <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
       <div style="text-align:right;width:100%">
@@ -106,6 +105,7 @@
           <el-select
             v-model="baseUrlOption"
             size="small"
+            :style="inputWidth"
             filterable
             allow-create
             clearable
@@ -165,6 +165,7 @@ export default {
       baseUrlOptions: [],
       value: [],
       options: [],
+      inputWidth: 'width:360px',
       formLabelWidth: '120px',
       searchObj: {
         projectName: '',
@@ -192,30 +193,55 @@ export default {
     this.getfilterBaseUrl()
   },
   methods: {
+    // 下载模板
     handleDownload() {
       import('@/utils/Export2Excel').then(excel => {
         const tHeader = [
-          '用户名',
-          '用户编号',
-          '账号角色',
-          '最后登录IP',
-          '账号操作内容',
-          '操作界面',
-          '操作时间'
+          '环境域名',
+          '所属业务',
+          '所属分组',
+          '接口名称',
+          '接口路径',
+          '请求方法',
+          '接口描述',
+          '请求头',
+          '请求参数',
+          '请求体',
+          '用例规则',
+          '响应信息'
         ]
         const filterVal = [
-          'username',
-          'userNumber',
-          'role',
-          'lastIp',
-          'logContent',
-          'operatePath',
-          'createdAt'
+          'baseUrl',
+          'projectName',
+          'apiGroup',
+          'apiName',
+          'apiPath',
+          'reqMethod',
+          'apiDescription',
+          'reqHeaders',
+          'reqQuery',
+          'reqBody',
+          'caseRules',
+          'apiResponse'
         ]
         const list = [
           {
-            username: '222',
-            userNumber: `[{'name': 'Content-Type', 'value': 'application/x-www-form-urlencoded', 'required': '1', 'example': '', 'desc': ''}, {'name': 'Authorization', 'value': 'bearer aklpsdjfl;kasdgponcvbpn', 'required': '1', 'example': '', 'desc': 'jwt'}]`
+            baseUrl: 'csr.adl.io',
+            projectName: '靶场inner',
+            apiGroup: '用户中心',
+            apiName: '获取用户信息',
+            apiPath: '/range-user/api/inner/user/info',
+            reqMethod: 'POST',
+            apiDescription: '通过用户id获取用户信息',
+            reqHeaders:
+              "[{'name': 'Content-Type', 'value': 'application/x-www-form-urlencoded', 'required': '1', 'example': '', 'desc': ''}]",
+            reqQuery:
+              "[{'name': 'url', 'required': '1', 'example': 'range-usr/api/login', 'desc': ''}]",
+            reqBody:
+              "[{'name': 'id', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}]",
+            caseRules:
+              "[{'name': 'id', 'required': '1', 'type': 'text', 'min': '6', 'max': '10', 'options': '['男', '女']', 'isArray': '0', model: 'phone'}]",
+            apiResponse: `{"code": "00000","message": "","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
           }
         ]
         const data = this.formatJson(filterVal, list)
@@ -225,6 +251,13 @@ export default {
           filename: '接口模板'
         })
       })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          return v[j]
+        })
+      )
     },
     handleExceed(files, fileList) {
       this.$message.warning('当前限制选择 1个文件')

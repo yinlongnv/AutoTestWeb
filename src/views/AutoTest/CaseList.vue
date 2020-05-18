@@ -202,6 +202,33 @@ export default {
     this.getfilterMap()
   },
   methods: {
+    // 下载模板
+    handleDownload() {
+      import('@/utils/Export2Excel').then(excel => {
+        const tHeader = ['用例内容', '用例描述', '预期响应']
+        const filterVal = ['caseBody', 'caseDescription', 'caseResponse']
+        const list = [
+          {
+            caseBody: "{'username': 'dadalong', 'password': '123456'}",
+            caseDescription: '测试用户登录正常场景',
+            caseResponse: `{"code": "00000","message": "登录成功","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
+          }
+        ]
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: '用例模板'
+        })
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          return v[j]
+        })
+      )
+    },
     handleChange(val) {
       if (val.length === 0) {
         this.searchObj.projectName = ''
@@ -229,44 +256,8 @@ export default {
       }
       this.type = ''
     },
-    // 下载模板
-    handleDownload() {
-      import('@/utils/Export2Excel').then(excel => {
-        const tHeader = [
-          '用户名',
-          '身份证号',
-          '账号角色',
-          '登入IP',
-          '账号操作',
-          '操作界面',
-          '操作时间'
-        ]
-        const filterVal = [
-          'username',
-          'id_number',
-          'role',
-          'login_ip',
-          'action',
-          'page',
-          'time'
-        ]
-        const list = this.list
-        const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
-        })
-      })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          return v[j]
-        })
-      )
+    goApiDetail(row) {
+      this.$router.push({ path: '/api/detail', query: { id: row.id }})
     },
     goDetail(path, row) {
       this.$router.push({ path, query: { id: row.id }})

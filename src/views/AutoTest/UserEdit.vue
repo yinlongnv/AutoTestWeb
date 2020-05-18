@@ -40,7 +40,7 @@
           v-model="form.password"
           :style="inputWidth"
           size="small"
-          placeholder="请输入账号密码，6-20位，需含字母、数字、符号"
+          placeholder="请输入账号密码，至少6位"
         />
       </el-form-item>
     </el-form>

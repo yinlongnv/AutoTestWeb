@@ -91,7 +91,7 @@
             <el-input
               v-model="form.password"
               style="width:300px"
-              placeholder="请输入新密码"
+              placeholder="请输入密码,至少6位"
               size="small"
             />
           </el-form-item>

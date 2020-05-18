@@ -124,10 +124,9 @@ export default {
   },
   methods: {
     getTableData(data) {
-      console.log('操作日志list')
-      console.log(data)
       this.list = data
     },
+    // 获取全部用户名的下拉筛选框
     async getfilterUserName() {
       try {
         const result = await getfilterUserName()
@@ -136,13 +135,13 @@ export default {
         this.$message.error(error)
       }
     },
-    // 批量导出
+    // 导出全部日志
     handleDownload() {
       import('@/utils/Export2Excel').then(excel => {
         const tHeader = [
           '用户名',
           '用户编号',
-          '账号角色',
+          '账号角色(1为root,0为QA)',
           '最后登录IP',
           '账号操作内容',
           '操作界面',
@@ -160,12 +159,11 @@ export default {
         let list = []
         exportAllLogs().then(res => {
           list = res.data
-          console.log('res', list)
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: '操作日志模板'
+            filename: '操作日志表'
           })
         })
       })
