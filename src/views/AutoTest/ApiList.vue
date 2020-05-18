@@ -1,6 +1,8 @@
 <template>
   <div class="old-manage">
     <div class="header-line">接口管理</div>
+    <el-button type="text" style="color:#67c23a" size="small" @click="showParams">参数规则</el-button>
+
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
@@ -87,7 +89,7 @@
               style="color:#e6a23c"
               @click="onCreateCase(scope.row)"
             >创建用例</el-button>
-            <el-button type="text" style="color:#67c23a" size="small">参数规则</el-button>
+            <el-button type="text" style="color:#67c23a" size="small" @click="showParams">参数规则</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
@@ -98,6 +100,69 @@
         </template>
       </el-table-column>
     </base-table>
+    <el-dialog title="参数规则" :visible="dialogParams" width="550px">
+      <el-form ref="paramForm" :model="paramForm">
+        <el-form-item label="参数名" prop="name" :label-width="formLabelWidth">
+          <el-input v-model="paramForm.name" placeholder="请输入参数名" size="small" style="width:300px" />
+        </el-form-item>
+        <el-form-item label="是否必需" prop="required" :label-width="formLabelWidth">
+          <el-radio-group v-model="paramForm.required">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="2">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="数据类型" prop="type" :label-width="formLabelWidth">
+          <el-select v-model="paramForm.type" placeholder="请选择数据类型" size="small">
+            <el-option
+              v-for="item in typeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="限制" prop="required" :label-width="formLabelWidth">
+          <el-radio-group v-model="paramForm.limit">
+            <el-radio :label="1">范围</el-radio>
+            <el-radio :label="2">选项</el-radio>
+            <el-radio :label="3">无</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <div v-if="paramForm.limit ===1">
+          <el-form-item label="最小值" :label-width="formLabelWidth">
+            <el-input v-model="paramForm.min" placeholder="请输入最小值" style="width:300px" />
+          </el-form-item>
+          <el-form-item label="最大值" :label-width="formLabelWidth">
+            <el-input v-model="paramForm.max" placeholder="请输入最大值" style="width:300px" />
+          </el-form-item>
+          <el-form-item label="是否为数组" prop="required" :label-width="formLabelWidth">
+            <el-radio-group v-model="paramForm.isArray">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="2">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
+            <el-select v-model="paramForm.model" placeholder="请选择数据类型">
+              <el-option
+                v-for="item in modelOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </div>
+        <div v-if="paramForm.limit === 2">
+          <el-form-item label="选项显示" :label-width="formLabelWidth">
+            <el-input v-model="paramForm.options" placeholder="请输入选项内容" style="width:300px" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogParams = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="dialogParams = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog title="批量导入" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -158,6 +223,15 @@ export default {
   },
   data() {
     return {
+      dialogParams: false,
+      paramForm: {
+        name: '',
+        min: '',
+        max: '',
+        isArray: '',
+        model: '',
+        options: ''
+      },
       form: {},
       fileList: [],
       baseUrlOption: '',
@@ -175,6 +249,42 @@ export default {
       },
       idList: [],
       type: '',
+      typeOptions: [
+        {
+          value: 'int',
+          label: 'int'
+        },
+        {
+          value: 'string',
+          label: 'string'
+        },
+        {
+          value: 'other',
+          label: 'other'
+        }
+      ],
+      modelOptions: [
+        {
+          value: 'phone',
+          label: 'phone'
+        },
+        {
+          value: 'email',
+          label: 'email'
+        },
+        {
+          value: 'idNumber',
+          label: 'idNumber'
+        },
+        {
+          value: 'dateTime',
+          label: 'dateTime'
+        },
+        {
+          value: 'other',
+          label: 'other'
+        }
+      ],
       methodOptions: [
         {
           value: 'get',
@@ -193,6 +303,9 @@ export default {
     this.getfilterBaseUrl()
   },
   methods: {
+    showParams() {
+      this.dialogParams = true
+    },
     // 下载模板
     handleDownload() {
       import('@/utils/Export2Excel').then(excel => {
