@@ -94,7 +94,7 @@ export default {
     goEdit() {
       this.$router.push({ path: '/api/edit', query: { type: 1 }})
     },
-    deleteItem(row) {
+    deleteItem() {
       this.$confirm('确定要删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -109,7 +109,7 @@ export default {
     },
     async deleteApis(apiIds) {
       try {
-        await deleteApis({ apiIds: apiIds })
+        await deleteApis({ apiIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)

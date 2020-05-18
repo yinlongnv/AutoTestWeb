@@ -80,8 +80,8 @@
       <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="editApi(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="copyApi(scope.row)">复制接口</el-button>
+            <el-button type="text" size="small" @click="editOrCopy(1,scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="editOrCopy(2,scope.row)">复制接口</el-button>
             <el-button
               type="text"
               size="small"
@@ -93,7 +93,7 @@
               type="text"
               style="color:#f56c6c"
               size="small"
-              @click="onDelete(scope.row)"
+              @click="onDelete([scope.row.id])"
             >删除</el-button>
           </div>
         </template>
@@ -231,7 +231,6 @@ export default {
     },
     handleFileChange(file, fileList) {
       this.fileList = fileList
-      console.log('filefile', file)
     },
     handleChange(val) {
       if (val.length === 0) {
@@ -264,41 +263,22 @@ export default {
         this.$message.error(error)
       }
     },
-    // 创建接口
     createApi(row) {
       sessionStorage.removeItem('apiDetail')
       this.$router.push({ path: '/api/edit', query: { type: 0 }})
     },
-    // 编辑接口
-    editApi(row) {
+    editOrCopy(type, row) {
       sessionStorage.setItem('apiDetail', JSON.stringify(row))
-      this.$router.push({ path: '/api/edit', query: { type: 1 }})
+      this.$router.push({ path: '/api/edit', query: { type }})
     },
-    // 复制接口
-    copyApi(row) {
-      sessionStorage.setItem('apiDetail', JSON.stringify(row))
-      this.$router.push({ path: '/api/edit', query: { type: 2 }})
-    },
-    // 列表操作
-    onDelete(row) {
+    onDelete(idList) {
       this.$confirm('确定要删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      })
-        .then(() => {
-          if (Array.isArray(row)) {
-            this.deleteApis(row)
-          } else {
-            const ids = [row.id]
-            this.deleteApis(ids)
-          }
-        })
-        .catch(() => {})
+      }).then(() => this.deleteApis(idList)).catch(() => {})
     },
     async handleUpload() {
-      console.log(this.fileList[0], 'filelist')
-      console.log(this.baseUrlOption)
       const file = new FormData()
       file.append('file', this.fileList[0])
       const result = await handleUpload({
@@ -331,7 +311,6 @@ export default {
     },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id)
-      // console.log(this.idList);
     },
     async deleteApis(apiIds) {
       try {

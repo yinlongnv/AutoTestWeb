@@ -54,6 +54,14 @@
 <script>
 import { timeFilter } from '@/utils/filter'
 import { createUser } from '@/api/user'
+const INIT_FORM = {
+  username: '',
+  idNumber: '',
+  phoneNumber: '',
+  email: '',
+  role: '',
+  password: ''
+}
 export default {
   filters: { timeFilter },
   data() {
@@ -100,23 +108,11 @@ export default {
     }
   },
   created() {
-    const initForm = {
-      username: '',
-      idNumber: '',
-      phoneNumber: '',
-      email: '',
-      role: '',
-      password: ''
-    }
-    this.form = JSON.parse(sessionStorage.getItem('userDetail')) || initForm
+    this.form = JSON.parse(sessionStorage.getItem('userDetail')) || INIT_FORM
   },
   methods: {
     closeDialog() {
       this.$refs['ruleForm'].resetFields()
-    },
-    selectRoles(val) {
-      console.log(val)
-      console.log(this.role)
     },
     goBack() {
       this.$router.go(-1)
@@ -135,12 +131,14 @@ export default {
       sessionStorage.removeItem('userDetail')
       const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
       const result = await createUser({ ...this.form, userId })
-      if (this.editStatus === 0 && result.data.code === '00000') {
+      const createOk = this.editStatus === 0 && result.data.code === '00000'
+      const editOk = this.editStatus === 1 && result.data.code === '00000'
+      if (createOk) {
         this.$message({
           type: 'success',
           message: '创建成功'
         })
-      } else if (this.editStatus === 1 && result.data.code === '00000') {
+      } else if (editOk) {
         this.$message({
           type: 'success',
           message: '编辑成功'

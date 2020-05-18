@@ -114,7 +114,7 @@ export default {
     goEdit() {
       this.$router.push({ path: '/case/edit', query: { type: 1 }})
     },
-    deleteItem(row) {
+    deleteItem() {
       this.$confirm('确定要删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

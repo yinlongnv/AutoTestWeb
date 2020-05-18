@@ -109,20 +109,20 @@
               type="text"
               style="color:#67c23a"
               size="small"
-              @click="onEnable(scope.row)"
+              @click="enableUsers([scope.row.id])"
             >启用</el-button>
             <el-button
               v-else
               type="text"
               style="color:#e6a23c"
               size="small"
-              @click="onDisable(scope.row)"
+              @click="onDisable([scope.row.id])"
             >禁用</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
-              @click="onDelete(scope.row)"
+              @click="onDelete([scope.row.id])"
             >删除</el-button>
           </div>
         </template>
@@ -135,7 +135,6 @@
 import BaseTable from '@/components/BaseTable'
 import { statusFilter, roleFilter } from '@/utils/filter'
 import { deleteUsers, disableUsers, enableUsers } from '@/api/user'
-
 export default {
   components: { BaseTable },
   filters: {
@@ -188,7 +187,6 @@ export default {
   },
   watch: {
     timeArray(val) {
-      // console.log(val);
       if (!val) {
         this.searchObj.startTime = ''
         this.searchObj.endTime = ''
@@ -208,49 +206,22 @@ export default {
       } else if (this.type === '删除') {
         this.onDelete(this.idList)
       } else {
-        this.onEnable(this.idList)
+        this.enableUsers(this.idList)
       }
       this.type = ''
     },
-    onDisable(row) {
-      this.$confirm('确定要禁用吗?', '提示', {
+    actionNotice(text, fn) {
+      this.$confirm(text, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      })
-        .then(() => {
-          if (Array.isArray(row)) {
-            this.disableUsers(row)
-          } else {
-            const ids = [row.id]
-            this.disableUsers(ids)
-          }
-        })
-        .catch(() => {})
+      }).then(fn).catch(() => {})
     },
-    onDelete(row) {
-      this.$confirm('确定要删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          if (Array.isArray(row)) {
-            this.deleteUsers(row)
-          } else {
-            const ids = [row.id]
-            this.deleteUsers(ids)
-          }
-        })
-        .catch(() => {})
+    onDisable(idList) {
+      this.actionNotice('确定要禁用吗?', () => { this.disableUsers(idList) })
     },
-    onEnable(row) {
-      if (Array.isArray(row)) {
-        this.enableUsers(row)
-      } else {
-        const ids = [row.id]
-        this.enableUsers(ids)
-      }
+    onDelete(idList) {
+      this.actionNotice('确定要删除吗?', () => { this.deleteUsers(idList) })
     },
     onEdit(row) {
       sessionStorage.setItem('userDetail', JSON.stringify(row))
@@ -266,7 +237,7 @@ export default {
     // 接口调用
     async deleteUsers(userIds) {
       try {
-        await deleteUsers({ userIds: userIds })
+        await deleteUsers({ userIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)
@@ -274,7 +245,7 @@ export default {
     },
     async enableUsers(userIds) {
       try {
-        await enableUsers({ userIds: userIds })
+        await enableUsers({ userIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)
@@ -282,7 +253,7 @@ export default {
     },
     async disableUsers(userIds) {
       try {
-        await disableUsers({ userIds: userIds })
+        await disableUsers({ userIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)

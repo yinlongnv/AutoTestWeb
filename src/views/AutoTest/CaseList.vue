@@ -66,7 +66,7 @@
           <el-button
             type="text"
             size="small"
-            @click="goApiDetail(scope.row)"
+            @click="goDetail('/api/detail',scope.row)"
           >{{ scope.row.apiName }}</el-button>
         </template>
       </el-table-column>
@@ -75,7 +75,7 @@
           <el-button
             type="text"
             size="small"
-            @click="goCaseDetail(scope.row)"
+            @click="goDetail('/case/detail',scope.row)"
           >{{ scope.row.caseDescription }}</el-button>
         </template>
       </el-table-column>
@@ -118,8 +118,8 @@
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="copyCase(scope.row)">复制用例</el-button>
+            <el-button type="text" size="small" @click="editOrCopy(1,scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="editOrCopy(2,scope.row)">复制用例</el-button>
             <el-button
               type="text"
               style="color:#67c23a"
@@ -130,7 +130,7 @@
               type="text"
               style="color:#f56c6c"
               size="small"
-              @click="onDelete(scope.row)"
+              @click="onDelete([scope.row.id])"
             >删除</el-button>
           </div>
         </template>
@@ -268,40 +268,25 @@ export default {
         })
       )
     },
-    goApiDetail(row) {
-      this.$router.push({ path: '/api/detail', query: { id: row.id }})
+    goDetail(path, row) {
+      this.$router.push({ path, query: { id: row.id }})
     },
-    goCaseDetail(row) {
-      this.$router.push({ path: '/case/detail', query: { id: row.id }})
-    },
-    // 创建用例
     createCase(row) {
       sessionStorage.removeItem('caseDetail')
       this.$router.push({ path: '/case/edit', query: { type: 0 }})
     },
-    // 编辑用例
-    onEdit(row) {
+    editOrCopy(type, row) {
       sessionStorage.setItem('caseDetail', JSON.stringify(row))
-      this.$router.push({ path: '/case/edit', query: { type: 1 }})
+      this.$router.push({ path: '/case/edit', query: { type }})
     },
-    // 复制用例
-    copyCase(row) {
-      sessionStorage.setItem('caseDetail', JSON.stringify(row))
-      this.$router.push({ path: '/case/edit', query: { type: 2 }})
-    },
-    onDelete(row) {
+    onDelete(idList) {
       this.$confirm('确定要删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          if (Array.isArray(row)) {
-            this.deleteCases(row)
-          } else {
-            const ids = [row.id]
-            this.deleteCases(ids)
-          }
+          this.deleteCases(idList)
         })
         .catch(() => {})
     },
@@ -311,7 +296,7 @@ export default {
     },
     async deleteCases(caseIds) {
       try {
-        await deleteCases({ caseIds: caseIds })
+        await deleteCases({ caseIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)

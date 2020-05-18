@@ -101,33 +101,28 @@ export default {
     goEdit() {
       this.$router.push({ path: '/user/edit', query: { type: 1 }})
     },
-    deleteItem(row) {
-      this.$confirm('确定要删除吗?', '提示', {
+    actionNotice(text, fn) {
+      this.$confirm(text, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      })
-        .then(() => {
-          this.deleteUsers([this.userInfo.id]).then(() => {
-            this.$router.go(-1)
-          })
-        })
-        .catch(() => {})
+      }).then(fn).catch(() => {})
     },
-    disableItem(row) {
-      this.$confirm('确定要禁用吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.disableUsers([this.userInfo.id]).then(() => {
-            this.getUserDetail()
-          })
+    deleteItem() {
+      this.actionNotice('确定要删除吗?', () => {
+        this.deleteUsers([this.userInfo.id]).then(() => {
+          this.$router.go(-1)
         })
-        .catch(() => {})
+      })
     },
-    enableItem(row) {
+    disableItem() {
+      this.actionNotice('确定要禁用吗?', () => {
+        this.disableUsers([this.userInfo.id]).then(() => {
+          this.getUserDetail()
+        })
+      })
+    },
+    enableItem() {
       this.enableUsers([this.userInfo.id]).then(() => {
         this.getUserDetail()
       })
@@ -135,7 +130,7 @@ export default {
     // 接口调用
     async deleteUsers(userIds) {
       try {
-        await deleteUsers({ userIds: userIds })
+        await deleteUsers({ userIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)
@@ -143,7 +138,7 @@ export default {
     },
     async enableUsers(userIds) {
       try {
-        await enableUsers({ userIds: userIds })
+        await enableUsers({ userIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)
@@ -151,7 +146,7 @@ export default {
     },
     async disableUsers(userIds) {
       try {
-        await disableUsers({ userIds: userIds })
+        await disableUsers({ userIds })
         this.$refs.tableRef.onSearch()
       } catch (error) {
         this.$message.error(error)

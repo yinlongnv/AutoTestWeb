@@ -98,8 +98,6 @@ export default {
     }
   },
   created() {
-    // this.editStatus = Boolean(this.$route.query.type)
-    // console.log(this.$route.query.type, this.editStatus);
     this.form = JSON.parse(sessionStorage.getItem('caseDetail')) || FORM
     this.getfilterMap()
     if (this.editStatus !== 0) {
@@ -156,23 +154,6 @@ export default {
         }
       })
     },
-    // async createAccount() {
-    //   // sessionStorage.removeItem("userDetail");
-    //   let userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-    //   await createCase({ ...this.form, userId });
-    //   if (this.editStatus === 0) {
-    //     this.$message({
-    //       type: "success",
-    //       message: "创建成功"
-    //     });
-    //   } else {
-    //     this.$message({
-    //       type: "success",
-    //       message: "编辑成功"
-    //     });
-    //   }
-    //   this.$router.push({ path: "/case/list" });
-    // }
     judgeStatus(result, message) {
       if (result.data.code === '00000') {
         this.$message({

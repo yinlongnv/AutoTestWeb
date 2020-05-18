@@ -177,10 +177,10 @@ export default {
       try {
         const id = JSON.parse(sessionStorage.getItem('userInfo')).id
         const result = await getUserDetail({ id })
-        const data = JSON.stringify(result.data.data)
-        sessionStorage.setItem('centerInfo', data)
-        this.userInfo = JSON.parse(data)
-        this.form = JSON.parse(data)
+        const dataCopy = JSON.stringify(result.data.data)
+        sessionStorage.setItem('centerInfo', dataCopy)
+        this.userInfo = JSON.parse(dataCopy)
+        this.form = JSON.parse(dataCopy)
       } catch (error) {
         this.$message.error(error)
       }
@@ -201,14 +201,13 @@ export default {
           })
           this.dialogVisible = false
         } else {
-          console.log('error submit!!')
+          console.log('请输入正确的表单信息!!')
           return false
         }
       })
     },
     openDialog(type) {
       this.dialogTitle = DIALOGTITLES[type]()
-      console.log(this.dialogTitle, this.form)
       this.dialogVisible = true
     },
     closeDialog() {
