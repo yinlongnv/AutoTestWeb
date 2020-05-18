@@ -104,6 +104,7 @@
         <el-form-item label="环境域名" :label-width="formLabelWidth">
           <el-select
             size="small"
+            :style="inputWidth"
             v-model="baseUrlOption"
             filterable
             allow-create
@@ -166,6 +167,7 @@ export default {
       baseUrlOptions: [],
       value: [],
       options: [],
+      inputWidth: "width:360px",
       formLabelWidth: "120px",
       searchObj: {
         projectName: "",
