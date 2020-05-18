@@ -100,49 +100,57 @@
         </template>
       </el-table-column>
     </base-table>
-    <el-dialog title="参数规则" :visible="dialogParams" width="550px">
-      <el-form ref="paramForm" :model="paramForm">
-        <el-form-item label="参数名" prop="name" :label-width="formLabelWidth">
-          <el-input v-model="paramForm.name" placeholder="请输入参数名" size="small" style="width:300px" />
-        </el-form-item>
-        <el-form-item label="是否必需" prop="required" :label-width="formLabelWidth">
-          <el-radio-group v-model="paramForm.required">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="2">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="数据类型" prop="type" :label-width="formLabelWidth">
-          <el-select v-model="paramForm.type" placeholder="请选择数据类型" size="small">
-            <el-option
-              v-for="item in typeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="限制" prop="required" :label-width="formLabelWidth">
-          <el-radio-group v-model="paramForm.limit">
-            <el-radio :label="1">范围</el-radio>
-            <el-radio :label="2">选项</el-radio>
-            <el-radio :label="3">无</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <div v-if="paramForm.limit ===1">
-          <el-form-item label="最小值" :label-width="formLabelWidth">
-            <el-input v-model="paramForm.min" placeholder="请输入最小值" style="width:300px" />
-          </el-form-item>
-          <el-form-item label="最大值" :label-width="formLabelWidth">
-            <el-input v-model="paramForm.max" placeholder="请输入最大值" style="width:300px" />
-          </el-form-item>
-          <el-form-item label="是否为数组" prop="required" :label-width="formLabelWidth">
-            <el-radio-group v-model="paramForm.isArray">
+    <el-dialog title="参数规则" :visible="dialogParams" width="1000px">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+      >
+        <el-table-column label="参数名" width="150" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.name" size="small" />
+          </template>
+        </el-table-column>
+        <el-table-column label="是否必需" width="150" align="center">
+          <template slot-scope="scope">
+            <el-radio-group v-model="scope.row.required" size="small">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="2">否</el-radio>
             </el-radio-group>
-          </el-form-item>
-          <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
-            <el-select v-model="paramForm.model" placeholder="请选择数据类型">
+          </template>
+        </el-table-column>
+        <el-table-column label="数据类型" width="150" align="center">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.type" size="small" placeholder="数据类型">
+              <el-option
+                v-for="item in typeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="最小值" width="150" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.min" :disabled="Boolean(scope.row.options)" size="small" placeholder="最小值" style="width:100px" />
+          </template>
+        </el-table-column>
+        <el-table-column label="最大值" width="150" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.max" :disabled="Boolean(scope.row.options)" size="small" placeholder="最大值" style="width:100px" />
+          </template>
+        </el-table-column>
+        <el-table-column label="是否为数组" width="150" align="center">
+          <template slot-scope="scope">
+            <el-radio-group v-model="scope.row.isArray" size="small">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="2">否</el-radio>
+            </el-radio-group>
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" width="150" align="center">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.model" size="small" placeholder="数据类型">
               <el-option
                 v-for="item in modelOptions"
                 :key="item.value"
@@ -150,17 +158,18 @@
                 :value="item.value"
               />
             </el-select>
-          </el-form-item>
-        </div>
-        <div v-if="paramForm.limit === 2">
-          <el-form-item label="选项显示" :label-width="formLabelWidth">
-            <el-input v-model="paramForm.options" placeholder="请输入选项内容" style="width:300px" />
-          </el-form-item>
-        </div>
-      </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column label="选项内容" width="200" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.options" :disabled="Boolean(scope.row.max)||Boolean(scope.row.min)" size="small" placeholder="选项内容" style="width:170px" />
+          </template>
+        </el-table-column>
+      </el-table>
+
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogParams = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="dialogParams = false">确 定</el-button>
+        <el-button size="small" type="primary" @click="confirmParams">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -224,14 +233,30 @@ export default {
   data() {
     return {
       dialogParams: false,
-      paramForm: {
-        name: '',
-        min: '',
-        max: '',
-        isArray: '',
-        model: '',
-        options: ''
-      },
+      tableData: [
+        {
+          name: '',
+          required: '',
+          type: '',
+          limit: 1,
+          min: '111',
+          max: '222',
+          isArray: '',
+          model: '',
+          options: ''
+        },
+        {
+          name: '',
+          required: '',
+          type: '',
+          limit: '',
+          min: '',
+          max: '',
+          isArray: '',
+          model: '',
+          options: '111'
+        }
+      ],
       form: {},
       fileList: [],
       baseUrlOption: '',
@@ -303,6 +328,10 @@ export default {
     this.getfilterBaseUrl()
   },
   methods: {
+    confirmParams() {
+      console.log(this.tableData)
+      // this.dialogParams = false
+    },
     showParams() {
       this.dialogParams = true
     },
