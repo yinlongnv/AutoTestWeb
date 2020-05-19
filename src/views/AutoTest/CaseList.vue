@@ -142,10 +142,7 @@
 <script>
 import BaseTable from '@/components/BaseTable'
 import { executeStatusFilter } from '@/utils/filter'
-import {
-  deleteCases,
-  getfilterMap
-} from '@/api/case'
+import { deleteCases, getfilterMap } from '@/api/case'
 export default {
   components: { BaseTable },
   filters: {
@@ -257,7 +254,8 @@ export default {
       this.type = ''
     },
     goApiDetail(row) {
-      this.$router.push({ path: '/api/detail', query: { id: row.id }})
+      // console.log(row);
+      this.$router.push({ path: '/api/detail', query: { id: row.apiId }})
     },
     goDetail(path, row) {
       this.$router.push({ path, query: { id: row.id }})

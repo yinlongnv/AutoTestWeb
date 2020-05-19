@@ -406,7 +406,6 @@ export default {
       this.$message.warning('当前限制选择 1个文件')
     },
     beforeUpload(file) {
-      console.log(file.type)
       const isHtml = file.type === 'text/html'
       if (!isHtml) {
         this.$message.error('上传的文件只能是html!')
