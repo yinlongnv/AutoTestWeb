@@ -140,12 +140,9 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { executeStatusFilter } from '@/utils/filter'
-import {
-  deleteCases,
-  getfilterMap
-} from '@/api/case'
+import BaseTable from "@/components/BaseTable";
+import { executeStatusFilter } from "@/utils/filter";
+import { deleteCases, getfilterMap } from "@/api/case";
 export default {
   components: { BaseTable },
   filters: {
@@ -156,145 +153,146 @@ export default {
       value: [],
       options: [],
       timeArray: [],
-      formLabelWidth: '120px',
-      apiName: '',
+      formLabelWidth: "120px",
+      apiName: "",
       searchObj: {
-        caseDescription: '',
-        executeStatus: '',
-        projectName: '',
-        apiGroup: '',
-        apiMerge: ''
+        caseDescription: "",
+        executeStatus: "",
+        projectName: "",
+        apiGroup: "",
+        apiMerge: ""
       },
       idList: [],
-      type: '',
+      type: "",
       typeOptions: [
         {
-          name: '批量执行',
-          value: '执行'
+          name: "批量执行",
+          value: "执行"
         },
         {
-          name: '批量删除',
-          value: '删除'
+          name: "批量删除",
+          value: "删除"
         }
       ],
-      role: '',
+      role: "",
       executeStatusOptions: [
         {
-          name: '未执行',
+          name: "未执行",
           value: 1
         },
         {
-          name: '成功',
+          name: "成功",
           value: 2
         },
         {
-          name: '失败',
+          name: "失败",
           value: 3
         }
       ],
-      apiGroup: '',
+      apiGroup: "",
       apiGroupOptions: [],
-      reqMethod: '',
+      reqMethod: "",
       reqMethodOptions: []
-    }
+    };
   },
   created() {
-    this.getfilterMap()
+    this.getfilterMap();
   },
   methods: {
     // 下载模板
     handleDownload() {
-      import('@/utils/Export2Excel').then(excel => {
-        const tHeader = ['用例内容', '用例描述', '预期响应']
-        const filterVal = ['caseBody', 'caseDescription', 'caseResponse']
+      import("@/utils/Export2Excel").then(excel => {
+        const tHeader = ["用例内容", "用例描述", "预期响应"];
+        const filterVal = ["caseBody", "caseDescription", "caseResponse"];
         const list = [
           {
             caseBody: "{'username': 'dadalong', 'password': '123456'}",
-            caseDescription: '测试用户登录正常场景',
+            caseDescription: "测试用户登录正常场景",
             caseResponse: `{"code": "00000","message": "登录成功","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
           }
-        ]
-        const data = this.formatJson(filterVal, list)
+        ];
+        const data = this.formatJson(filterVal, list);
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '用例模板'
-        })
-      })
+          filename: "用例模板"
+        });
+      });
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          return v[j]
+          return v[j];
         })
-      )
+      );
     },
     handleChange(val) {
       if (val.length === 0) {
-        this.searchObj.projectName = ''
-        this.searchObj.apiGroup = ''
-        this.searchObj.apiMerge = ''
+        this.searchObj.projectName = "";
+        this.searchObj.apiGroup = "";
+        this.searchObj.apiMerge = "";
       } else {
-        this.searchObj.projectName = val[0]
-        this.searchObj.apiGroup = val[1]
-        this.searchObj.apiMerge = val[2]
+        this.searchObj.projectName = val[0];
+        this.searchObj.apiGroup = val[1];
+        this.searchObj.apiMerge = val[2];
       }
     },
     async getfilterMap() {
       try {
-        const result = await getfilterMap()
-        this.options = result.data.options
+        const result = await getfilterMap();
+        this.options = result.data.options;
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     batchActions() {
-      if (this.type === '删除') {
-        this.onDelete(this.idList)
+      if (this.type === "删除") {
+        this.onDelete(this.idList);
       } else {
-        this.onExecute(this.idList)
+        this.onExecute(this.idList);
       }
-      this.type = ''
+      this.type = "";
     },
     goApiDetail(row) {
-      this.$router.push({ path: '/api/detail', query: { id: row.id }})
+      // console.log(row);
+      this.$router.push({ path: "/api/detail", query: { id: row.apiId } });
     },
     goDetail(path, row) {
-      this.$router.push({ path, query: { id: row.id }})
+      this.$router.push({ path, query: { id: row.id } });
     },
     createCase(row) {
-      sessionStorage.removeItem('caseDetail')
-      this.$router.push({ path: '/case/edit', query: { type: 0 }})
+      sessionStorage.removeItem("caseDetail");
+      this.$router.push({ path: "/case/edit", query: { type: 0 } });
     },
     editOrCopy(type, row) {
-      sessionStorage.setItem('caseDetail', JSON.stringify(row))
-      this.$router.push({ path: '/case/edit', query: { type }})
+      sessionStorage.setItem("caseDetail", JSON.stringify(row));
+      this.$router.push({ path: "/case/edit", query: { type } });
     },
     onDelete(idList) {
-      this.$confirm('确定要删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("确定要删除吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
-          this.deleteCases(idList)
+          this.deleteCases(idList);
         })
-        .catch(() => {})
+        .catch(() => {});
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id)
-      console.log(this.idList)
+      this.idList = row.map(f => f.id);
+      console.log(this.idList);
     },
     async deleteCases(caseIds) {
       try {
-        await deleteCases({ caseIds })
-        this.$refs.tableRef.onSearch()
+        await deleteCases({ caseIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
