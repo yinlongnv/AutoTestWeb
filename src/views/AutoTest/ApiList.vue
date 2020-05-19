@@ -200,6 +200,7 @@
             action="https://jsonplaceholder.typicode.com/posts/"
             :on-exceed="handleExceed"
             :on-change="handleFileChange"
+            :before-upload="beforeUpload"
             :file-list="fileList"
             :limit="1"
           >
@@ -404,6 +405,14 @@ export default {
     handleExceed(files, fileList) {
       this.$message.warning('当前限制选择 1个文件')
     },
+    beforeUpload(file) {
+      console.log(file.type)
+      const isHtml = file.type === 'text/html'
+      if (!isHtml) {
+        this.$message.error('上传的文件只能是html!')
+      }
+      return isHtml
+    },
     handleFileChange(file, fileList) {
       this.fileList = fileList
     },
@@ -454,12 +463,13 @@ export default {
       }).then(() => this.deleteApis(idList)).catch(() => {})
     },
     async handleUpload() {
-      const file = new FormData()
-      file.append('file', this.fileList[0])
-      const result = await handleUpload({
-        baseUrl: this.baseUrlOption,
-        file
-      })
+      const userInfo = sessionStorage.getItem('userInfo')
+      const userId = userInfo ? JSON.parse(sessionStorage.getItem('userInfo')).id : ''
+      const formData = new FormData()
+      formData.append('file', this.fileList[0].raw)
+      formData.append('baseUrl', this.baseUrlOption)
+      formData.append('userId', userId)
+      const result = await handleUpload(formData)
       if (result.data.code === '00000') {
         console.log(result.data)
         sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
