@@ -214,6 +214,7 @@
             action="https://jsonplaceholder.typicode.com/posts/"
             :on-exceed="handleExceed"
             :on-change="handleFileChange"
+            :before-upload="beforeUpload"
             :file-list="fileList"
             :limit="1"
           >
@@ -396,7 +397,7 @@ export default {
             reqBody:
               "[{'name': 'id', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}]",
             caseRules:
-              "[{'name': 'id', 'required': '1', 'type': 'text', 'min': '6', 'max': '10', 'options': '['男', '女']', 'isArray': '0', 'model': 'phone'}]",
+              "[{'name': 'id', 'required': '1', 'type': 'text', 'min': '6', 'max': '10', 'options': '['男', '女']', 'isArray': '0', model: 'phone'}]",
             apiResponse: `{"code": "00000","message": "","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
           }
         ];
@@ -417,6 +418,13 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning("当前限制选择 1个文件");
+    },
+    beforeUpload(file) {
+      const isHtml = file.type === "text/html";
+      if (!isHtml) {
+        this.$message.error("上传的文件只能是html!");
+      }
+      return isHtml;
     },
     handleFileChange(file, fileList) {
       this.fileList = fileList;
@@ -470,12 +478,15 @@ export default {
         .catch(() => {});
     },
     async handleUpload() {
-      const file = new FormData();
-      file.append("file", this.fileList[0]);
-      const result = await handleUpload({
-        baseUrl: this.baseUrlOption,
-        file
-      });
+      const userInfo = sessionStorage.getItem("userInfo");
+      const userId = userInfo
+        ? JSON.parse(sessionStorage.getItem("userInfo")).id
+        : "";
+      const formData = new FormData();
+      formData.append("file", this.fileList[0].raw);
+      formData.append("baseUrl", this.baseUrlOption);
+      formData.append("userId", userId);
+      const result = await handleUpload(formData);
       if (result.data.code === "00000") {
         console.log(result.data);
         sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));

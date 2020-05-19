@@ -253,9 +253,6 @@ export default {
       }
       this.type = "";
     },
-    // goApiDetail(row) {
-    //   this.$router.push({ path: "/api/detail", query: { id: row.apiId } });
-    // },
     goDetail(path, row) {
       if (path == "/api/detail") {
         this.$router.push({ path, query: { id: row.apiId } });
