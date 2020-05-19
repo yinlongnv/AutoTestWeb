@@ -124,10 +124,9 @@ const DIALOGTITLES = {
   }
 };
 import { createUser, getUserDetail } from "@/api/user";
-import { statusFilter, roleFilter } from "@/utils/filter";
+import { roleFilter } from "@/utils/filter";
 export default {
   filters: {
-    statusFilter,
     roleFilter
   },
   data() {
@@ -175,6 +174,7 @@ export default {
   methods: {
     async getUserDetail() {
       try {
+        // 这边的逻辑还有点问题
         const id = JSON.parse(sessionStorage.getItem("userInfo")).id;
         const result = await getUserDetail({ id });
         const dataCopy = JSON.stringify(result.data.data);
@@ -201,7 +201,6 @@ export default {
           });
           this.dialogVisible = false;
         } else {
-          console.log("请输入正确的表单信息!!");
           return false;
         }
       });

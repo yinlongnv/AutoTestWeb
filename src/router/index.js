@@ -22,7 +22,7 @@ export const constantRoutes = [
   {
     path: "/user",
     component: Layout,
-    meta: { title: "用户管理", icon: "user" },
+    meta: { title: "用户管理", icon: "tree" },
     hidden: !hasAuthority,
     children: [
       {

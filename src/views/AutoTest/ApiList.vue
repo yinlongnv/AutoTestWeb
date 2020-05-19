@@ -1,7 +1,6 @@
 <template>
   <div class="old-manage">
     <div class="header-line">接口管理</div>
-    <!-- <el-button type="text" style="color:#67c23a" size="small" @click="showParams">参数规则</el-button> -->
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
@@ -18,7 +17,7 @@
         />
         <el-select
           v-model="searchObj.reqMethod"
-          style="width:150px"
+          style="width:200px"
           placeholder="请选择请求方法"
           size="small"
           :no-data-text="'暂无数据'"
@@ -36,7 +35,7 @@
           icon="el-icon-search"
           placeholder="搜索接口名称"
           size="small"
-          style="width:130px"
+          style="width:200px"
         />
       </div>
     </div>
@@ -47,32 +46,32 @@
       @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="接口名称" width="120">
+      <el-table-column label="接口名称" width="170">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.apiName }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="接口路径" width="200" align="center">
+      <el-table-column label="接口路径" width="280" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.apiPath }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="请求方法" width="100" align="center">
+      <el-table-column label="请求方法" width="80" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.reqMethod }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="所属业务" width="120" align="center">
+      <el-table-column label="所属业务" width="160" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.projectName }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="所属分组" width="180" align="center">
+      <el-table-column label="所属分组" width="120" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.apiGroup }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" width="150" align="center">
+      <el-table-column label="创建人" width="120" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.createdBy }}</div>
         </template>
@@ -99,7 +98,7 @@
         </template>
       </el-table-column>
     </base-table>
-    <el-dialog title="参数规则" :visible="dialogParams" width="1000px">
+    <el-dialog title="参数规则" :visible="dialogParams" width="1300px">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="参数名" width="150" align="center">
           <template slot-scope="scope">
@@ -354,7 +353,6 @@ export default {
     handleDownload() {
       import("@/utils/Export2Excel").then(excel => {
         const tHeader = [
-          "环境域名",
           "所属业务",
           "所属分组",
           "接口名称",
@@ -368,7 +366,6 @@ export default {
           "响应信息"
         ];
         const filterVal = [
-          "baseUrl",
           "projectName",
           "apiGroup",
           "apiName",
@@ -383,7 +380,6 @@ export default {
         ];
         const list = [
           {
-            baseUrl: "csr.adl.io",
             projectName: "靶场inner",
             apiGroup: "用户中心",
             apiName: "获取用户信息",
@@ -397,7 +393,7 @@ export default {
             reqBody:
               "[{'name': 'id', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}]",
             caseRules:
-              "[{'name': 'id', 'required': '1', 'type': 'text', 'min': '6', 'max': '10', 'options': '['男', '女']', 'isArray': '0', model: 'phone'}]",
+              "[{'name': 'id', 'required': '1', 'type': 'int', 'min': '6', 'max': '10', 'options': '', 'isArray': '0', model: ''}]",
             apiResponse: `{"code": "00000","message": "","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
           }
         ];
@@ -405,7 +401,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "接口模板"
+          filename: "api"
         });
       });
     },
@@ -488,6 +484,7 @@ export default {
       formData.append("userId", userId);
       const result = await handleUpload(formData);
       if (result.data.code === "00000") {
+        // 不明白
         console.log(result.data);
         sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
         if (result.data.data.role) {

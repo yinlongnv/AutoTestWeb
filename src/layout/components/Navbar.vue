@@ -5,18 +5,11 @@
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
-    <!-- <breadcrumb class="breadcrumb-container" /> -->
-    <i
-      class="el-icon-message-solid"
-      style="font-size:18px;position: absolute; right: 66px;top: 18px;"
-    />
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <i class="el-icon-user-solid user-avatar" /> -->
-          <i class="el-icon-user-solid user-avatar" style="font-size:18px" />
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <i class="el-icon-user-solid user-avatar" style="font-size:24px" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -34,7 +27,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-// import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from "@/components/Hamburger";
 
 export default {
@@ -51,8 +43,6 @@ export default {
     async logout() {
       sessionStorage.clear();
       this.$router.push({ path: "/login" });
-      // await this.$store.dispatch('user/logout')
-      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
 };
@@ -111,7 +101,7 @@ export default {
     }
 
     .avatar-container {
-      margin-right: 30px;
+      margin-right: 50px;
 
       .avatar-wrapper {
         margin-top: 5px;
@@ -127,7 +117,7 @@ export default {
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
-          right: -20px;
+          right: -30px;
           top: 15px;
           font-size: 18px;
         }

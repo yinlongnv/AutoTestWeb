@@ -33,3 +33,14 @@ export function getfilterMap(data) {
     param: data
   });
 }
+// 批量导入用例数据
+export function handleUpload(data) {
+  return request({
+    url: "/case/upload",
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+}

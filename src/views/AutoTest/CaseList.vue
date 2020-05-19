@@ -4,7 +4,8 @@
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
-      <el-button icon="el-icon-upload2" size="small" @click="handleDownload">批量导入</el-button>
+      <!-- <el-button icon="el-icon-upload2" size="small" @click="handleDownload">批量导入</el-button> -->
+      <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
       <el-select
         v-model="type"
         style="width:150px;margin-left:16px"
@@ -32,7 +33,7 @@
         />
         <el-select
           v-model="searchObj.executeStatus"
-          style="width:150px"
+          style="width:200px"
           placeholder="请选择执行状态"
           size="small"
           clearable
@@ -50,7 +51,7 @@
           icon="el-icon-search"
           placeholder="搜索用例描述"
           size="small"
-          style="width:130px"
+          style="width:200px"
         />
       </div>
     </div>
@@ -98,16 +99,10 @@
       <el-table-column label="执行状态" align="center" width="80">
         <template slot-scope="scope">
           <el-tag
-            v-if="scope.row.executeStatus == 1"
-          >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
-          <el-tag
-            v-else-if="scope.row.executeStatus == 2"
+            v-if="scope.row.executeStatus"
             type="success"
           >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
-          <el-tag
-            v-else-if="scope.row.executeStatus == 3"
-            type="danger"
-          >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
+          <el-tag v-else type="warning">{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="执行次数" align="center" width="80">
@@ -136,13 +131,44 @@
         </template>
       </el-table-column>
     </base-table>
+    <el-dialog title="批量导入" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="关联接口信息" :label-width="formLabelWidth">
+          <el-cascader
+            v-model="value"
+            size="small"
+            clearable
+            placeholder="请选择关联接口信息"
+            :options="options"
+            @change="handleChange"
+          />
+        </el-form-item>
+        <el-form-item label="上传文件" :label-width="formLabelWidth">
+          <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :on-exceed="handleExceed"
+            :on-change="handleFileChange"
+            :before-upload="beforeUpload"
+            :file-list="fileList"
+            :limit="1"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="handleUpload">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from "@/components/BaseTable";
 import { executeStatusFilter } from "@/utils/filter";
-import { deleteCases, getfilterMap } from "@/api/case";
+import { deleteCases, getfilterMap, handleUpload } from "@/api/case";
 export default {
   components: { BaseTable },
   filters: {
@@ -163,6 +189,8 @@ export default {
         apiMerge: ""
       },
       idList: [],
+      fileList: [],
+      dialogFormVisible: false,
       type: "",
       typeOptions: [
         {
@@ -178,15 +206,11 @@ export default {
       executeStatusOptions: [
         {
           name: "未执行",
+          value: 0
+        },
+        {
+          name: "已执行",
           value: 1
-        },
-        {
-          name: "成功",
-          value: 2
-        },
-        {
-          name: "失败",
-          value: 3
         }
       ],
       apiGroup: "",
@@ -215,7 +239,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "用例模板"
+          filename: "case"
         });
       });
     },
@@ -225,6 +249,19 @@ export default {
           return v[j];
         })
       );
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning("当前限制选择 1个文件");
+    },
+    beforeUpload(file) {
+      const isHtml = file.type === "text/html";
+      if (!isHtml) {
+        this.$message.error("上传的文件只能是html!");
+      }
+      return isHtml;
+    },
+    handleFileChange(file, fileList) {
+      this.fileList = fileList;
     },
     handleChange(val) {
       if (val.length === 0) {
@@ -289,6 +326,28 @@ export default {
         this.$refs.tableRef.onSearch();
       } catch (error) {
         this.$message.error(error);
+      }
+    },
+    async handleUpload() {
+      const userInfo = sessionStorage.getItem("userInfo");
+      const userId = userInfo
+        ? JSON.parse(sessionStorage.getItem("userInfo")).id
+        : "";
+      const formData = new FormData();
+      formData.append("file", this.fileList[0].raw);
+      formData.append("baseUrl", this.baseUrlOption);
+      formData.append("userId", userId);
+      const result = await handleUpload(formData);
+      if (result.data.code === "00000") {
+        console.log(result.data);
+        sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
+        if (result.data.data.role) {
+          this.$router.push({ path: "/user/list" });
+        } else {
+          this.$router.push({ path: "/api/list" });
+        }
+      } else {
+        this.$message.error(result.data.message);
       }
     }
   }
