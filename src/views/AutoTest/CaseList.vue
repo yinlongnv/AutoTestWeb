@@ -263,7 +263,8 @@ export default {
       this.type = "";
     },
     goApiDetail(row) {
-      this.$router.push({ path: "/api/detail", query: { id: row.id } });
+      // console.log(row);
+      this.$router.push({ path: "/api/detail", query: { id: row.apiId } });
     },
     goCaseDetail(row) {
       this.$router.push({ path: "/case/detail", query: { id: row.id } });

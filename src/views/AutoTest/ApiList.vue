@@ -242,7 +242,7 @@ export default {
             reqBody:
               "[{'name': 'id', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}]",
             caseRules:
-              "[{'name': 'id', 'required': '1', 'type': 'text', 'min': '6', 'max': '10', 'options': '['男', '女']', 'isArray': '0', model: 'phone'}]",
+              "[{'name': 'id', 'required': '1', 'type': 'text', 'min': '6', 'max': '10', 'options': '['男', '女']', 'isArray': '0', 'model': 'phone'}]",
             apiResponse: `{"code": "00000","message": "","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
           }
         ];
