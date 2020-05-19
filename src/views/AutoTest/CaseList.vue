@@ -2,10 +2,19 @@
   <div class="old-manage">
     <div class="header-line">用例管理</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
-      <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
+      <el-button type="primary" size="small" @click="createCase"
+        >创建用例</el-button
+      >
+      <el-button icon="el-icon-download" size="small" @click="handleDownload"
+        >下载模板</el-button
+      >
       <!-- <el-button icon="el-icon-upload2" size="small" @click="handleDownload">批量导入</el-button> -->
-      <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
+      <el-button
+        icon="el-icon-upload2"
+        size="small"
+        @click="dialogFormVisible = true"
+        >批量导入</el-button
+      >
       <el-select
         v-model="type"
         style="width:150px;margin-left:16px"
@@ -29,7 +38,7 @@
           clearable
           placeholder="请选择关联接口信息"
           :options="options"
-          @change="handleChange"
+          @change="handleChange($event, 'searchObj')"
         />
         <el-select
           v-model="searchObj.executeStatus"
@@ -67,8 +76,9 @@
           <el-button
             type="text"
             size="small"
-            @click="goDetail('/api/detail',scope.row)"
-          >{{ scope.row.apiName }}</el-button>
+            @click="goDetail('/api/detail', scope.row)"
+            >{{ scope.row.apiName }}</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column label="用例描述" align="center">
@@ -76,8 +86,9 @@
           <el-button
             type="text"
             size="small"
-            @click="goDetail('/case/detail',scope.row)"
-          >{{ scope.row.caseDescription }}</el-button>
+            @click="goDetail('/case/detail', scope.row)"
+            >{{ scope.row.caseDescription }}</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column label="创建人" align="center" width="160">
@@ -98,11 +109,12 @@
       </el-table-column>
       <el-table-column label="执行状态" align="center" width="80">
         <template slot-scope="scope">
-          <el-tag
-            v-if="scope.row.executeStatus"
-            type="success"
-          >{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
-          <el-tag v-else type="warning">{{ scope.row.executeStatus | executeStatusFilter }}</el-tag>
+          <el-tag v-if="scope.row.executeStatus" type="success">{{
+            scope.row.executeStatus | executeStatusFilter
+          }}</el-tag>
+          <el-tag v-else type="warning">{{
+            scope.row.executeStatus | executeStatusFilter
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="执行次数" align="center" width="80">
@@ -113,20 +125,32 @@
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="editOrCopy(1,scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="editOrCopy(2,scope.row)">复制用例</el-button>
+            <el-button
+              type="text"
+              size="small"
+              @click="editOrCopy(1, scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              type="text"
+              size="small"
+              @click="editOrCopy(2, scope.row)"
+              >复制用例</el-button
+            >
             <el-button
               type="text"
               style="color:#67c23a"
               size="small"
               @click="onExecute(scope.row)"
-            >执行</el-button>
+              >执行</el-button
+            >
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
               @click="onDelete([scope.row.id])"
-            >删除</el-button>
+              >删除</el-button
+            >
           </div>
         </template>
       </el-table-column>
@@ -135,12 +159,12 @@
       <el-form :model="form">
         <el-form-item label="关联接口信息" :label-width="formLabelWidth">
           <el-cascader
-            v-model="value"
+            v-model="importValue"
             size="small"
             clearable
             placeholder="请选择关联接口信息"
             :options="options"
-            @change="handleChange"
+            @change="handleChange($event, 'importObj')"
           />
         </el-form-item>
         <el-form-item label="上传文件" :label-width="formLabelWidth">
@@ -158,8 +182,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="handleUpload">确 定</el-button>
+        <el-button size="small" @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button size="small" type="primary" @click="handleUpload"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -177,6 +205,7 @@ export default {
   data() {
     return {
       value: [],
+      importValue: [],
       options: [],
       timeArray: [],
       formLabelWidth: "120px",
@@ -184,6 +213,11 @@ export default {
       searchObj: {
         caseDescription: "",
         executeStatus: "",
+        projectName: "",
+        apiGroup: "",
+        apiMerge: ""
+      },
+      importObj: {
         projectName: "",
         apiGroup: "",
         apiMerge: ""
@@ -230,7 +264,7 @@ export default {
         const filterVal = ["caseBody", "caseDescription", "caseResponse"];
         const list = [
           {
-            caseBody: "{'username': 'dadalong', 'password': '123456'}",
+            caseBody: `{"username": "dadalong", "password": "123456"}`,
             caseDescription: "测试用户登录正常场景",
             caseResponse: `{"code": "00000","message": "登录成功","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
           }
@@ -254,24 +288,26 @@ export default {
       this.$message.warning("当前限制选择 1个文件");
     },
     beforeUpload(file) {
-      const isHtml = file.type === "text/html";
+      const isHtml =
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       if (!isHtml) {
-        this.$message.error("上传的文件只能是html!");
+        this.$message.error("上传的文件只能是.xlsx");
       }
       return isHtml;
     },
     handleFileChange(file, fileList) {
       this.fileList = fileList;
     },
-    handleChange(val) {
+    handleChange(val, type) {
       if (val.length === 0) {
-        this.searchObj.projectName = "";
-        this.searchObj.apiGroup = "";
-        this.searchObj.apiMerge = "";
+        this[type].projectName = "";
+        this[type].apiGroup = "";
+        this[type].apiMerge = "";
       } else {
-        this.searchObj.projectName = val[0];
-        this.searchObj.apiGroup = val[1];
-        this.searchObj.apiMerge = val[2];
+        this[type].projectName = val[0];
+        this[type].apiGroup = val[1];
+        this[type].apiMerge = val[2];
       }
     },
     async getfilterMap() {
@@ -329,23 +365,18 @@ export default {
       }
     },
     async handleUpload() {
-      const userInfo = sessionStorage.getItem("userInfo");
-      const userId = userInfo
-        ? JSON.parse(sessionStorage.getItem("userInfo")).id
-        : "";
+      this.dialogFormVisible = false;
+      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
       const formData = new FormData();
       formData.append("file", this.fileList[0].raw);
-      formData.append("baseUrl", this.baseUrlOption);
+      formData.append("projectName", this.importObj.projectName);
+      formData.append("apiGroup", this.importObj.apiGroup);
+      formData.append("apiMerge", this.importObj.apiMerge);
       formData.append("userId", userId);
       const result = await handleUpload(formData);
       if (result.data.code === "00000") {
-        console.log(result.data);
-        sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
-        if (result.data.data.role) {
-          this.$router.push({ path: "/user/list" });
-        } else {
-          this.$router.push({ path: "/api/list" });
-        }
+        this.$message.success(result.data.message);
+        this.$refs.tableRef.onSearch();
       } else {
         this.$message.error(result.data.message);
       }

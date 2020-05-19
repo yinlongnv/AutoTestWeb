@@ -1,8 +1,12 @@
 <template>
   <div class="old-info-container">
-    <div class="header-line">{{ editStatus|pageTypeFilter }}接口</div>
+    <div class="header-line">{{ editStatus | pageTypeFilter }}接口</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item prop="baseUrl" label="环境域名：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="baseUrl"
+        label="环境域名："
+        :label-width="formLabelWidth"
+      >
         <el-input
           v-model="form.baseUrl"
           :style="inputWidth"
@@ -10,7 +14,11 @@
           placeholder="请输入环境域名，例如：csr.adl.top"
         />
       </el-form-item>
-      <el-form-item prop="projectGroup" label="业务分组：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="projectGroup"
+        label="业务分组："
+        :label-width="formLabelWidth"
+      >
         <el-cascader
           v-model="value"
           size="small"
@@ -20,13 +28,35 @@
           @change="handleChange"
         />
       </el-form-item>
-      <el-form-item prop="apiName" label="接口名称：" :label-width="formLabelWidth">
-        <el-input v-model="form.apiName" :style="inputWidth" size="small" placeholder="请输入接口名称" />
+      <el-form-item
+        prop="apiName"
+        label="接口名称："
+        :label-width="formLabelWidth"
+      >
+        <el-input
+          v-model="form.apiName"
+          :style="inputWidth"
+          size="small"
+          placeholder="请输入接口名称"
+        />
       </el-form-item>
-      <el-form-item prop="apiPath" label="接口路径：" :label-width="formLabelWidth">
-        <el-input v-model="form.apiPath" :style="inputWidth" size="small" placeholder="请输入接口路径" />
+      <el-form-item
+        prop="apiPath"
+        label="接口路径："
+        :label-width="formLabelWidth"
+      >
+        <el-input
+          v-model="form.apiPath"
+          :style="inputWidth"
+          size="small"
+          placeholder="请输入接口路径"
+        />
       </el-form-item>
-      <el-form-item prop="reqMethod" label="请求方法：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="reqMethod"
+        label="请求方法："
+        :label-width="formLabelWidth"
+      >
         <el-select
           v-model="form.reqMethod"
           :style="inputWidth"
@@ -43,7 +73,11 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item prop="apiDescription" label="接口描述：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="apiDescription"
+        label="接口描述："
+        :label-width="formLabelWidth"
+      >
         <el-input
           v-model="form.apiDescription"
           :style="inputWidth"
@@ -53,54 +87,74 @@
           rows="3"
         />
       </el-form-item>
-      <el-form-item prop="reqHeaders" label="请求头：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="reqHeaders"
+        label="请求头："
+        :label-width="formLabelWidth"
+      >
         <el-input
           v-model="form.reqHeaders"
           type="textarea"
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入请求头，例如：[{'name': 'Content-Type', 'value': 'application/json', 'required': '1', 'example': '', 'desc': ''}]"
+          placeholder='请输入请求头，例如：[{"name":"Content-Type","value":"application/x-www-form-urlencoded","required":"1","example":"","desc":""}]'
         />
       </el-form-item>
-      <el-form-item prop="reqQuery" label="请求参数：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="reqQuery"
+        label="请求参数："
+        :label-width="formLabelWidth"
+      >
         <el-input
           v-model="form.reqQuery"
           type="textarea"
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入请求参数，例如：[{'name': 'url', 'required': '1', 'example': 'range-usr/api/login', 'desc': ''}]"
+          placeholder='请输入请求参数，例如：[{"name": "tagId", "required": "1","example": "", "desc": ""}]'
         />
       </el-form-item>
-      <el-form-item prop="reqBody" label="请求体：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="reqBody"
+        label="请求体："
+        :label-width="formLabelWidth"
+      >
         <el-input
           v-model="form.reqBody"
           type="textarea"
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入请求体，例如：[{'name': 'relationId', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}, {'name': 'relationType', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}]"
+          placeholder='请输入请求体，例如：[{"name": "snapshotName", "type": "string", "required": "0"}, {"name": "summary", "type": "string","required": "0"}, {"name": "trainId", "type": "integer", "required": "0"}]'
         />
       </el-form-item>
-      <el-form-item prop="caseRules" label="用例规则" :label-width="formLabelWidth">
+      <el-form-item
+        prop="caseRules"
+        label="用例规则"
+        :label-width="formLabelWidth"
+      >
         <el-input
           v-model="form.caseRules"
           type="textarea"
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入用例规则，例如：[{'name': 'id', 'required': '1', 'type': 'int', 'min': '6', 'max': '10', 'options': '', 'isArray': '0', model: ''}]"
+          placeholder='请输入用例规则，例如：[{"name":"username","required":"1","type":"string","min":"6","max":"10","options":"","isArray":"0","model":""}]'
         />
       </el-form-item>
-      <el-form-item prop="apiResponse" label="响应信息：" :label-width="formLabelWidth">
+      <el-form-item
+        prop="apiResponse"
+        label="响应信息："
+        :label-width="formLabelWidth"
+      >
         <el-input
           v-model="form.apiResponse"
           type="textarea"
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入响应信息，例如：{'code': '00000','message': '密码修改成功','data': []}"
+          placeholder='请输入响应信息，例如：{"code":"00000","message":"密码修改成功","data":[]}'
         />
       </el-form-item>
     </el-form>
@@ -175,7 +229,9 @@ export default {
     };
   },
   created() {
-    this.form = JSON.parse(sessionStorage.getItem("apiDetail")) || FORM;
+    this.form =
+      JSON.parse(sessionStorage.getItem("apiDetail")) ||
+      JSON.parse(JSON.stringify(FORM));
     this.getfilterMap();
     if (this.editStatus !== 0) {
       this.value = [this.form.projectName, this.form.apiGroup];

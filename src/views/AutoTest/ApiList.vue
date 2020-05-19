@@ -2,10 +2,18 @@
   <div class="old-manage">
     <div class="header-line">接口管理</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
-      <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
-      <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
-      <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
+      <el-button type="primary" size="small" @click="createApi"
+        >创建接口</el-button
+      >
+      <el-button icon="el-icon-download" size="small" @click="handleDownload"
+        >下载模板</el-button
+      >
+      <el-button icon="el-icon-upload2" size="small" @click="handleImport"
+        >批量导入</el-button
+      >
+      <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)"
+        >批量删除</el-button
+      >
       <div style="text-align:right;width:100%">
         <el-cascader
           v-model="value"
@@ -48,7 +56,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="接口名称" width="170">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.apiName }}</el-button>
+          <el-button type="text" size="small" @click="goDetail(scope.row)">{{
+            scope.row.apiName
+          }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="接口路径" width="280" align="center">
@@ -79,26 +89,44 @@
       <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="editOrCopy(1,scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="editOrCopy(2,scope.row)">复制接口</el-button>
+            <el-button
+              type="text"
+              size="small"
+              @click="editOrCopy(1, scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              type="text"
+              size="small"
+              @click="editOrCopy(2, scope.row)"
+              >复制接口</el-button
+            >
             <el-button
               type="text"
               size="small"
               style="color:#e6a23c"
               @click="onCreateCase(scope.row)"
-            >创建用例</el-button>
-            <el-button type="text" style="color:#67c23a" size="small" @click="showParams">参数规则</el-button>
+              >创建用例</el-button
+            >
+            <el-button
+              type="text"
+              style="color:#67c23a"
+              size="small"
+              @click="showParams"
+              >参数规则</el-button
+            >
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
               @click="onDelete([scope.row.id])"
-            >删除</el-button>
+              >删除</el-button
+            >
           </div>
         </template>
       </el-table-column>
     </base-table>
-    <el-dialog title="参数规则" :visible="dialogParams" width="1300px">
+    <el-dialog title="参数规则" :visible.sync="dialogParams" width="1300px">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="参数名" width="150" align="center">
           <template slot-scope="scope">
@@ -115,7 +143,11 @@
         </el-table-column>
         <el-table-column label="数据类型" width="150" align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.type" size="small" placeholder="数据类型">
+            <el-select
+              v-model="scope.row.type"
+              size="small"
+              placeholder="数据类型"
+            >
               <el-option
                 v-for="item in typeOptions"
                 :key="item.value"
@@ -157,7 +189,11 @@
         </el-table-column>
         <el-table-column label="类型" width="150" align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.model" size="small" placeholder="数据类型">
+            <el-select
+              v-model="scope.row.model"
+              size="small"
+              placeholder="数据类型"
+            >
               <el-option
                 v-for="item in modelOptions"
                 :key="item.value"
@@ -171,7 +207,7 @@
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.options"
-              :disabled="Boolean(scope.row.max)||Boolean(scope.row.min)"
+              :disabled="Boolean(scope.row.max) || Boolean(scope.row.min)"
               size="small"
               placeholder="选项内容"
               style="width:170px"
@@ -182,12 +218,14 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogParams = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="confirmParams">确 定</el-button>
+        <el-button size="small" type="primary" @click="confirmParams"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
     <el-dialog title="批量导入" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="form" ref="importForm">
         <el-form-item label="环境域名" :label-width="formLabelWidth">
           <el-select
             v-model="baseUrlOption"
@@ -222,8 +260,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="handleUpload">确 定</el-button>
+        <el-button size="small" @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button size="small" type="primary" @click="handleUpload"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -342,6 +384,11 @@ export default {
     this.getfilterBaseUrl();
   },
   methods: {
+    handleImport() {
+      this.baseUrlOption = "";
+      this.fileList = [];
+      this.dialogFormVisible = true;
+    },
     confirmParams() {
       console.log(this.tableData);
       // this.dialogParams = false
@@ -386,15 +433,11 @@ export default {
             apiPath: "/range-user/api/inner/user/info",
             reqMethod: "POST",
             apiDescription: "通过用户id获取用户信息",
-            reqHeaders:
-              "[{'name': 'Content-Type', 'value': 'application/x-www-form-urlencoded', 'required': '1', 'example': '', 'desc': ''}]",
-            reqQuery:
-              "[{'name': 'url', 'required': '1', 'example': 'range-usr/api/login', 'desc': ''}]",
-            reqBody:
-              "[{'name': 'id', 'type': 'text', 'required': '1', 'example': '', 'desc': ''}]",
-            caseRules:
-              "[{'name': 'id', 'required': '1', 'type': 'int', 'min': '6', 'max': '10', 'options': '', 'isArray': '0', model: ''}]",
-            apiResponse: `{"code": "00000","message": "","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
+            reqHeaders: `[{"name":"Content-Type","value":"application/x-www-form-urlencoded","required":"1","example":"","desc":""}]`,
+            reqQuery: `[{"name": "tagId", "required": "1", "example": "", "desc": ""}]`,
+            reqBody: `[{"name": "snapshotName", "type": "string", "required": "0"}, {"name": "summary", "type": "string", "required": "0"}, {"name": "trainId", "type": "integer", "required": "0"}]`,
+            caseRules: `[{"name":"username","required":"1","type":"string","min":"6","max":"10","options":"","isArray":"0","model":""},{"name":"password","required":"1","type":"string","min":"6","max":"10","options":"","isArray":"0","model":""},{"name":"email","required":"1","type":"string","min":"","max":"","options":"","isArray":"0","model":"email"}]`,
+            apiResponse: `{"code": "00000","message": "","data": {"id": 7,"trainId": 1,"profile": "1","visits": 0,"creatorId": 59,"createdTime": 1575250698063,"hasUpload": true,"hasBug": true,"uploads": [{"code": "95386d42b07af57bc7c8d84b86587184","name": "人员画像.mp4","url": "http://192.168.37.150/group1/M00/00/0A/wKgll13g2EuAXAKVAWVKCVOeYz8504.mp4"}]}}`
           }
         ];
         const data = this.formatJson(filterVal, list);
@@ -416,11 +459,14 @@ export default {
       this.$message.warning("当前限制选择 1个文件");
     },
     beforeUpload(file) {
-      const isHtml = file.type === "text/html";
-      if (!isHtml) {
-        this.$message.error("上传的文件只能是html!");
+      const isHtmlOrXlsx =
+        file.type === "text/html" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      if (!isHtmlOrXlsx) {
+        this.$message.error("上传的文件只能是.html或.xlsx");
       }
-      return isHtml;
+      return isHtmlOrXlsx;
     },
     handleFileChange(file, fileList) {
       this.fileList = fileList;
@@ -474,6 +520,7 @@ export default {
         .catch(() => {});
     },
     async handleUpload() {
+      this.dialogFormVisible = false;
       const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
       const formData = new FormData();
       formData.append("file", this.fileList[0].raw);
@@ -481,13 +528,8 @@ export default {
       formData.append("userId", userId);
       const result = await handleUpload(formData);
       if (result.data.code === "00000") {
-        console.log(result.data);
-        sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
-        if (result.data.data.role) {
-          this.$router.push({ path: "/user/list" });
-        } else {
-          this.$router.push({ path: "/api/list" });
-        }
+        this.$message.success(result.data.message);
+        this.$refs.tableRef.onSearch();
       } else {
         this.$message.error(result.data.message);
       }
