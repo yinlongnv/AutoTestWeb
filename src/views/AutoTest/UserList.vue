@@ -132,9 +132,9 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { statusFilter, roleFilter } from '@/utils/filter'
-import { deleteUsers, disableUsers, enableUsers } from '@/api/user'
+import BaseTable from "@/components/BaseTable";
+import { statusFilter, roleFilter } from "@/utils/filter";
+import { deleteUsers, disableUsers, enableUsers } from "@/api/user";
 export default {
   components: { BaseTable },
   filters: {
@@ -144,123 +144,129 @@ export default {
   data() {
     return {
       rules: {
-        name: [{ required: true, message: '请输入新密码', trigger: 'blur' }]
+        name: [{ required: true, message: "请输入新密码", trigger: "blur" }]
       },
       timeArray: [],
       form: {
-        password: ''
+        password: ""
       },
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       searchObj: {
-        userInfo: '',
-        role: '',
-        startTime: '',
-        endTime: ''
+        userInfo: "",
+        role: "",
+        startTime: "",
+        endTime: ""
       },
       idList: [],
-      type: '',
+      type: "",
       typeOptions: [
         {
-          name: '批量禁用',
-          value: '禁用'
+          name: "批量禁用",
+          value: "禁用"
         },
         {
-          name: '批量启用',
-          value: '启用'
+          name: "批量启用",
+          value: "启用"
         },
         {
-          name: '批量删除',
-          value: '删除'
+          name: "批量删除",
+          value: "删除"
         }
       ],
       roleOptions: [
         {
-          name: 'root',
+          name: "root",
           value: 1
         },
         {
-          name: 'QA',
+          name: "QA",
           value: 0
         }
       ]
-    }
+    };
   },
   watch: {
     timeArray(val) {
       if (!val) {
-        this.searchObj.startTime = ''
-        this.searchObj.endTime = ''
+        this.searchObj.startTime = "";
+        this.searchObj.endTime = "";
       } else {
-        this.searchObj.startTime = val[0]
-        this.searchObj.endTime = val[1]
+        this.searchObj.startTime = val[0];
+        this.searchObj.endTime = val[1];
       }
     }
   },
   methods: {
     createAccount() {
-      this.$router.push({ path: '/user/edit', query: { type: 0 }})
+      this.$router.push({ path: "/user/edit", query: { type: 0 } });
     },
     batchActions() {
-      if (this.type === '禁用') {
-        this.onDisable(this.idList)
-      } else if (this.type === '删除') {
-        this.onDelete(this.idList)
+      if (this.type === "禁用") {
+        this.onDisable(this.idList);
+      } else if (this.type === "删除") {
+        this.onDelete(this.idList);
       } else {
-        this.enableUsers(this.idList)
+        this.enableUsers(this.idList);
       }
-      this.type = ''
+      this.type = "";
     },
     actionNotice(text, fn) {
-      this.$confirm(text, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(fn).catch(() => {})
+      this.$confirm(text, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(fn)
+        .catch(() => {});
     },
     onDisable(idList) {
-      this.actionNotice('确定要禁用吗?', () => { this.disableUsers(idList) })
+      this.actionNotice("确定要禁用吗?", () => {
+        this.disableUsers(idList);
+      });
     },
     onDelete(idList) {
-      this.actionNotice('确定要删除吗?', () => { this.deleteUsers(idList) })
+      this.actionNotice("确定要删除吗?", () => {
+        this.deleteUsers(idList);
+      });
     },
     onEdit(row) {
-      sessionStorage.setItem('userDetail', JSON.stringify(row))
-      this.$router.push({ path: '/user/edit', query: { type: 1 }})
+      sessionStorage.setItem("userDetail", JSON.stringify(row));
+      this.$router.push({ path: "/user/edit", query: { type: 1 } });
     },
     goDetail(row) {
-      this.$router.push({ path: '/user/detail', query: { id: row.id }})
+      this.$router.push({ path: "/user/detail", query: { id: row.id } });
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id)
-      console.log(this.idList)
+      this.idList = row.map(f => f.id);
+      console.log(this.idList);
     },
     // 接口调用
     async deleteUsers(userIds) {
       try {
-        await deleteUsers({ userIds })
-        this.$refs.tableRef.onSearch()
+        await deleteUsers({ userIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     async enableUsers(userIds) {
       try {
-        await enableUsers({ userIds })
-        this.$refs.tableRef.onSearch()
+        await enableUsers({ userIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     async disableUsers(userIds) {
       try {
-        await disableUsers({ userIds })
-        this.$refs.tableRef.onSearch()
+        await disableUsers({ userIds });
+        this.$refs.tableRef.onSearch();
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

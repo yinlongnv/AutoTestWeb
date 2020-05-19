@@ -253,12 +253,15 @@ export default {
       }
       this.type = "";
     },
-    goApiDetail(row) {
-      // console.log(row);
-      this.$router.push({ path: "/api/detail", query: { id: row.apiId } });
-    },
+    // goApiDetail(row) {
+    //   this.$router.push({ path: "/api/detail", query: { id: row.apiId } });
+    // },
     goDetail(path, row) {
-      this.$router.push({ path, query: { id: row.id } });
+      if (path == "/api/detail") {
+        this.$router.push({ path, query: { id: row.apiId } });
+      } else if (path == "/case/detail") {
+        this.$router.push({ path, query: { id: row.id } });
+      }
     },
     createCase(row) {
       sessionStorage.removeItem("caseDetail");
