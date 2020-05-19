@@ -291,9 +291,9 @@ export default {
       this.type = "";
     },
     goDetail(path, row) {
-      if (path == "/api/detail") {
+      if (path === "/api/detail") {
         this.$router.push({ path, query: { id: row.apiId } });
-      } else if (path == "/case/detail") {
+      } else if (path === "/case/detail") {
         this.$router.push({ path, query: { id: row.id } });
       }
     },

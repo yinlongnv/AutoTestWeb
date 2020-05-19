@@ -474,17 +474,13 @@ export default {
         .catch(() => {});
     },
     async handleUpload() {
-      const userInfo = sessionStorage.getItem("userInfo");
-      const userId = userInfo
-        ? JSON.parse(sessionStorage.getItem("userInfo")).id
-        : "";
+      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
       const formData = new FormData();
       formData.append("file", this.fileList[0].raw);
       formData.append("baseUrl", this.baseUrlOption);
       formData.append("userId", userId);
       const result = await handleUpload(formData);
       if (result.data.code === "00000") {
-        // 不明白
         console.log(result.data);
         sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
         if (result.data.data.role) {
