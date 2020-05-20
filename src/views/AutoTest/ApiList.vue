@@ -1,7 +1,6 @@
 <template>
   <div class="old-manage">
     <div class="header-line">接口管理</div>
-    <div @click="showParams({ apiId: 1 })">参数规则</div>
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
@@ -118,8 +117,8 @@
         <el-table-column label="是否必需" width="150" align="center">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.required" size="small">
-              <el-radio :label="1">是</el-radio>
-              <el-radio :label="2">否</el-radio>
+              <el-radio :label="'1'">是</el-radio>
+              <el-radio :label="'0'">否</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
@@ -160,8 +159,8 @@
         <el-table-column label="是否为数组" width="150" align="center">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.isArray" size="small">
-              <el-radio :label="1">是</el-radio>
-              <el-radio :label="2">否</el-radio>
+              <el-radio :label="'1'">是</el-radio>
+              <el-radio :label="'0'">否</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
@@ -359,9 +358,8 @@ export default {
       this.dialogParams = false;
     },
     showParams(row) {
-      this.apiId = row.apiId;
-      console.log(row.apiId);
-      this.getReqBody(row.apiId);
+      this.apiId = row.id;
+      this.getReqBody(row.id);
     },
     // 下载模板
     handleDownload() {
@@ -472,11 +470,16 @@ export default {
     async getReqBody(apiId) {
       try {
         const result = await getReqBody({ apiId });
-        this.tableData = result.data.data;
-        for (const item of this.tableData) {
-          item.type = "";
+
+        if (result.data.code === "00000") {
+          this.tableData = result.data.data;
+          for (const item of this.tableData) {
+            item.type = "";
+          }
+          this.dialogParams = true;
+        } else {
+          this.$message.error(result.data.message);
         }
-        this.dialogParams = true;
       } catch (error) {
         this.$message.error(error);
       }
@@ -508,18 +511,22 @@ export default {
         .catch(() => {});
     },
     async handleUpload() {
-      this.dialogFormVisible = false;
-      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      const formData = new FormData();
-      formData.append("file", this.fileList[0].raw);
-      formData.append("baseUrl", this.baseUrlOption);
-      formData.append("userId", userId);
-      const result = await handleUpload(formData);
-      if (result.data.code === "00000") {
-        this.$message.success(result.data.message);
-        this.$refs.tableRef.onSearch();
+      if (this.baseUrlOption && this.fileList[0]) {
+        const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+        const formData = new FormData();
+        formData.append("file", this.fileList[0].raw);
+        formData.append("baseUrl", this.baseUrlOption);
+        formData.append("userId", userId);
+        const result = await handleUpload(formData);
+        if (result.data.code === "00000") {
+          this.$message.success(result.data.message);
+          this.$refs.tableRef.onSearch();
+        } else {
+          this.$message.error(result.data.message);
+        }
+        this.dialogFormVisible = false;
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error("请输入环境域名和上传文件");
       }
     },
     onCreateCase(row) {

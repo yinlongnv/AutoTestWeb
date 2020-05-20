@@ -137,7 +137,7 @@
       </el-table-column>
     </base-table>
     <el-dialog title="批量导入" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form>
         <el-form-item label="关联接口信息" :label-width="formLabelWidth">
           <el-cascader
             v-model="importValue"
@@ -342,20 +342,24 @@ export default {
       }
     },
     async handleUpload() {
-      this.dialogFormVisible = false;
-      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      const formData = new FormData();
-      formData.append("file", this.fileList[0].raw);
-      formData.append("projectName", this.importObj.projectName);
-      formData.append("apiGroup", this.importObj.apiGroup);
-      formData.append("apiMerge", this.importObj.apiMerge);
-      formData.append("userId", userId);
-      const result = await handleUpload(formData);
-      if (result.data.code === "00000") {
-        this.$message.success(result.data.message);
-        this.$refs.tableRef.onSearch();
+      if (this.importObj.apiMerge && this.fileList[0]) {
+        const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+        const formData = new FormData();
+        formData.append("file", this.fileList[0].raw);
+        formData.append("projectName", this.importObj.projectName);
+        formData.append("apiGroup", this.importObj.apiGroup);
+        formData.append("apiMerge", this.importObj.apiMerge);
+        formData.append("userId", userId);
+        const result = await handleUpload(formData);
+        if (result.data.code === "00000") {
+          this.$message.success(result.data.message);
+          this.$refs.tableRef.onSearch();
+        } else {
+          this.$message.error(result.data.message);
+        }
+        this.dialogFormVisible = false;
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error("请输入关联接口信息和上传文件");
       }
     }
   }

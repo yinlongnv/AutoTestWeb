@@ -211,6 +211,7 @@ export default {
   },
   methods: {
     createAccount() {
+      sessionStorage.removeItem("userDetail");
       this.$router.push({ path: "/user/edit", query: { type: 0 } });
     },
     batchActions() {
