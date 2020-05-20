@@ -8,7 +8,7 @@
       </el-row>
       <el-row>
         <el-col :span="3">账号角色</el-col>
-        <el-col :span="10" :offset="1">{{ userInfo.role|roleFilter }}</el-col>
+        <el-col :span="10" :offset="1">{{ userInfo.role | roleFilter }}</el-col>
       </el-row>
     </div>
     <div class="content">
@@ -16,43 +16,61 @@
         <el-col :span="3">用户名</el-col>
         <el-col :span="16" :offset="1">{{ userInfo.username }}</el-col>
         <el-col :span="4" class="right">
-          <el-button type="text" size="small" @click="openDialog('username')">修改用户名</el-button>
+          <el-button type="text" size="small" @click="openDialog('username')"
+            >修改用户名</el-button
+          >
         </el-col>
       </el-row>
       <el-row type="flex" align="middle">
         <el-col :span="3">身份证号</el-col>
         <el-col :span="16" :offset="1">{{ userInfo.idNumber }}</el-col>
         <el-col :span="4" class="right">
-          <el-button type="text" size="small" @click="openDialog('idNumber')">修改身份证号</el-button>
+          <el-button type="text" size="small" @click="openDialog('idNumber')"
+            >修改身份证号</el-button
+          >
         </el-col>
       </el-row>
       <el-row type="flex" align="middle">
         <el-col :span="3">手机号</el-col>
         <el-col :span="16" :offset="1">{{ userInfo.phoneNumber }}</el-col>
         <el-col :span="4" class="right">
-          <el-button type="text" size="small" @click="openDialog('phoneNumber')">修改手机号</el-button>
+          <el-button type="text" size="small" @click="openDialog('phoneNumber')"
+            >修改手机号</el-button
+          >
         </el-col>
       </el-row>
       <el-row type="flex" align="middle">
         <el-col :span="3">邮箱地址</el-col>
         <el-col :span="16" :offset="1">{{ userInfo.email }}</el-col>
         <el-col :span="4" class="right">
-          <el-button type="text" size="small" @click="openDialog('email')">修改邮箱地址</el-button>
+          <el-button type="text" size="small" @click="openDialog('email')"
+            >修改邮箱地址</el-button
+          >
         </el-col>
       </el-row>
       <el-row type="flex" align="middle">
         <el-col :span="3">密码</el-col>
         <el-col :span="16" :offset="1">{{ userInfo.password }}</el-col>
         <el-col :span="4" class="right">
-          <el-button type="text" size="small" @click="openDialog('password')">修改密码</el-button>
+          <el-button type="text" size="small" @click="openDialog('password')"
+            >修改密码</el-button
+          >
         </el-col>
       </el-row>
     </div>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" @close="closeDialog">
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      @close="closeDialog"
+    >
       <!-- <el-form ref="ruleForm" :model="form"> -->
       <el-form ref="ruleForm" :model="form" :rules="rules">
-        <div v-if="dialogTitle==='修改用户名'">
-          <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
+        <div v-if="dialogTitle === '修改用户名'">
+          <el-form-item
+            label="用户名"
+            :label-width="formLabelWidth"
+            prop="username"
+          >
             <el-input
               v-model="form.username"
               style="width:300px"
@@ -61,8 +79,12 @@
             />
           </el-form-item>
         </div>
-        <div v-if="dialogTitle==='修改身份证号'">
-          <el-form-item label="身份证号" :label-width="formLabelWidth" prop="idNumber">
+        <div v-if="dialogTitle === '修改身份证号'">
+          <el-form-item
+            label="身份证号"
+            :label-width="formLabelWidth"
+            prop="idNumber"
+          >
             <el-input
               v-model="form.idNumber"
               style="width:300px"
@@ -71,8 +93,12 @@
             />
           </el-form-item>
         </div>
-        <div v-if="dialogTitle==='修改手机号'">
-          <el-form-item label="手机号" :label-width="formLabelWidth" prop="phoneNumber">
+        <div v-if="dialogTitle === '修改手机号'">
+          <el-form-item
+            label="手机号"
+            :label-width="formLabelWidth"
+            prop="phoneNumber"
+          >
             <el-input
               v-model="form.phoneNumber"
               style="width:300px"
@@ -81,13 +107,26 @@
             />
           </el-form-item>
         </div>
-        <div v-if="dialogTitle==='修改邮箱地址'">
-          <el-form-item label="邮箱地址" :label-width="formLabelWidth" prop="email">
-            <el-input v-model="form.email" style="width:300px" placeholder="请输入邮箱地址" size="small" />
+        <div v-if="dialogTitle === '修改邮箱地址'">
+          <el-form-item
+            label="邮箱地址"
+            :label-width="formLabelWidth"
+            prop="email"
+          >
+            <el-input
+              v-model="form.email"
+              style="width:300px"
+              placeholder="请输入邮箱地址"
+              size="small"
+            />
           </el-form-item>
         </div>
-        <div v-if="dialogTitle==='修改密码'">
-          <el-form-item label="新密码" :label-width="formLabelWidth" prop="password">
+        <div v-if="dialogTitle === '修改密码'">
+          <el-form-item
+            label="新密码"
+            :label-width="formLabelWidth"
+            prop="password"
+          >
             <el-input
               v-model="form.password"
               style="width:300px"
@@ -174,7 +213,6 @@ export default {
   methods: {
     async getUserDetail() {
       try {
-        // 这边的逻辑还有点问题
         const id = JSON.parse(sessionStorage.getItem("userInfo")).id;
         const result = await getUserDetail({ id });
         const dataCopy = JSON.stringify(result.data.data);
@@ -209,11 +247,13 @@ export default {
       if (this.$refs.ruleForm) {
         this.$refs.ruleForm.resetFields();
       }
+      this.form = JSON.parse(sessionStorage.getItem("centerInfo"));
+
       this.dialogTitle = DIALOGTITLES[type]();
       this.dialogVisible = true;
     },
     closeDialog() {
-      this.form = JSON.parse(sessionStorage.getItem("centerInfo"));
+      // this.form = JSON.parse(sessionStorage.getItem("centerInfo"));
     }
   }
 };
