@@ -411,6 +411,7 @@ export default {
       this.dialogParams = false
     },
     showParams(row) {
+      this.apiId = row.apiId
       this.getReqBody(row.apiId)
       this.dialogParams = true
     },
@@ -533,7 +534,8 @@ export default {
     },
     async putCaseRules() {
       try {
-        await putCaseRules({ caseRulesList: this.tableData })
+        const apiId = this.apiId
+        await putCaseRules({ caseRulesList: this.tableData, apiId })
         this.$message.success('参数规则修改成功')
       } catch (error) {
         this.$message.error(error)
