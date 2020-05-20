@@ -2,7 +2,9 @@
   <div class="record-list">
     <div class="header-line">操作日志</div>
     <div class="flex-box">
-      <el-button icon="el-icon-download" size="small" @click="handleDownload">导出全部日志</el-button>
+      <el-button icon="el-icon-download" size="small" @click="handleDownload"
+        >导出全部日志</el-button
+      >
       <div style="text-align:right;width:100%">
         <el-select
           v-model="searchObj.user"
@@ -55,7 +57,7 @@
       </el-table-column>
       <el-table-column label="账号角色" align="center">
         <template slot-scope="scope">
-          <div>{{ scope.row.role|roleFilter }}</div>
+          <div>{{ scope.row.role | roleFilter }}</div>
         </template>
       </el-table-column>
       <el-table-column label="登入IP" align="center">
@@ -83,10 +85,10 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { timeFilter, roleFilter } from '@/utils/filter'
-import { parseTime } from '@/utils'
-import { getfilterUserName, exportAllLogs } from '@/api/operateLog'
+import BaseTable from "@/components/BaseTable";
+import { timeFilter, roleFilter } from "@/utils/filter";
+import { parseTime } from "@/utils";
+import { getfilterUserName, exportAllLogs } from "@/api/operateLog";
 export default {
   components: { BaseTable },
   filters: {
@@ -96,91 +98,94 @@ export default {
   data() {
     return {
       timeArray: [],
-      searchName: '',
+      searchName: "",
       searchObj: {
-        user: '',
-        startTime: '',
-        endTime: '',
-        logInfo: ''
+        user: "",
+        startTime: "",
+        endTime: "",
+        logInfo: ""
       },
       list: [],
       options: [],
-      value: ''
-    }
+      value: ""
+    };
   },
   watch: {
     timeArray(val) {
       if (!val) {
-        this.searchObj.startTime = ''
-        this.searchObj.endTime = ''
+        this.searchObj.startTime = "";
+        this.searchObj.endTime = "";
       } else {
-        this.searchObj.startTime = val[0]
-        this.searchObj.endTime = val[1]
+        this.searchObj.startTime = val[0];
+        this.searchObj.endTime = val[1];
       }
     }
   },
   created() {
-    this.getfilterUserName()
+    this.getfilterUserName();
   },
   methods: {
     getTableData(data) {
-      this.list = data
+      this.list = data;
     },
     // 获取全部用户名的下拉筛选框
     async getfilterUserName() {
       try {
-        const result = await getfilterUserName()
-        this.options = result.data.userNameOptions
+        const result = await getfilterUserName();
+        if (result.data.code === "00000") {
+          console.log(result.data);
+          this.options = result.data.userNameOptions;
+        }
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     // 导出全部日志
     handleDownload() {
-      import('@/utils/Export2Excel').then(excel => {
+      import("@/utils/Export2Excel").then(excel => {
         const tHeader = [
-          '用户名',
-          '用户编号',
-          '账号角色(1为root,0为QA)',
-          '最后登录IP',
-          '账号操作内容',
-          '操作界面',
-          '操作时间'
-        ]
+          "用户名",
+          "用户编号",
+          "账号角色(1为root,0为QA)",
+          "最后登录IP",
+          "账号操作内容",
+          "操作界面",
+          "操作时间"
+        ];
         const filterVal = [
-          'username',
-          'userNumber',
-          'role',
-          'lastIp',
-          'logContent',
-          'operatePath',
-          'createdAt'
-        ]
-        let list = []
+          "username",
+          "userNumber",
+          "role",
+          "lastIp",
+          "logContent",
+          "operatePath",
+          "createdAt"
+        ];
+        let list = [];
         exportAllLogs().then(res => {
-          list = res.data
-          const data = this.formatJson(filterVal, list)
+          list = res.data;
+          const data = this.formatJson(filterVal, list);
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: '操作日志表'
-          })
-        })
-      })
+            filename: "操作日志表"
+          });
+        });
+      });
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
+          if (j === "timestamp") {
+            return parseTime(v[j]);
           } else {
-            return v[j]
+            return v[j];
           }
         })
-      )
+      );
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

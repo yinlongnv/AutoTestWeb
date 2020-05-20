@@ -2,7 +2,9 @@
   <div class="old-manage">
     <div class="header-line">用户列表</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" @click="createAccount">创建账号</el-button>
+      <el-button type="primary" size="small" @click="createAccount"
+        >创建账号</el-button
+      >
       <el-select
         v-model="type"
         style="width:150px;margin-left:16px"
@@ -61,7 +63,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户名" width="120">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="goDetail(scope.row)">{{ scope.row.username }}</el-button>
+          <el-button type="text" size="small" @click="goDetail(scope.row)">{{
+            scope.row.username
+          }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="用户编号" width="200" align="center">
@@ -71,13 +75,17 @@
       </el-table-column>
       <el-table-column label="账号状态" width="80" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status" type="warning">{{ scope.row.status | statusFilter }}</el-tag>
-          <el-tag v-else type="success">{{ scope.row.status | statusFilter }}</el-tag>
+          <el-tag v-if="scope.row.status" type="warning">{{
+            scope.row.status | statusFilter
+          }}</el-tag>
+          <el-tag v-else type="success">{{
+            scope.row.status | statusFilter
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="账号角色" width="80" align="center">
         <template slot-scope="scope">
-          <div>{{ scope.row.role|roleFilter }}</div>
+          <div>{{ scope.row.role | roleFilter }}</div>
         </template>
       </el-table-column>
       <el-table-column label="创建账号" width="140" align="center">
@@ -103,27 +111,32 @@
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="onEdit(scope.row)"
+              >编辑</el-button
+            >
             <el-button
               v-if="scope.row.status"
               type="text"
               style="color:#67c23a"
               size="small"
               @click="enableUsers([scope.row.id])"
-            >启用</el-button>
+              >启用</el-button
+            >
             <el-button
               v-else
               type="text"
               style="color:#e6a23c"
               size="small"
               @click="onDisable([scope.row.id])"
-            >禁用</el-button>
+              >禁用</el-button
+            >
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
               @click="onDelete([scope.row.id])"
-            >删除</el-button>
+              >删除</el-button
+            >
           </div>
         </template>
       </el-table-column>
@@ -132,9 +145,9 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { statusFilter, roleFilter } from '@/utils/filter'
-import { deleteUsers, disableUsers, enableUsers } from '@/api/user'
+import BaseTable from "@/components/BaseTable";
+import { statusFilter, roleFilter } from "@/utils/filter";
+import { deleteUsers, disableUsers, enableUsers } from "@/api/user";
 export default {
   components: { BaseTable },
   filters: {
@@ -144,129 +157,133 @@ export default {
   data() {
     return {
       rules: {
-        name: [{ required: true, message: '请输入新密码', trigger: 'blur' }]
+        name: [{ required: true, message: "请输入新密码", trigger: "blur" }]
       },
       timeArray: [],
       form: {
-        password: ''
+        password: ""
       },
-      formLabelWidth: '120px',
+      errorMsg: "操作失败，请重试",
+      formLabelWidth: "120px",
       searchObj: {
-        userInfo: '',
-        role: '',
-        startTime: '',
-        endTime: ''
+        userInfo: "",
+        role: "",
+        startTime: "",
+        endTime: ""
       },
       idList: [],
-      type: '',
+      type: "",
       typeOptions: [
         {
-          name: '批量禁用',
-          value: '禁用'
+          name: "批量禁用",
+          value: "禁用"
         },
         {
-          name: '批量启用',
-          value: '启用'
+          name: "批量启用",
+          value: "启用"
         },
         {
-          name: '批量删除',
-          value: '删除'
+          name: "批量删除",
+          value: "删除"
         }
       ],
       roleOptions: [
         {
-          name: 'root',
+          name: "root",
           value: 1
         },
         {
-          name: 'QA',
+          name: "QA",
           value: 0
         }
       ]
-    }
+    };
   },
   watch: {
     timeArray(val) {
       if (!val) {
-        this.searchObj.startTime = ''
-        this.searchObj.endTime = ''
+        this.searchObj.startTime = "";
+        this.searchObj.endTime = "";
       } else {
-        this.searchObj.startTime = val[0]
-        this.searchObj.endTime = val[1]
+        this.searchObj.startTime = val[0];
+        this.searchObj.endTime = val[1];
       }
     }
   },
   methods: {
     createAccount() {
-      this.$router.push({ path: '/user/edit', query: { type: 0 }})
+      this.$router.push({ path: "/user/edit", query: { type: 0 } });
     },
     batchActions() {
-      if (this.type === '禁用') {
-        this.onDisable(this.idList)
-      } else if (this.type === '删除') {
-        this.onDelete(this.idList)
+      if (this.type === "禁用") {
+        this.onDisable(this.idList);
+      } else if (this.type === "删除") {
+        this.onDelete(this.idList);
       } else {
-        this.enableUsers(this.idList)
+        this.enableUsers(this.idList);
       }
-      this.type = ''
+      this.type = "";
     },
     actionNotice(text, fn) {
-      this.$confirm(text, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm(text, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(fn)
-        .catch(() => {})
+        .catch(() => {});
     },
     onDisable(idList) {
-      this.actionNotice('确定要禁用吗?', () => {
-        this.disableUsers(idList)
-      })
+      this.actionNotice("确定要禁用吗?", () => {
+        this.disableUsers(idList);
+      });
     },
     onDelete(idList) {
-      this.actionNotice('确定要删除吗?', () => {
-        this.deleteUsers(idList)
-      })
+      this.actionNotice("确定要删除吗?", () => {
+        this.deleteUsers(idList);
+      });
     },
     onEdit(row) {
-      sessionStorage.setItem('userDetail', JSON.stringify(row))
-      this.$router.push({ path: '/user/edit', query: { type: 1 }})
+      sessionStorage.setItem("userDetail", JSON.stringify(row));
+      this.$router.push({ path: "/user/edit", query: { type: 1 } });
     },
     goDetail(row) {
-      this.$router.push({ path: '/user/detail', query: { id: row.id }})
+      this.$router.push({ path: "/user/detail", query: { id: row.id } });
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id)
-      console.log(this.idList)
+      this.idList = row.map(f => f.id);
+      console.log(this.idList);
     },
     // 接口调用
     async deleteUsers(userIds) {
-      try {
-        await deleteUsers({ userIds })
-        this.$refs.tableRef.onSearch()
-      } catch (error) {
-        this.$message.error(error)
+      const result = await deleteUsers({ userIds });
+      if (result.data.code === "00000") {
+        this.$refs.tableRef.onSearch();
+        this.$message.success(result.data.message);
+      } else {
+        this.$message.error(result.data.message);
       }
     },
     async enableUsers(userIds) {
-      try {
-        await enableUsers({ userIds })
-        this.$refs.tableRef.onSearch()
-      } catch (error) {
-        this.$message.error(error)
+      const result = await enableUsers({ userIds });
+      if (result.data.code === "00000") {
+        this.$refs.tableRef.onSearch();
+        this.$message.success(result.data.message);
+      } else {
+        this.$message.error(this.errorMsg);
       }
     },
     async disableUsers(userIds) {
-      try {
-        await disableUsers({ userIds })
-        this.$refs.tableRef.onSearch()
-      } catch (error) {
-        this.$message.error(error)
+      const result = await disableUsers({ userIds });
+      if (result.data.code === "00000") {
+        this.$refs.tableRef.onSearch();
+        this.$message.success(result.data.message);
+      } else {
+        this.$message.error(this.errorMsg);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

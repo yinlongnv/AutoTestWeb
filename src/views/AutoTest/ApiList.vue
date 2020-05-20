@@ -400,6 +400,7 @@ export default {
     },
     showParams(row) {
       this.apiId = row.apiId;
+      console.log(row.apiId);
       this.getReqBody(row.apiId);
     },
     // 下载模板
