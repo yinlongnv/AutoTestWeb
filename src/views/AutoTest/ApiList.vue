@@ -1,6 +1,7 @@
 <template>
   <div class="old-manage">
     <div class="header-line">接口管理</div>
+    <div @click="showParams({apiId:1})">参数规则</div>
     <div class="flex-box">
       <el-button
         type="primary"
@@ -374,10 +375,6 @@ export default {
           label: 'idNumber'
         },
         {
-          value: 'dateTime',
-          label: 'dateTime'
-        },
-        {
           value: 'other',
           label: 'other'
         }
@@ -413,7 +410,6 @@ export default {
     showParams(row) {
       this.apiId = row.apiId
       this.getReqBody(row.apiId)
-      this.dialogParams = true
     },
     // 下载模板
     handleDownload() {
@@ -528,6 +524,7 @@ export default {
         for (const item of this.tableData) {
           item.type = ''
         }
+        this.dialogParams = true
       } catch (error) {
         this.$message.error(error)
       }

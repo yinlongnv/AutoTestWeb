@@ -32,7 +32,7 @@ export function getfilterMap(data) {
   return request({
     url: '/api/filterMap',
     method: 'get',
-    param: data
+    params: data
   })
 }
 // 获取环境域名下拉筛选内容
@@ -40,7 +40,7 @@ export function getfilterBaseUrl(data) {
   return request({
     url: '/api/filterBaseUrl',
     method: 'get',
-    param: data
+    params: data
   })
 }
 // 批量导入接口数据
@@ -59,7 +59,7 @@ export function getReqBody(data) {
   return request({
     url: '/api/getReqQueryOrBody',
     method: 'get',
-    param: { ...data }
+    params: { ...data }
   })
 }
 // 填入参数规则，传userId、apiId和参数规则的对象数组caseRulesList
