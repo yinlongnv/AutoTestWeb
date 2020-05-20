@@ -2,11 +2,7 @@
   <div class="old-info-container">
     <div class="header-line">{{ editStatus | pageTypeFilter }}用例</div>
     <el-form ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item
-        prop="apiInfo"
-        label="关联接口信息"
-        :label-width="formLabelWidth"
-      >
+      <el-form-item prop="apiInfo" label="关联接口信息" :label-width="formLabelWidth">
         <el-cascader
           v-model="value"
           size="small"
@@ -16,11 +12,7 @@
           @change="handleChange"
         />
       </el-form-item>
-      <el-form-item
-        prop="caseBody"
-        label="用例内容"
-        :label-width="formLabelWidth"
-      >
+      <el-form-item prop="caseBody" label="用例内容" :label-width="formLabelWidth">
         <el-input
           v-model="form.caseBody"
           type="textarea"
@@ -30,11 +22,7 @@
           placeholder="请输入用例内容，例如：{&quot;username&quot;: &quot;dadalong&quot;, &quot;password&quot;: &quot;123456&quot;}"
         />
       </el-form-item>
-      <el-form-item
-        prop="caseDescription"
-        label="用例描述"
-        :label-width="formLabelWidth"
-      >
+      <el-form-item prop="caseDescription" label="用例描述" :label-width="formLabelWidth">
         <el-input
           v-model="form.caseDescription"
           type="textarea"
@@ -44,11 +32,7 @@
           placeholder="请输入用例描述，例如：测试用户登录正常场景"
         />
       </el-form-item>
-      <el-form-item
-        prop="caseResponse"
-        label="预期响应"
-        :label-width="formLabelWidth"
-      >
+      <el-form-item prop="caseResponse" label="预期响应" :label-width="formLabelWidth">
         <el-input
           v-model="form.caseResponse"
           type="textarea"
@@ -67,27 +51,26 @@
 </template>
 
 <script>
-import { timeFilter, pageTypeFilter } from '@/utils/filter'
-import { createCase, getfilterMap } from '@/api/case'
+import { timeFilter, pageTypeFilter } from "@/utils/filter";
+import { createCase, getfilterMap } from "@/api/case";
 const FORM = {
-  projectName: '',
-  apiGroup: '',
-  apiMerge: '',
-  caseBody: '',
-  caseDescription: '',
-  caseResponse: ''
-}
+  projectName: "",
+  apiGroup: "",
+  apiMerge: "",
+  caseBody: "",
+  caseDescription: "",
+  caseResponse: ""
+};
 export default {
   filters: { timeFilter, pageTypeFilter },
   data() {
     const validateProjectGroup = (rule, value, callback) => {
-      console.log(this.value, 'value')
       if (this.value.length === 0) {
-        callback(new Error('请选择关联接口信息'))
+        callback(new Error("请选择关联接口信息"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       value: [],
       options: [],
@@ -95,100 +78,100 @@ export default {
       form: FORM,
       rules: {
         apiInfo: [
-          { required: true, validator: validateProjectGroup, trigger: 'change' }
+          { required: true, validator: validateProjectGroup, trigger: "change" }
         ],
         caseBody: [
-          { required: true, message: '请输入用例内容', trigger: 'blur' }
+          { required: true, message: "请输入用例内容", trigger: "blur" }
         ],
         caseDescription: [
-          { required: true, message: '请输入用例描述', trigger: 'blur' }
+          { required: true, message: "请输入用例描述", trigger: "blur" }
         ],
         caseResponse: [
-          { required: true, message: '请输入预期响应', trigger: 'blur' }
+          { required: true, message: "请输入预期响应", trigger: "blur" }
         ]
       },
-      inputWidth: 'width:460px',
-      formLabelWidth: '120px',
+      inputWidth: "width:460px",
+      formLabelWidth: "120px",
       communityList: [],
       subdistrictList: []
-    }
+    };
   },
   created() {
     this.form =
-      JSON.parse(sessionStorage.getItem('caseDetail')) ||
-      JSON.parse(JSON.stringify(FORM))
-    this.getfilterMap()
+      JSON.parse(sessionStorage.getItem("caseDetail")) ||
+      JSON.parse(JSON.stringify(FORM));
+    this.getfilterMap();
     if (this.editStatus !== 0) {
       this.value = [
         this.form.projectName,
         this.form.apiGroup,
         this.form.apiMerge
-      ]
+      ];
     } else {
-      this.value = []
+      this.value = [];
     }
   },
   methods: {
     async getfilterMap() {
       try {
-        const result = await getfilterMap()
-        this.options = result.data.options
+        const result = await getfilterMap();
+        this.options = result.data.data.options;
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     handleChange(val) {
       if (val.length === 0) {
-        this.form.projectName = ''
-        this.form.apiGroup = ''
-        this.form.apiMerge = ''
+        this.form.projectName = "";
+        this.form.apiGroup = "";
+        this.form.apiMerge = "";
       } else {
-        this.form.projectName = val[0]
-        this.form.apiGroup = val[1]
-        this.form.apiMerge = val[2]
+        this.form.projectName = val[0];
+        this.form.apiGroup = val[1];
+        this.form.apiMerge = val[2];
       }
     },
     goBack() {
-      this.$router.go(-1)
-      sessionStorage.removeItem('caseDetail')
+      this.$router.go(-1);
+      sessionStorage.removeItem("caseDetail");
     },
     confirmEdit() {
-      this.$refs['ruleForm'].validate(valid => {
+      this.$refs["ruleForm"].validate(valid => {
         if (valid) {
-          this.createAccount()
-          sessionStorage.removeItem('caseDetail')
+          this.createAccount();
+          sessionStorage.removeItem("caseDetail");
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     judgeStatus(result, message) {
-      if (result.data.code === '00000') {
+      if (result.data.code === "00000") {
         this.$message({
-          type: 'success',
+          type: "success",
           message: message
-        })
+        });
       } else {
-        this.$message.error(result.data.message)
+        this.$message.error(result.data.message);
       }
     },
     async createAccount() {
-      const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
+      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
       if (this.editStatus === 0) {
-        const result = await createCase({ ...this.form, userId })
-        this.judgeStatus(result, '创建成功')
+        const result = await createCase({ ...this.form, userId });
+        this.judgeStatus(result, "创建成功");
       } else if (this.editStatus === 1) {
-        const result = await createCase({ ...this.form, userId })
-        this.judgeStatus(result, '编辑成功')
+        const result = await createCase({ ...this.form, userId });
+        this.judgeStatus(result, "编辑成功");
       } else if (this.editStatus === 2) {
-        const result = await createCase({ ...this.form, userId, id: '' })
-        this.judgeStatus(result, '复制成功')
+        const result = await createCase({ ...this.form, userId, id: "" });
+        this.judgeStatus(result, "复制成功");
       }
 
-      this.$router.push({ path: '/case/list' })
+      this.$router.push({ path: "/case/list" });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

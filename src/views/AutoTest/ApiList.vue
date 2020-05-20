@@ -3,18 +3,10 @@
     <div class="header-line">接口管理</div>
     <div @click="showParams({ apiId: 1 })">参数规则</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" @click="createApi"
-        >创建接口</el-button
-      >
-      <el-button icon="el-icon-download" size="small" @click="handleDownload"
-        >下载模板</el-button
-      >
-      <el-button icon="el-icon-upload2" size="small" @click="handleImport"
-        >批量导入</el-button
-      >
-      <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)"
-        >批量删除</el-button
-      >
+      <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
+      <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
+      <el-button icon="el-icon-upload2" size="small" @click="handleImport">批量导入</el-button>
+      <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
       <div style="text-align:right;width:100%">
         <el-cascader
           v-model="value"
@@ -57,9 +49,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="接口名称" width="170">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="goDetail(scope.row)">{{
+          <el-button type="text" size="small" @click="goDetail(scope.row)">
+            {{
             scope.row.apiName
-          }}</el-button>
+            }}
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="接口路径" width="280" align="center">
@@ -90,46 +84,26 @@
       <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button
-              type="text"
-              size="small"
-              @click="editOrCopy(1, scope.row)"
-              >编辑</el-button
-            >
-            <el-button
-              type="text"
-              size="small"
-              @click="editOrCopy(2, scope.row)"
-              >复制接口</el-button
-            >
+            <el-button type="text" size="small" @click="editOrCopy(1, scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="editOrCopy(2, scope.row)">复制接口</el-button>
             <el-button
               type="text"
               size="small"
               style="color:#e6a23c"
               @click="onCreateCase(scope.row)"
-              >创建用例</el-button
-            >
+            >创建用例</el-button>
             <el-button
               type="text"
               style="color:#67c23a"
               size="small"
               @click="showParams(scope.row)"
-              >参数规则</el-button
-            >
-            <el-button
-              type="text"
-              size="small"
-              style="color:#e6a23c"
-              @click="onCreateCases(scope.row)"
-              >生成用例</el-button
-            >
+            >参数规则</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
               @click="onDelete([scope.row.id])"
-              >删除</el-button
-            >
+            >删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -151,11 +125,7 @@
         </el-table-column>
         <el-table-column label="数据类型" width="150" align="center">
           <template slot-scope="scope">
-            <el-select
-              v-model="scope.row.type"
-              size="small"
-              placeholder="数据类型"
-            >
+            <el-select v-model="scope.row.type" size="small" placeholder="数据类型">
               <el-option
                 v-for="item in typeOptions"
                 :key="item.value"
@@ -197,11 +167,7 @@
         </el-table-column>
         <el-table-column label="类型" width="150" align="center">
           <template slot-scope="scope">
-            <el-select
-              v-model="scope.row.model"
-              size="small"
-              placeholder="数据类型"
-            >
+            <el-select v-model="scope.row.model" size="small" placeholder="数据类型">
               <el-option
                 v-for="item in modelOptions"
                 :key="item.value"
@@ -226,9 +192,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogParams = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="confirmParams"
-          >确 定</el-button
-        >
+        <el-button size="small" type="primary" @click="confirmParams">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -268,12 +232,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false"
-          >取 消</el-button
-        >
-        <el-button size="small" type="primary" @click="handleUpload"
-          >确 定</el-button
-        >
+        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="handleUpload">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -490,13 +450,13 @@ export default {
     async getfilterMap() {
       try {
         const result = await getfilterMap();
-        const options = result.data.options;
+        const options = result.data.data.options;
         for (const i of options) {
           for (const child of i.children) {
             delete child.children;
           }
         }
-        this.options = result.data.options;
+        this.options = result.data.data.options;
       } catch (error) {
         this.$message.error(error);
       }
@@ -504,7 +464,7 @@ export default {
     async getfilterBaseUrl() {
       try {
         const result = await getfilterBaseUrl();
-        this.baseUrlOptions = result.data.baseUrlOptions;
+        this.baseUrlOptions = result.data.data.baseUrlOptions;
       } catch (error) {
         this.$message.error(error);
       }
@@ -576,11 +536,12 @@ export default {
       this.idList = row.map(f => f.id);
     },
     async deleteApis(apiIds) {
-      try {
-        await deleteApis({ apiIds: apiIds });
+      const result = await deleteApis({ apiIds: apiIds });
+      if (result.data.code === "00000") {
         this.$refs.tableRef.onSearch();
-      } catch (error) {
-        this.$message.error(error);
+        this.$message.success("删除成功");
+      } else {
+        this.$message.error("操作失败，请重试");
       }
     }
   }

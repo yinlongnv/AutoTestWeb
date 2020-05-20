@@ -2,9 +2,7 @@
   <div class="record-list">
     <div class="header-line">操作日志</div>
     <div class="flex-box">
-      <el-button icon="el-icon-download" size="small" @click="handleDownload"
-        >导出全部日志</el-button
-      >
+      <el-button icon="el-icon-download" size="small" @click="handleDownload">导出全部日志</el-button>
       <div style="text-align:right;width:100%">
         <el-select
           v-model="searchObj.user"
@@ -133,8 +131,7 @@ export default {
       try {
         const result = await getfilterUserName();
         if (result.data.code === "00000") {
-          console.log(result.data);
-          this.options = result.data.userNameOptions;
+          this.options = result.data.data.userNameOptions;
         }
       } catch (error) {
         this.$message.error(error);
@@ -163,7 +160,7 @@ export default {
         ];
         let list = [];
         exportAllLogs().then(res => {
-          list = res.data;
+          list = res.data.data;
           const data = this.formatJson(filterVal, list);
           excel.export_json_to_excel({
             header: tHeader,

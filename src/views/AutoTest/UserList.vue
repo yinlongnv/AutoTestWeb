@@ -2,9 +2,7 @@
   <div class="old-manage">
     <div class="header-line">用户列表</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" @click="createAccount"
-        >创建账号</el-button
-      >
+      <el-button type="primary" size="small" @click="createAccount">创建账号</el-button>
       <el-select
         v-model="type"
         style="width:150px;margin-left:16px"
@@ -63,9 +61,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户名" width="120">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="goDetail(scope.row)">{{
+          <el-button type="text" size="small" @click="goDetail(scope.row)">
+            {{
             scope.row.username
-          }}</el-button>
+            }}
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="用户编号" width="200" align="center">
@@ -75,12 +75,16 @@
       </el-table-column>
       <el-table-column label="账号状态" width="80" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status" type="warning">{{
+          <el-tag v-if="scope.row.status" type="warning">
+            {{
             scope.row.status | statusFilter
-          }}</el-tag>
-          <el-tag v-else type="success">{{
+            }}
+          </el-tag>
+          <el-tag v-else type="success">
+            {{
             scope.row.status | statusFilter
-          }}</el-tag>
+            }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="账号角色" width="80" align="center">
@@ -111,32 +115,27 @@
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <div style="display:flex">
-            <el-button type="text" size="small" @click="onEdit(scope.row)"
-              >编辑</el-button
-            >
+            <el-button type="text" size="small" @click="onEdit(scope.row)">编辑</el-button>
             <el-button
               v-if="scope.row.status"
               type="text"
               style="color:#67c23a"
               size="small"
               @click="enableUsers([scope.row.id])"
-              >启用</el-button
-            >
+            >启用</el-button>
             <el-button
               v-else
               type="text"
               style="color:#e6a23c"
               size="small"
               @click="onDisable([scope.row.id])"
-              >禁用</el-button
-            >
+            >禁用</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
               @click="onDelete([scope.row.id])"
-              >删除</el-button
-            >
+            >删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -252,7 +251,6 @@ export default {
     },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);
-      console.log(this.idList);
     },
     // 接口调用
     async deleteUsers(userIds) {
