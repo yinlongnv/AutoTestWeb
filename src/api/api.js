@@ -59,7 +59,7 @@ export function getReqBody(data) {
   return request({
     url: '/api/getReqQueryOrBody',
     method: 'get',
-    param: data
+    param: { ...data }
   })
 }
 // 填入参数规则，传userId、apiId和参数规则的对象数组caseRulesList
