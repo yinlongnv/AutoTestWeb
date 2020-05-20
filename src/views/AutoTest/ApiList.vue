@@ -117,6 +117,13 @@
             >
             <el-button
               type="text"
+              size="small"
+              style="color:#e6a23c"
+              @click="onCreateCases(scope.row)"
+              >生成用例</el-button
+            >
+            <el-button
+              type="text"
               style="color:#f56c6c"
               size="small"
               @click="onDelete([scope.row.id])"
@@ -294,7 +301,6 @@ export default {
           name: "",
           required: "",
           type: "",
-          limit: 1,
           min: "111",
           max: "222",
           isArray: "",
@@ -305,7 +311,6 @@ export default {
           name: "",
           required: "",
           type: "",
-          limit: "",
           min: "",
           max: "",
           isArray: "",
