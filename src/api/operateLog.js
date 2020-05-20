@@ -14,6 +14,6 @@ export function getfilterUserName(data) {
   return request({
     url: "/operateLog/filterUserName",
     method: "get",
-    param: data
+    params: data
   });
 }

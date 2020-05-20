@@ -30,7 +30,7 @@ export function getfilterMap(data) {
   return request({
     url: "/case/filterMap",
     method: "get",
-    param: data
+    params: data
   });
 }
 // 批量导入用例数据
