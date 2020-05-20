@@ -27,7 +27,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder='请输入用例内容，例如：{"username": "dadalong", "password": "123456"}'
+          placeholder="请输入用例内容，例如：{&quot;username&quot;: &quot;dadalong&quot;, &quot;password&quot;: &quot;123456&quot;}"
         />
       </el-form-item>
       <el-form-item
@@ -55,7 +55,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder='请输入预期响应，例如：{"code": "00000","message": "登录成功","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}'
+          placeholder="请输入预期响应，例如：{&quot;code&quot;: &quot;00000&quot;,&quot;message&quot;: &quot;登录成功&quot;,&quot;data&quot;: {&quot;id&quot;: 1,&quot;username&quot;: &quot;root&quot;,&quot;name&quot;: &quot;root&quot;,&quot;idCard&quot;: &quot;&quot;,&quot;mobile&quot;: &quot;&quot;,&quot;status&quot;: &quot;enable&quot;,&quot;email&quot;: &quot;&quot;,&quot;createTime&quot;: &quot;1552999848000&quot;,&quot;roleIds&quot;: [1],&quot;roleNames&quot;: [&quot;超级管理员&quot;],&quot;provnce&quot;: [&quot;北京市&quot;,&quot;浙江省&quot;]}}"
         />
       </el-form-item>
     </el-form>
@@ -67,27 +67,27 @@
 </template>
 
 <script>
-import { timeFilter, pageTypeFilter } from "@/utils/filter";
-import { createCase, getfilterMap } from "@/api/case";
+import { timeFilter, pageTypeFilter } from '@/utils/filter'
+import { createCase, getfilterMap } from '@/api/case'
 const FORM = {
-  projectName: "",
-  apiGroup: "",
-  apiMerge: "",
-  caseBody: "",
-  caseDescription: "",
-  caseResponse: ""
-};
+  projectName: '',
+  apiGroup: '',
+  apiMerge: '',
+  caseBody: '',
+  caseDescription: '',
+  caseResponse: ''
+}
 export default {
   filters: { timeFilter, pageTypeFilter },
   data() {
     const validateProjectGroup = (rule, value, callback) => {
-      console.log(this.value, "value");
+      console.log(this.value, 'value')
       if (this.value.length === 0) {
-        callback(new Error("请选择关联接口信息"));
+        callback(new Error('请选择关联接口信息'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       value: [],
       options: [],
@@ -95,100 +95,100 @@ export default {
       form: FORM,
       rules: {
         apiInfo: [
-          { required: true, validator: validateProjectGroup, trigger: "change" }
+          { required: true, validator: validateProjectGroup, trigger: 'change' }
         ],
         caseBody: [
-          { required: true, message: "请输入用例内容", trigger: "blur" }
+          { required: true, message: '请输入用例内容', trigger: 'blur' }
         ],
         caseDescription: [
-          { required: true, message: "请输入用例描述", trigger: "blur" }
+          { required: true, message: '请输入用例描述', trigger: 'blur' }
         ],
         caseResponse: [
-          { required: true, message: "请输入预期响应", trigger: "blur" }
+          { required: true, message: '请输入预期响应', trigger: 'blur' }
         ]
       },
-      inputWidth: "width:460px",
-      formLabelWidth: "120px",
+      inputWidth: 'width:460px',
+      formLabelWidth: '120px',
       communityList: [],
       subdistrictList: []
-    };
+    }
   },
   created() {
     this.form =
-      JSON.parse(sessionStorage.getItem("caseDetail")) ||
-      JSON.parse(JSON.stringify(FORM));
-    this.getfilterMap();
+      JSON.parse(sessionStorage.getItem('caseDetail')) ||
+      JSON.parse(JSON.stringify(FORM))
+    this.getfilterMap()
     if (this.editStatus !== 0) {
       this.value = [
         this.form.projectName,
         this.form.apiGroup,
         this.form.apiMerge
-      ];
+      ]
     } else {
-      this.value = [];
+      this.value = []
     }
   },
   methods: {
     async getfilterMap() {
       try {
-        const result = await getfilterMap();
-        this.options = result.data.options;
+        const result = await getfilterMap()
+        this.options = result.data.options
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     handleChange(val) {
       if (val.length === 0) {
-        this.form.projectName = "";
-        this.form.apiGroup = "";
-        this.form.apiMerge = "";
+        this.form.projectName = ''
+        this.form.apiGroup = ''
+        this.form.apiMerge = ''
       } else {
-        this.form.projectName = val[0];
-        this.form.apiGroup = val[1];
-        this.form.apiMerge = val[2];
+        this.form.projectName = val[0]
+        this.form.apiGroup = val[1]
+        this.form.apiMerge = val[2]
       }
     },
     goBack() {
-      this.$router.go(-1);
-      sessionStorage.removeItem("caseDetail");
+      this.$router.go(-1)
+      sessionStorage.removeItem('caseDetail')
     },
     confirmEdit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.createAccount();
-          sessionStorage.removeItem("caseDetail");
+          this.createAccount()
+          sessionStorage.removeItem('caseDetail')
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     judgeStatus(result, message) {
-      if (result.data.code === "00000") {
+      if (result.data.code === '00000') {
         this.$message({
-          type: "success",
+          type: 'success',
           message: message
-        });
+        })
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
     },
     async createAccount() {
-      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
       if (this.editStatus === 0) {
-        const result = await createCase({ ...this.form, userId });
-        this.judgeStatus(result, "创建成功");
+        const result = await createCase({ ...this.form, userId })
+        this.judgeStatus(result, '创建成功')
       } else if (this.editStatus === 1) {
-        const result = await createCase({ ...this.form, userId });
-        this.judgeStatus(result, "编辑成功");
+        const result = await createCase({ ...this.form, userId })
+        this.judgeStatus(result, '编辑成功')
       } else if (this.editStatus === 2) {
-        const result = await createCase({ ...this.form, userId, id: "" });
-        this.judgeStatus(result, "复制成功");
+        const result = await createCase({ ...this.form, userId, id: '' })
+        this.judgeStatus(result, '复制成功')
       }
 
-      this.$router.push({ path: "/case/list" });
+      this.$router.push({ path: '/case/list' })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

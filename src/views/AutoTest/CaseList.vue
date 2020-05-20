@@ -2,19 +2,22 @@
   <div class="old-manage">
     <div class="header-line">用例管理</div>
     <div class="flex-box">
-      <el-button type="primary" size="small" @click="createCase"
-        >创建用例</el-button
-      >
-      <el-button icon="el-icon-download" size="small" @click="handleDownload"
-        >下载模板</el-button
-      >
+      <el-button
+        type="primary"
+        size="small"
+        @click="createCase"
+      >创建用例</el-button>
+      <el-button
+        icon="el-icon-download"
+        size="small"
+        @click="handleDownload"
+      >下载模板</el-button>
       <!-- <el-button icon="el-icon-upload2" size="small" @click="handleDownload">批量导入</el-button> -->
       <el-button
         icon="el-icon-upload2"
         size="small"
         @click="dialogFormVisible = true"
-        >批量导入</el-button
-      >
+      >批量导入</el-button>
       <el-select
         v-model="type"
         style="width:150px;margin-left:16px"
@@ -77,8 +80,7 @@
             type="text"
             size="small"
             @click="goDetail('/api/detail', scope.row)"
-            >{{ scope.row.apiName }}</el-button
-          >
+          >{{ scope.row.apiName }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="用例描述" align="center">
@@ -87,8 +89,7 @@
             type="text"
             size="small"
             @click="goDetail('/case/detail', scope.row)"
-            >{{ scope.row.caseDescription }}</el-button
-          >
+          >{{ scope.row.caseDescription }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="创建人" align="center" width="160">
@@ -129,28 +130,24 @@
               type="text"
               size="small"
               @click="editOrCopy(1, scope.row)"
-              >编辑</el-button
-            >
+            >编辑</el-button>
             <el-button
               type="text"
               size="small"
               @click="editOrCopy(2, scope.row)"
-              >复制用例</el-button
-            >
+            >复制用例</el-button>
             <el-button
               type="text"
               style="color:#67c23a"
               size="small"
               @click="onExecute(scope.row)"
-              >执行</el-button
-            >
+            >执行</el-button>
             <el-button
               type="text"
               style="color:#f56c6c"
               size="small"
               @click="onDelete([scope.row.id])"
-              >删除</el-button
-            >
+            >删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -182,21 +179,24 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false"
-          >取 消</el-button
-        >
-        <el-button size="small" type="primary" @click="handleUpload"
-          >确 定</el-button
-        >
+        <el-button
+          size="small"
+          @click="dialogFormVisible = false"
+        >取 消</el-button>
+        <el-button
+          size="small"
+          type="primary"
+          @click="handleUpload"
+        >确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import BaseTable from "@/components/BaseTable";
-import { executeStatusFilter } from "@/utils/filter";
-import { deleteCases, getfilterMap, handleUpload } from "@/api/case";
+import BaseTable from '@/components/BaseTable'
+import { executeStatusFilter } from '@/utils/filter'
+import { deleteCases, getfilterMap, handleUpload } from '@/api/case'
 export default {
   components: { BaseTable },
   filters: {
@@ -208,181 +208,181 @@ export default {
       importValue: [],
       options: [],
       timeArray: [],
-      formLabelWidth: "120px",
-      apiName: "",
+      formLabelWidth: '120px',
+      apiName: '',
       searchObj: {
-        caseDescription: "",
-        executeStatus: "",
-        projectName: "",
-        apiGroup: "",
-        apiMerge: ""
+        caseDescription: '',
+        executeStatus: '',
+        projectName: '',
+        apiGroup: '',
+        apiMerge: ''
       },
       importObj: {
-        projectName: "",
-        apiGroup: "",
-        apiMerge: ""
+        projectName: '',
+        apiGroup: '',
+        apiMerge: ''
       },
       idList: [],
       fileList: [],
       dialogFormVisible: false,
-      type: "",
+      type: '',
       typeOptions: [
         {
-          name: "批量执行",
-          value: "执行"
+          name: '批量执行',
+          value: '执行'
         },
         {
-          name: "批量删除",
-          value: "删除"
+          name: '批量删除',
+          value: '删除'
         }
       ],
-      role: "",
+      role: '',
       executeStatusOptions: [
         {
-          name: "未执行",
+          name: '未执行',
           value: 0
         },
         {
-          name: "已执行",
+          name: '已执行',
           value: 1
         }
       ],
-      apiGroup: "",
+      apiGroup: '',
       apiGroupOptions: [],
-      reqMethod: "",
+      reqMethod: '',
       reqMethodOptions: []
-    };
+    }
   },
   created() {
-    this.getfilterMap();
+    this.getfilterMap()
   },
   methods: {
     // 下载模板
     handleDownload() {
-      import("@/utils/Export2Excel").then(excel => {
-        const tHeader = ["用例内容", "用例描述", "预期响应"];
-        const filterVal = ["caseBody", "caseDescription", "caseResponse"];
+      import('@/utils/Export2Excel').then(excel => {
+        const tHeader = ['用例内容', '用例描述', '预期响应']
+        const filterVal = ['caseBody', 'caseDescription', 'caseResponse']
         const list = [
           {
             caseBody: `{"username": "dadalong", "password": "123456"}`,
-            caseDescription: "测试用户登录正常场景",
+            caseDescription: '测试用户登录正常场景',
             caseResponse: `{"code": "00000","message": "登录成功","data": {"id": 1,"username": "root","name": "root","idCard": "","mobile": "","status": "enable","email": "","createTime": "1552999848000","roleIds": [1],"roleNames": ["超级管理员"],"provnce": ["北京市","浙江省"]}}`
           }
-        ];
-        const data = this.formatJson(filterVal, list);
+        ]
+        const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "case"
-        });
-      });
+          filename: 'case'
+        })
+      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          return v[j];
+          return v[j]
         })
-      );
+      )
     },
     handleExceed(files, fileList) {
-      this.$message.warning("当前限制选择 1个文件");
+      this.$message.warning('当前限制选择 1个文件')
     },
     beforeUpload(file) {
       const isHtml =
         file.type ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       if (!isHtml) {
-        this.$message.error("上传的文件只能是.xlsx");
+        this.$message.error('上传的文件只能是.xlsx')
       }
-      return isHtml;
+      return isHtml
     },
     handleFileChange(file, fileList) {
-      this.fileList = fileList;
+      this.fileList = fileList
     },
     handleChange(val, type) {
       if (val.length === 0) {
-        this[type].projectName = "";
-        this[type].apiGroup = "";
-        this[type].apiMerge = "";
+        this[type].projectName = ''
+        this[type].apiGroup = ''
+        this[type].apiMerge = ''
       } else {
-        this[type].projectName = val[0];
-        this[type].apiGroup = val[1];
-        this[type].apiMerge = val[2];
+        this[type].projectName = val[0]
+        this[type].apiGroup = val[1]
+        this[type].apiMerge = val[2]
       }
     },
     async getfilterMap() {
       try {
-        const result = await getfilterMap();
-        this.options = result.data.options;
+        const result = await getfilterMap()
+        this.options = result.data.options
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     batchActions() {
-      if (this.type === "删除") {
-        this.onDelete(this.idList);
+      if (this.type === '删除') {
+        this.onDelete(this.idList)
       } else {
-        this.onExecute(this.idList);
+        this.onExecute(this.idList)
       }
-      this.type = "";
+      this.type = ''
     },
     goDetail(path, row) {
-      if (path === "/api/detail") {
-        this.$router.push({ path, query: { id: row.apiId } });
-      } else if (path === "/case/detail") {
-        this.$router.push({ path, query: { id: row.id } });
+      if (path === '/api/detail') {
+        this.$router.push({ path, query: { id: row.apiId }})
+      } else if (path === '/case/detail') {
+        this.$router.push({ path, query: { id: row.id }})
       }
     },
     createCase(row) {
-      sessionStorage.removeItem("caseDetail");
-      this.$router.push({ path: "/case/edit", query: { type: 0 } });
+      sessionStorage.removeItem('caseDetail')
+      this.$router.push({ path: '/case/edit', query: { type: 0 }})
     },
     editOrCopy(type, row) {
-      sessionStorage.setItem("caseDetail", JSON.stringify(row));
-      this.$router.push({ path: "/case/edit", query: { type } });
+      sessionStorage.setItem('caseDetail', JSON.stringify(row))
+      this.$router.push({ path: '/case/edit', query: { type }})
     },
     onDelete(idList) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
-          this.deleteCases(idList);
+          this.deleteCases(idList)
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id);
-      console.log(this.idList);
+      this.idList = row.map(f => f.id)
+      console.log(this.idList)
     },
     async deleteCases(caseIds) {
       try {
-        await deleteCases({ caseIds });
-        this.$refs.tableRef.onSearch();
+        await deleteCases({ caseIds })
+        this.$refs.tableRef.onSearch()
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     async handleUpload() {
-      this.dialogFormVisible = false;
-      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      const formData = new FormData();
-      formData.append("file", this.fileList[0].raw);
-      formData.append("projectName", this.importObj.projectName);
-      formData.append("apiGroup", this.importObj.apiGroup);
-      formData.append("apiMerge", this.importObj.apiMerge);
-      formData.append("userId", userId);
-      const result = await handleUpload(formData);
-      if (result.data.code === "00000") {
-        this.$message.success(result.data.message);
-        this.$refs.tableRef.onSearch();
+      this.dialogFormVisible = false
+      const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
+      const formData = new FormData()
+      formData.append('file', this.fileList[0].raw)
+      formData.append('projectName', this.importObj.projectName)
+      formData.append('apiGroup', this.importObj.apiGroup)
+      formData.append('apiMerge', this.importObj.apiMerge)
+      formData.append('userId', userId)
+      const result = await handleUpload(formData)
+      if (result.data.code === '00000') {
+        this.$message.success(result.data.message)
+        this.$refs.tableRef.onSearch()
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

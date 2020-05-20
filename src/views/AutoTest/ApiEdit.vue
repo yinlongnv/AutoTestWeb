@@ -98,7 +98,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder='请输入请求头，例如：[{"name":"Content-Type","value":"application/x-www-form-urlencoded","required":"1","example":"","desc":""}]'
+          placeholder="请输入请求头，例如：[{&quot;name&quot;:&quot;Content-Type&quot;,&quot;value&quot;:&quot;application/x-www-form-urlencoded&quot;,&quot;required&quot;:&quot;1&quot;,&quot;example&quot;:&quot;&quot;,&quot;desc&quot;:&quot;&quot;}]"
         />
       </el-form-item>
       <el-form-item
@@ -112,7 +112,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder='请输入请求参数，例如：[{"name": "tagId", "required": "1","example": "", "desc": ""}]'
+          placeholder="请输入请求参数，例如：[{&quot;name&quot;: &quot;tagId&quot;, &quot;required&quot;: &quot;1&quot;,&quot;example&quot;: &quot;&quot;, &quot;desc&quot;: &quot;&quot;}]"
         />
       </el-form-item>
       <el-form-item
@@ -126,7 +126,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder='请输入请求体，例如：[{"name": "snapshotName", "type": "string", "required": "0"}, {"name": "summary", "type": "string","required": "0"}, {"name": "trainId", "type": "integer", "required": "0"}]'
+          placeholder="请输入请求体，例如：[{&quot;name&quot;: &quot;snapshotName&quot;, &quot;type&quot;: &quot;string&quot;, &quot;required&quot;: &quot;0&quot;}, {&quot;name&quot;: &quot;summary&quot;, &quot;type&quot;: &quot;string&quot;,&quot;required&quot;: &quot;0&quot;}, {&quot;name&quot;: &quot;trainId&quot;, &quot;type&quot;: &quot;integer&quot;, &quot;required&quot;: &quot;0&quot;}]"
         />
       </el-form-item>
       <el-form-item
@@ -140,7 +140,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder='请输入用例规则，例如：[{"name":"username","required":"1","type":"string","min":"6","max":"10","options":"","isArray":"0","model":""}]'
+          placeholder="请输入用例规则，例如：[{&quot;name&quot;:&quot;username&quot;,&quot;required&quot;:&quot;1&quot;,&quot;type&quot;:&quot;string&quot;,&quot;min&quot;:&quot;6&quot;,&quot;max&quot;:&quot;10&quot;,&quot;options&quot;:&quot;&quot;,&quot;isArray&quot;:&quot;0&quot;,&quot;model&quot;:&quot;&quot;}]"
         />
       </el-form-item>
       <el-form-item
@@ -154,7 +154,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder='请输入响应信息，例如：{"code":"00000","message":"密码修改成功","data":[]}'
+          placeholder="请输入响应信息，例如：{&quot;code&quot;:&quot;00000&quot;,&quot;message&quot;:&quot;密码修改成功&quot;,&quot;data&quot;:[]}"
         />
       </el-form-item>
     </el-form>
@@ -166,32 +166,32 @@
 </template>
 
 <script>
-import { timeFilter, pageTypeFilter } from "@/utils/filter";
-import { createApi, getfilterMap } from "@/api/api";
+import { timeFilter, pageTypeFilter } from '@/utils/filter'
+import { createApi, getfilterMap } from '@/api/api'
 const FORM = {
-  baseUrl: "",
-  projectGroup: "",
-  apiName: "",
-  apiPath: "",
-  reqMethod: "",
-  apiDescription: "",
-  reqHeaders: "",
-  reqBody: "",
-  reqQuery: "",
-  caseRules: "",
-  apiResponse: ""
-};
+  baseUrl: '',
+  projectGroup: '',
+  apiName: '',
+  apiPath: '',
+  reqMethod: '',
+  apiDescription: '',
+  reqHeaders: '',
+  reqBody: '',
+  reqQuery: '',
+  caseRules: '',
+  apiResponse: ''
+}
 export default {
   filters: { timeFilter, pageTypeFilter },
   data() {
     const validateProjectGroup = (rule, value, callback) => {
-      console.log(this.value, "value");
+      console.log(this.value, 'value')
       if (this.value.length === 0) {
-        callback(new Error("请选择业务分组"));
+        callback(new Error('请选择业务分组'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       value: [],
       options: [],
@@ -199,119 +199,119 @@ export default {
       form: FORM,
       rules: {
         baseUrl: [
-          { required: true, message: "请输入正确的环境域名", trigger: "blur" }
+          { required: true, message: '请输入正确的环境域名', trigger: 'blur' }
         ],
         projectGroup: [
-          { required: true, validator: validateProjectGroup, trigger: "change" }
+          { required: true, validator: validateProjectGroup, trigger: 'change' }
         ],
         apiName: [
-          { required: true, message: "请输入接口名称", trigger: "blur" }
+          { required: true, message: '请输入接口名称', trigger: 'blur' }
         ],
         apiPath: [
-          { required: true, message: "请输入正确的接口路径", trigger: "blur" }
+          { required: true, message: '请输入正确的接口路径', trigger: 'blur' }
         ],
         reqMethod: [
-          { required: true, message: "请选择请求方法", trigger: "change" }
+          { required: true, message: '请选择请求方法', trigger: 'change' }
         ]
       },
       methodOptions: [
         {
-          label: "POST",
-          value: "POST"
+          label: 'POST',
+          value: 'POST'
         },
         {
-          label: "GET",
-          value: "GET"
+          label: 'GET',
+          value: 'GET'
         }
       ],
-      inputWidth: "width:360px",
-      formLabelWidth: "120px"
-    };
+      inputWidth: 'width:360px',
+      formLabelWidth: '120px'
+    }
   },
   created() {
     this.form =
-      JSON.parse(sessionStorage.getItem("apiDetail")) ||
-      JSON.parse(JSON.stringify(FORM));
-    this.getfilterMap();
+      JSON.parse(sessionStorage.getItem('apiDetail')) ||
+      JSON.parse(JSON.stringify(FORM))
+    this.getfilterMap()
     if (this.editStatus !== 0) {
-      this.value = [this.form.projectName, this.form.apiGroup];
+      this.value = [this.form.projectName, this.form.apiGroup]
     } else {
-      this.value = [];
-      this.form.reqMethod = "";
+      this.value = []
+      this.form.reqMethod = ''
     }
   },
   methods: {
     async getfilterMap() {
       try {
-        const result = await getfilterMap();
-        const options = result.data.options;
+        const result = await getfilterMap()
+        const options = result.data.options
         for (const i of options) {
           for (const child of i.children) {
-            delete child.children;
+            delete child.children
           }
         }
-        this.options = result.data.options;
+        this.options = result.data.options
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     handleChange(val) {
       if (val.length === 0) {
-        this.form.projectName = "";
-        this.form.apiGroup = "";
+        this.form.projectName = ''
+        this.form.apiGroup = ''
       } else {
-        this.form.projectName = val[0];
-        this.form.apiGroup = val[1];
+        this.form.projectName = val[0]
+        this.form.apiGroup = val[1]
       }
     },
     selectMethod(val) {
-      console.log(val);
+      console.log(val)
     },
     closeDialog() {
-      this.$refs["ruleForm"].resetFields();
+      this.$refs['ruleForm'].resetFields()
     },
     goBack() {
-      this.$router.go(-1);
-      sessionStorage.removeItem("apiDetail");
+      this.$router.go(-1)
+      sessionStorage.removeItem('apiDetail')
     },
     confirmEdit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.createAccount();
-          sessionStorage.removeItem("apiDetail");
+          this.createAccount()
+          sessionStorage.removeItem('apiDetail')
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     judgeStatus(result, message) {
-      if (result.data.code === "00000") {
+      if (result.data.code === '00000') {
         this.$message({
-          type: "success",
+          type: 'success',
           message: message
-        });
+        })
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
     },
     async createAccount() {
-      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
       if (this.editStatus === 0) {
-        const result = await createApi({ ...this.form, userId });
-        this.judgeStatus(result, "创建成功");
+        const result = await createApi({ ...this.form, userId })
+        this.judgeStatus(result, '创建成功')
       } else if (this.editStatus === 1) {
-        const result = await createApi({ ...this.form, userId });
+        const result = await createApi({ ...this.form, userId })
 
-        this.judgeStatus(result, "编辑成功");
+        this.judgeStatus(result, '编辑成功')
       } else if (this.editStatus === 2) {
-        const result = await createApi({ ...this.form, userId, id: "" });
-        this.judgeStatus(result, "复制成功");
+        const result = await createApi({ ...this.form, userId, id: '' })
+        this.judgeStatus(result, '复制成功')
       }
 
-      this.$router.push({ path: "/api/list" });
+      this.$router.push({ path: '/api/list' })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

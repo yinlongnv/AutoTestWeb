@@ -52,109 +52,109 @@
 </template>
 
 <script>
-import { timeFilter } from "@/utils/filter";
-import { createUser } from "@/api/user";
+import { timeFilter } from '@/utils/filter'
+import { createUser } from '@/api/user'
 const INIT_FORM = {
-  username: "",
-  idNumber: "",
-  phoneNumber: "",
-  email: "",
-  role: "",
-  password: ""
-};
+  username: '',
+  idNumber: '',
+  phoneNumber: '',
+  email: '',
+  role: '',
+  password: ''
+}
 export default {
   filters: { timeFilter },
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("密码不能小于6位"));
+        callback(new Error('密码不能小于6位'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       editStatus: Number(this.$route.query.type),
       form: {
-        username: "",
-        idNumber: "",
-        phoneNumber: "",
-        email: "",
-        role: "",
-        password: ""
+        username: '',
+        idNumber: '',
+        phoneNumber: '',
+        email: '',
+        role: '',
+        password: ''
       },
       rules: {
         username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
+          { required: true, message: '用户名不能为空', trigger: 'blur' }
         ],
         role: [
-          { required: true, message: "账号角色不能为空", trigger: "blur" }
+          { required: true, message: '账号角色不能为空', trigger: 'blur' }
         ],
         password: [
-          { required: true, validator: validatePassword, trigger: "blur" }
+          { required: true, validator: validatePassword, trigger: 'blur' }
         ]
       },
       options: [
         {
-          label: "root",
+          label: 'root',
           value: 1
         },
         {
-          label: "QA",
+          label: 'QA',
           value: 0
         }
       ],
-      inputWidth: "width:360px",
-      formLabelWidth: "120px"
-    };
+      inputWidth: 'width:360px',
+      formLabelWidth: '120px'
+    }
   },
   created() {
     this.form =
-      JSON.parse(sessionStorage.getItem("userDetail")) ||
-      JSON.parse(JSON.stringify(INIT_FORM));
+      JSON.parse(sessionStorage.getItem('userDetail')) ||
+      JSON.parse(JSON.stringify(INIT_FORM))
   },
   methods: {
     closeDialog() {
-      this.$refs["ruleForm"].resetFields();
+      this.$refs['ruleForm'].resetFields()
     },
     goBack() {
-      this.$router.go(-1);
-      sessionStorage.removeItem("userDetail");
+      this.$router.go(-1)
+      sessionStorage.removeItem('userDetail')
     },
     confirmEdit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.createAccount();
+          this.createAccount()
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     async createAccount() {
-      sessionStorage.removeItem("userDetail");
-      const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      sessionStorage.removeItem('userDetail')
+      const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
       const result = await createUser({
         ...this.form,
         userId
-      });
-      const createOk = this.editStatus === 0 && result.data.code === "00000";
-      const editOk = this.editStatus === 1 && result.data.code === "00000";
+      })
+      const createOk = this.editStatus === 0 && result.data.code === '00000'
+      const editOk = this.editStatus === 1 && result.data.code === '00000'
       if (createOk) {
         this.$message({
-          type: "success",
-          message: "创建成功"
-        });
+          type: 'success',
+          message: '创建成功'
+        })
       } else if (editOk) {
         this.$message({
-          type: "success",
-          message: "编辑成功"
-        });
+          type: 'success',
+          message: '编辑成功'
+        })
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
-      this.$router.push({ path: "/user/list" });
+      this.$router.push({ path: '/user/list' })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

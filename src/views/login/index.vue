@@ -58,74 +58,74 @@
 </template>
 
 <script>
-import { login } from "@/api/user";
+import { login } from '@/api/user'
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("密码不能小于6位"));
+        callback(new Error('密码不能小于6位'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "大大龙",
-        password: "123456"
+        username: '大大龙',
+        password: '123456'
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", message: "请输入用户账号" }
+          { required: true, trigger: 'blur', message: '请输入用户账号' }
         ],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword }
+          { required: true, trigger: 'blur', validator: validatePassword }
         ]
       },
       loading: false,
-      passwordType: "password"
-    };
+      passwordType: 'password'
+    }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     handleLogin() {
-      this.$refs["loginForm"].validate(valid => {
+      this.$refs['loginForm'].validate(valid => {
         if (valid) {
-          this.login();
+          this.login()
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     async login() {
       // eslint-disable-next-line no-undef
-      const lastIp = returnCitySN["cip"];
+      const lastIp = returnCitySN['cip']
       const result = await login({
         ...this.loginForm,
         lastIp
-      });
-      if (result.data.code === "00000") {
-        sessionStorage.setItem("userInfo", JSON.stringify(result.data.data));
+      })
+      if (result.data.code === '00000') {
+        sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
         if (result.data.data.role) {
-          this.$router.push({ path: "/user/list" });
+          this.$router.push({ path: '/user/list' })
         } else {
-          this.$router.push({ path: "/api/list" });
+          this.$router.push({ path: '/api/list' })
         }
       } else {
-        this.$message.error(result.data.message);
+        this.$message.error(result.data.message)
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
