@@ -107,21 +107,21 @@
         </template>
       </el-table-column>
     </base-table>
-    <el-dialog title="参数规则" :visible.sync="dialogParams" width="1100px">
+    <el-dialog title="参数规则" :visible.sync="dialogParams" width="1000px">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="参数名" width="150" align="center">
           <template slot-scope="scope">
             <el-input v-model="scope.row.name" disabled size="small" />
           </template>
         </el-table-column>
-        <el-table-column label="是否必需" width="150" align="center">
+        <!-- <el-table-column label="是否必需" width="150" align="center">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.required" size="small">
               <el-radio :label="'1'">是</el-radio>
               <el-radio :label="'0'">否</el-radio>
             </el-radio-group>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="数据类型" width="170" align="center">
           <template slot-scope="scope">
             <el-select v-model="scope.row.type" clearable size="small" placeholder="请选择数据类型">
