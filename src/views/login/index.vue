@@ -115,11 +115,8 @@ export default {
       if (result.data.code === '00000') {
         sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
         this.$message.success(result.data.message)
-        if (result.data.data.role) {
-          this.$router.push({ path: '/user/list' })
-        } else {
-          this.$router.push({ path: '/api/list' })
-        }
+        localStorage.token = 'token'
+        this.$router.push({ path: '/api/list' })
       } else {
         this.$message.error(result.data.message)
       }

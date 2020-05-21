@@ -128,37 +128,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/user',
-    component: Layout,
-    meta: { title: '用户管理', icon: 'tree' },
-    children: [
-      {
-        path: '/user/list',
-        name: 'list',
-        component: () => import('@/views/AutoTest/UserList'),
-        meta: { title: '用户管理' }
-      },
-      {
-        path: '/user/detail',
-        name: 'detail',
-        component: () => import('@/views/AutoTest/UserDetail'),
-        hidden: true
-      },
-      {
-        path: '/user/edit',
-        name: 'edit',
-        component: () => import('@/views/AutoTest/UserEdit'),
-        hidden: true
-      },
-      {
-        path: '/my/center',
-        name: 'center',
-        component: () => import('@/views/AutoTest/MyCenter'),
-        hidden: true
-      }
-    ]
-  },
+
   {
     path: '/api',
     component: Layout,
@@ -166,19 +136,16 @@ export const asyncRoutes = [
     children: [
       {
         path: '/api/list',
-        name: 'api',
         component: () => import('@/views/AutoTest/ApiList'),
         meta: { title: '接口管理' }
       },
       {
         path: '/api/detail',
-        name: 'detail',
         component: () => import('@/views/AutoTest/ApiDetail'),
         hidden: true
       },
       {
         path: '/api/edit',
-        name: 'edit',
         component: () => import('@/views/AutoTest/ApiEdit'),
         hidden: true
       }
@@ -191,13 +158,11 @@ export const asyncRoutes = [
     children: [
       {
         path: '/case/list',
-        name: 'case',
         component: () => import('@/views/AutoTest/CaseList'),
         meta: { title: '用例管理' }
       },
       {
         path: '/case/detail',
-        name: 'detail',
         component: () => import('@/views/AutoTest/CaseDetail'),
         hidden: true
       },
@@ -209,13 +174,39 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/user',
+    component: Layout,
+    meta: { title: '用户管理', icon: 'tree' },
+    children: [
+      {
+        path: '/user/list',
+        component: () => import('@/views/AutoTest/UserList'),
+        meta: { title: '用户管理' }
+      },
+      {
+        path: '/user/detail',
+        component: () => import('@/views/AutoTest/UserDetail'),
+        hidden: true
+      },
+      {
+        path: '/user/edit',
+        component: () => import('@/views/AutoTest/UserEdit'),
+        hidden: true
+      },
+      {
+        path: '/my/center',
+        component: () => import('@/views/AutoTest/MyCenter'),
+        hidden: true
+      }
+    ]
+  },
+  {
     path: '/operateLog',
     component: Layout,
     meta: { title: '日志管理', icon: 'table' },
     children: [
       {
         path: '/operateLog/list',
-        name: 'operateLog',
         component: () => import('@/views/AutoTest/OperateLogList'),
         meta: { title: '日志管理' }
       }

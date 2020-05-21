@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
-
+import { asyncRoutes } from '@/router'
 export default {
   components: { SidebarItem, Logo },
   computed: {
@@ -31,7 +31,13 @@ export default {
       'sidebar'
     ]),
     routes() {
-      return this.$router.options.routes
+      if (localStorage.token) {
+        this.$router.addRoutes(asyncRoutes)
+        asyncRoutes.push({ path: '*', redirect: '/404', hidden: true })
+        return asyncRoutes
+      } else {
+        return this.$router.options.routes
+      }
     },
     activeMenu() {
       const route = this.$route
