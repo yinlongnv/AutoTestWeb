@@ -80,9 +80,6 @@ export default {
         apiInfo: [
           { required: true, validator: validateProjectGroup, trigger: "change" }
         ],
-        // caseBody: [
-        //   { required: true, message: "请输入用例内容", trigger: "blur" }
-        // ],
         caseDescription: [
           { required: true, message: "请输入用例描述", trigger: "blur" }
         ],

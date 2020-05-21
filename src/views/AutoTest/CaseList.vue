@@ -326,6 +326,15 @@ export default {
         })
         .catch(() => {});
     },
+    onExecute(row) {
+      this.$confirm("确定要执行该条用例嘛?","提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.execute(row.id);
+      })
+    },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);
     },
