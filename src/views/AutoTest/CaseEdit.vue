@@ -19,7 +19,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入用例内容，例如：{&quot;username&quot;: &quot;dadalong&quot;, &quot;password&quot;: &quot;123456&quot;}"
+          placeholder="请输入用例内容，例如：{&quot;username&quot;:&quot;dadalong&quot;,&quot;password&quot;:&quot;123456&quot;}"
         />
       </el-form-item>
       <el-form-item prop="caseDescription" label="用例描述" :label-width="formLabelWidth">
@@ -29,7 +29,7 @@
           rows="3"
           :style="inputWidth"
           size="small"
-          placeholder="请输入用例描述，例如：测试用户登录正常场景"
+          placeholder="请输入用例描述，例如：用户登录case1"
         />
       </el-form-item>
       <el-form-item prop="caseResponse" label="预期响应" :label-width="formLabelWidth">
@@ -39,7 +39,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入预期响应，例如：{&quot;code&quot;: &quot;00000&quot;,&quot;message&quot;: &quot;登录成功&quot;,&quot;data&quot;: {&quot;id&quot;: 1,&quot;username&quot;: &quot;root&quot;,&quot;name&quot;: &quot;root&quot;,&quot;idCard&quot;: &quot;&quot;,&quot;mobile&quot;: &quot;&quot;,&quot;status&quot;: &quot;enable&quot;,&quot;email&quot;: &quot;&quot;,&quot;createTime&quot;: &quot;1552999848000&quot;,&quot;roleIds&quot;: [1],&quot;roleNames&quot;: [&quot;超级管理员&quot;],&quot;provnce&quot;: [&quot;北京市&quot;,&quot;浙江省&quot;]}}"
+          placeholder="请输入预期响应，例如：{&quot;code&quot;: &quot;00000&quot;,&quot;message&quot;: &quot;登录成功&quot;,&quot;data&quot;: {...}}"
         />
       </el-form-item>
     </el-form>
@@ -80,9 +80,9 @@ export default {
         apiInfo: [
           { required: true, validator: validateProjectGroup, trigger: "change" }
         ],
-        caseBody: [
-          { required: true, message: "请输入用例内容", trigger: "blur" }
-        ],
+        // caseBody: [
+        //   { required: true, message: "请输入用例内容", trigger: "blur" }
+        // ],
         caseDescription: [
           { required: true, message: "请输入用例描述", trigger: "blur" }
         ],

@@ -70,7 +70,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入请求参数，例如：[{&quot;name&quot;: &quot;tagId&quot;, &quot;required&quot;: &quot;1&quot;,&quot;example&quot;: &quot;&quot;, &quot;desc&quot;: &quot;&quot;}]"
+          placeholder="请输入请求参数，例如：[{'name': 'userId', 'required': '1', 'example': '1', 'desc': '当前登录用户id'},{'name': 'userInfo', 'required': '0', 'example': '大', 'desc': '用户名/用户编号'},{'name': 'role', 'required': '0', 'example': '0', 'desc': 用户角色''}]"
         />
       </el-form-item>
       <el-form-item prop="reqBody" label="请求体：" :label-width="formLabelWidth">
@@ -80,7 +80,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入请求体，例如：[{&quot;name&quot;: &quot;snapshotName&quot;, &quot;type&quot;: &quot;string&quot;, &quot;required&quot;: &quot;0&quot;}, {&quot;name&quot;: &quot;summary&quot;, &quot;type&quot;: &quot;string&quot;,&quot;required&quot;: &quot;0&quot;}, {&quot;name&quot;: &quot;trainId&quot;, &quot;type&quot;: &quot;integer&quot;, &quot;required&quot;: &quot;0&quot;}]"
+          placeholder="请输入请求体，例如：[{'name': 'userId', 'type': 'int', 'required': '1', 'example': '1'},{'name': 'userIds', 'type': '', 'required': '1', 'example': '[43]'}]"
         />
       </el-form-item>
       <el-form-item prop="caseRules" label="用例规则" :label-width="formLabelWidth">
@@ -90,7 +90,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入用例规则，例如：[{&quot;name&quot;:&quot;username&quot;,&quot;required&quot;:&quot;1&quot;,&quot;type&quot;:&quot;string&quot;,&quot;min&quot;:&quot;6&quot;,&quot;max&quot;:&quot;10&quot;,&quot;options&quot;:&quot;&quot;,&quot;isArray&quot;:&quot;0&quot;,&quot;model&quot;:&quot;&quot;}]"
+          placeholder="请输入用例规则，例如：[{&quot;min&quot;:&quot;1&quot;,&quot;max&quot;:&quot;10&quot;,&quot;name&quot;:&quot;username&quot;,&quot;isArray&quot;:&quot;0&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:&quot;1&quot;}]"
         />
       </el-form-item>
       <el-form-item prop="apiResponse" label="响应信息：" :label-width="formLabelWidth">
@@ -100,7 +100,7 @@
           rows="6"
           :style="inputWidth"
           size="small"
-          placeholder="请输入响应信息，例如：{&quot;code&quot;:&quot;00000&quot;,&quot;message&quot;:&quot;密码修改成功&quot;,&quot;data&quot;:[]}"
+          placeholder="请输入响应信息，例如：{&quot;code&quot;: &quot;00000&quot;,&quot;message&quot;: &quot;登录成功&quot;,&quot;data&quot;: {...}}"
         />
       </el-form-item>
     </el-form>
