@@ -457,9 +457,6 @@ export default {
         const result = await getReqBody({ apiId });
         if (result.data.code === "00000") {
           this.tableData = result.data.data;
-          for (const item of this.tableData) {
-            item.type = "";
-          }
           this.dialogParams = true;
         } else {
           this.$message.error(result.data.message);
