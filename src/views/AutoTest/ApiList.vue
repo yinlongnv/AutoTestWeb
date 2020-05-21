@@ -1,6 +1,7 @@
 <template>
   <div class="old-manage">
     <div class="header-line">接口管理</div>
+    <!-- <div @click="showParams">aaa</div> -->
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createApi">创建接口</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
@@ -50,7 +51,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="goDetail(scope.row)">
             {{
-            scope.row.apiName
+              scope.row.apiName
             }}
           </el-button>
         </template>
@@ -108,7 +109,7 @@
       </el-table-column>
     </base-table>
     <el-dialog title="参数规则" :visible.sync="dialogParams" width="1000px">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;height:500px;overflow:scroll">
         <el-table-column label="参数名" width="150" align="center">
           <template slot-scope="scope">
             <el-input v-model="scope.row.name" disabled size="small" />
@@ -245,8 +246,8 @@
 </template>
 
 <script>
-import BaseTable from "@/components/BaseTable";
-import { statusFilter, reqMethodFilter } from "@/utils/filter";
+import BaseTable from '@/components/BaseTable'
+import { statusFilter, reqMethodFilter } from '@/utils/filter'
 import {
   deleteApis,
   getfilterMap,
@@ -254,7 +255,7 @@ import {
   handleUpload,
   getReqBody,
   putCaseRules
-} from "@/api/api";
+} from '@/api/api'
 export default {
   components: { BaseTable },
   filters: {
@@ -267,281 +268,282 @@ export default {
       tableData: [],
       form: {},
       fileList: [],
-      baseUrlOption: "",
+      baseUrlOption: '',
       dialogFormVisible: false,
       baseUrlOptions: [],
       value: [],
       options: [],
-      inputWidth: "width:360px",
-      formLabelWidth: "120px",
+      inputWidth: 'width:360px',
+      formLabelWidth: '120px',
       searchObj: {
-        projectName: "",
-        apiGroup: "",
-        reqMethod: "",
-        apiName: ""
+        projectName: '',
+        apiGroup: '',
+        reqMethod: '',
+        apiName: ''
       },
       idList: [],
-      type: "",
+      type: '',
       typeOptions: [
         {
-          value: "int",
-          label: "int"
+          value: 'int',
+          label: 'int'
         },
         {
-          value: "string",
-          label: "string"
+          value: 'string',
+          label: 'string'
         },
         {
-          value: "other",
-          label: "other"
+          value: 'other',
+          label: 'other'
         }
       ],
       modelOptions: [
         {
-          value: "phone",
-          label: "phone"
+          value: 'phone',
+          label: 'phone'
         },
         {
-          value: "email",
-          label: "email"
+          value: 'email',
+          label: 'email'
         },
         {
-          value: "idNumber",
-          label: "idNumber"
+          value: 'idNumber',
+          label: 'idNumber'
         },
         {
-          value: "other",
-          label: "other"
+          value: 'other',
+          label: 'other'
         }
       ],
       methodOptions: [
         {
-          value: "GET",
-          name: "GET"
+          value: 'GET',
+          name: 'GET'
         },
         {
-          value: "POST",
-          name: "POST"
+          value: 'POST',
+          name: 'POST'
         }
       ]
-    };
+    }
   },
 
   created() {
-    this.getfilterMap();
-    this.getfilterBaseUrl();
+    this.getfilterMap()
+    this.getfilterBaseUrl()
   },
   methods: {
     handleImport() {
-      this.baseUrlOption = "";
-      this.fileList = [];
-      this.dialogFormVisible = true;
+      this.baseUrlOption = ''
+      this.fileList = []
+      this.dialogFormVisible = true
     },
     confirmParams() {
-      console.log(this.tableData);
-      this.putCaseRules();
-      this.dialogParams = false;
+      console.log(this.tableData)
+      this.putCaseRules()
+      this.dialogParams = false
     },
     showParams(row) {
-      this.apiId = row.id;
-      this.getReqBody(row.id);
+      this.apiId = row.id
+      this.getReqBody(row.id)
+      // this.dialogParams = true
     },
     // 下载模板
     handleDownload() {
-      import("@/utils/Export2Excel").then(excel => {
+      import('@/utils/Export2Excel').then(excel => {
         const tHeader = [
-          "所属业务",
-          "所属分组",
-          "接口名称",
-          "接口路径",
-          "请求方法",
-          "接口描述",
-          "请求头",
-          "请求参数",
-          "请求体",
-          "用例规则",
-          "响应信息"
-        ];
+          '所属业务',
+          '所属分组',
+          '接口名称',
+          '接口路径',
+          '请求方法',
+          '接口描述',
+          '请求头',
+          '请求参数',
+          '请求体',
+          '用例规则',
+          '响应信息'
+        ]
         const filterVal = [
-          "projectName",
-          "apiGroup",
-          "apiName",
-          "apiPath",
-          "reqMethod",
-          "apiDescription",
-          "reqHeaders",
-          "reqQuery",
-          "reqBody",
-          "caseRules",
-          "apiResponse"
-        ];
+          'projectName',
+          'apiGroup',
+          'apiName',
+          'apiPath',
+          'reqMethod',
+          'apiDescription',
+          'reqHeaders',
+          'reqQuery',
+          'reqBody',
+          'caseRules',
+          'apiResponse'
+        ]
         const list = [
           {
-            projectName: "靶场inner",
-            apiGroup: "用户中心",
-            apiName: "获取用户信息",
-            apiPath: "/range-user/api/inner/user/info",
-            reqMethod: "POST",
-            apiDescription: "通过用户id获取用户信息",
+            projectName: '靶场inner',
+            apiGroup: '用户中心',
+            apiName: '获取用户信息',
+            apiPath: '/range-user/api/inner/user/info',
+            reqMethod: 'POST',
+            apiDescription: '通过用户id获取用户信息',
             reqHeaders: `[{"name":"Content-Type","value":"application/x-www-form-urlencoded","required":"1","example":"","desc":""}]`,
             reqQuery: `[{"name": "tagId", "required": "1", "example": "", "desc": ""}]`,
             reqBody: `[{"name": "snapshotName", "type": "string", "required": "0"}, {"name": "summary", "type": "string", "required": "0"}, {"name": "trainId", "type": "integer", "required": "0"}]`,
             caseRules: `[{"name":"username","required":"1","type":"string","min":"6","max":"10","options":"","isArray":"0","model":""},{"name":"password","required":"1","type":"string","min":"6","max":"10","options":"","isArray":"0","model":""},{"name":"email","required":"1","type":"string","min":"","max":"","options":"","isArray":"0","model":"email"}]`,
             apiResponse: `{"code": "00000","message": "","data": {"id": 7,"trainId": 1,"profile": "1","visits": 0,"creatorId": 59,"createdTime": 1575250698063,"hasUpload": true,"hasBug": true,"uploads": [{"code": "95386d42b07af57bc7c8d84b86587184","name": "人员画像.mp4","url": "http://192.168.37.150/group1/M00/00/0A/wKgll13g2EuAXAKVAWVKCVOeYz8504.mp4"}]}}`
           }
-        ];
-        const data = this.formatJson(filterVal, list);
+        ]
+        const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "api"
-        });
-      });
+          filename: 'api'
+        })
+      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          return v[j];
+          return v[j]
         })
-      );
+      )
     },
     handleExceed(files, fileList) {
-      this.$message.warning("当前限制选择 1个文件");
+      this.$message.warning('当前限制选择 1个文件')
     },
     beforeUpload(file) {
       const isHtmlOrXlsx =
-        file.type === "text/html" ||
+        file.type === 'text/html' ||
         file.type ===
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       if (!isHtmlOrXlsx) {
-        this.$message.error("上传的文件只能是.html或.xlsx");
+        this.$message.error('上传的文件只能是.html或.xlsx')
       }
-      return isHtmlOrXlsx;
+      return isHtmlOrXlsx
     },
     handleFileChange(file, fileList) {
-      this.fileList = fileList;
+      this.fileList = fileList
     },
     handleChange(val) {
       if (val.length === 0) {
-        this.searchObj.projectName = "";
-        this.searchObj.apiGroup = "";
+        this.searchObj.projectName = ''
+        this.searchObj.apiGroup = ''
       } else {
-        this.searchObj.projectName = val[0];
-        this.searchObj.apiGroup = val[1];
+        this.searchObj.projectName = val[0]
+        this.searchObj.apiGroup = val[1]
       }
     },
     async getfilterMap() {
       try {
-        const result = await getfilterMap();
-        const options = result.data.data.options;
+        const result = await getfilterMap()
+        const options = result.data.data.options
         for (const i of options) {
           for (const child of i.children) {
-            delete child.children;
+            delete child.children
           }
         }
-        this.options = result.data.data.options;
+        this.options = result.data.data.options
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     async getfilterBaseUrl() {
       try {
-        const result = await getfilterBaseUrl();
-        this.baseUrlOptions = result.data.data.baseUrlOptions;
+        const result = await getfilterBaseUrl()
+        this.baseUrlOptions = result.data.data.baseUrlOptions
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     async getReqBody(apiId) {
       try {
-        const result = await getReqBody({ apiId });
-        if (result.data.code === "00000") {
-          this.tableData = result.data.data;
-          this.dialogParams = true;
+        const result = await getReqBody({ apiId })
+        if (result.data.code === '00000') {
+          this.tableData = result.data.data
+          this.dialogParams = true
         } else {
-          this.$message.error(result.data.message);
+          this.$message.error(result.data.message)
         }
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     async putCaseRules() {
       try {
-        const apiId = this.apiId;
-        console.log(apiId);
+        const apiId = this.apiId
+        console.log(apiId)
         const result = await putCaseRules({
           caseRulesList: this.tableData,
           apiId
-        });
-        if (result.data.code === "00000") {
-          this.$message.success(result.data.message);
+        })
+        if (result.data.code === '00000') {
+          this.$message.success(result.data.message)
         } else {
-          this.$message.error(result.data.message);
+          this.$message.error(result.data.message)
         }
       } catch (error) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
     createApi(row) {
-      sessionStorage.removeItem("apiDetail");
-      this.$router.push({ path: "/api/edit", query: { type: 0 } });
+      sessionStorage.removeItem('apiDetail')
+      this.$router.push({ path: '/api/edit', query: { type: 0 }})
     },
     editOrCopy(type, row) {
-      sessionStorage.setItem("apiDetail", JSON.stringify(row));
-      this.$router.push({ path: "/api/edit", query: { type } });
+      sessionStorage.setItem('apiDetail', JSON.stringify(row))
+      this.$router.push({ path: '/api/edit', query: { type }})
     },
     onDelete(idList) {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => this.deleteApis(idList))
-        .catch(() => {});
+        .catch(() => {})
     },
     async handleUpload() {
       if (this.baseUrlOption && this.fileList[0]) {
-        const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-        const formData = new FormData();
-        formData.append("file", this.fileList[0].raw);
-        formData.append("baseUrl", this.baseUrlOption);
-        formData.append("userId", userId);
-        const result = await handleUpload(formData);
-        if (result.data.code === "00000") {
-          this.$message.success(result.data.message);
-          this.$refs.tableRef.onSearch();
+        const userId = JSON.parse(sessionStorage.getItem('userInfo')).id
+        const formData = new FormData()
+        formData.append('file', this.fileList[0].raw)
+        formData.append('baseUrl', this.baseUrlOption)
+        formData.append('userId', userId)
+        const result = await handleUpload(formData)
+        if (result.data.code === '00000') {
+          this.$message.success(result.data.message)
+          this.$refs.tableRef.onSearch()
         } else {
-          this.$message.error(result.data.message);
+          this.$message.error(result.data.message)
         }
-        this.dialogFormVisible = false;
+        this.dialogFormVisible = false
       } else {
-        this.$message.error("请输入环境域名和上传文件");
+        this.$message.error('请输入环境域名和上传文件')
       }
     },
     onCreateCase(row) {
       this.$router.push({
-        path: "/case/edit",
+        path: '/case/edit',
         query: { type: 0, apiId: row.id }
-      });
+      })
     },
 
     goDetail(row) {
-      this.$router.push({ path: "/api/detail", query: { id: row.id } });
+      this.$router.push({ path: '/api/detail', query: { id: row.id }})
     },
     handleSelectionChange(row) {
-      this.idList = row.map(f => f.id);
+      this.idList = row.map(f => f.id)
     },
     async deleteApis(apiIds) {
-      const result = await deleteApis({ apiIds: apiIds });
-      if (result.data.code === "00000") {
-        this.$refs.tableRef.onSearch();
-        this.$message.success("删除成功");
+      const result = await deleteApis({ apiIds: apiIds })
+      if (result.data.code === '00000') {
+        this.$refs.tableRef.onSearch()
+        this.$message.success('删除成功')
       } else {
-        this.$message.error("操作失败，请重试");
+        this.$message.error('操作失败，请重试')
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
