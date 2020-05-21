@@ -44,3 +44,11 @@ export function handleUpload(data) {
     }
   });
 }
+// 执行指定用例
+export function execute(data) {
+  return request({
+    url: "/case/execute",
+    method: "get",
+    params: { ...data, userId }
+  });
+}

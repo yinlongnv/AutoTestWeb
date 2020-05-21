@@ -4,7 +4,6 @@
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
-      <!-- <el-button icon="el-icon-upload2" size="small" @click="handleDownload">批量导入</el-button> -->
       <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
       <el-select
         v-model="type"
@@ -21,7 +20,6 @@
           :value="item.value"
         />
       </el-select>
-
       <div style="text-align:right;width:100%">
         <el-cascader
           v-model="value"
@@ -85,7 +83,6 @@
           <div>{{ scope.row.createdBy }}</div>
         </template>
       </el-table-column>
-
       <el-table-column label="执行人" align="center" width="160">
         <template slot-scope="scope">
           <div>{{ scope.row.username }}</div>
@@ -173,7 +170,7 @@
 <script>
 import BaseTable from "@/components/BaseTable";
 import { executeStatusFilter } from "@/utils/filter";
-import { deleteCases, getfilterMap, handleUpload } from "@/api/case";
+import { deleteCases, getfilterMap, handleUpload, execute } from "@/api/case";
 export default {
   components: { BaseTable },
   filters: {
@@ -361,6 +358,15 @@ export default {
       } else {
         this.$message.error("请输入关联接口信息和上传文件");
       }
+    },
+    async execute(caseIds) {
+      // const result = await deleteCases({ caseIds });
+      // if (result.data.code === "00000") {
+      //   this.$refs.tableRef.onSearch();
+      //   this.$message.success("删除成功");
+      // } else {
+      //   this.$message.error("操作失败，请重试");
+      // }
     }
   }
 };
