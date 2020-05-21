@@ -107,11 +107,11 @@
         </template>
       </el-table-column>
     </base-table>
-    <el-dialog title="参数规则" :visible.sync="dialogParams" width="1300px">
+    <el-dialog title="参数规则" :visible.sync="dialogParams" width="1100px">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="参数名" width="150" align="center">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.name" size="small" />
+            <el-input v-model="scope.row.name" disabled size="small" />
           </template>
         </el-table-column>
         <el-table-column label="是否必需" width="150" align="center">
@@ -122,9 +122,9 @@
             </el-radio-group>
           </template>
         </el-table-column>
-        <el-table-column label="数据类型" width="150" align="center">
+        <el-table-column label="数据类型" width="170" align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.type" size="small" placeholder="数据类型">
+            <el-select v-model="scope.row.type" clearable size="small" placeholder="请选择数据类型">
               <el-option
                 v-for="item in typeOptions"
                 :key="item.value"
@@ -134,39 +134,45 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="最小值" width="150" align="center">
+        <el-table-column label="最小值" width="120" align="center">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.min"
-              :disabled="Boolean(scope.row.options)"
+              :disabled="Boolean(scope.row.options) || Boolean(scope.row.model)"
               size="small"
               placeholder="最小值"
               style="width:100px"
             />
           </template>
         </el-table-column>
-        <el-table-column label="最大值" width="150" align="center">
+        <el-table-column label="最大值" width="120" align="center">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.max"
-              :disabled="Boolean(scope.row.options)"
+              :disabled="Boolean(scope.row.options) || Boolean(scope.row.model)"
               size="small"
               placeholder="最大值"
               style="width:100px"
             />
           </template>
         </el-table-column>
-        <el-table-column label="是否为数组" width="150" align="center">
+        <!-- <el-table-column label="是否为数组" width="150" align="center">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.isArray" size="small">
               <el-radio :label="'1'">是</el-radio>
               <el-radio :label="'0'">否</el-radio>
             </el-radio-group>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="类型" width="150" align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.model" size="small" placeholder="数据类型">
+            <el-select
+              v-model="scope.row.model"
+              :disabled="Boolean(scope.row.max) || Boolean(scope.row.min) || Boolean(scope.row.options)"
+              size="small"
+              clearable
+              placeholder="请选择类型"
+            >
               <el-option
                 v-for="item in modelOptions"
                 :key="item.value"
@@ -180,9 +186,9 @@
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.options"
-              :disabled="Boolean(scope.row.max) || Boolean(scope.row.min)"
+              :disabled="Boolean(scope.row.max) || Boolean(scope.row.min) || Boolean(scope.row.model)"
               size="small"
-              placeholder="选项内容"
+              placeholder="请输入选项内容"
               style="width:170px"
             />
           </template>
@@ -258,28 +264,7 @@ export default {
   data() {
     return {
       dialogParams: false,
-      tableData: [
-        {
-          name: "",
-          required: "",
-          type: "",
-          min: "111",
-          max: "222",
-          isArray: "",
-          model: "",
-          options: ""
-        },
-        {
-          name: "",
-          required: "",
-          type: "",
-          min: "",
-          max: "",
-          isArray: "",
-          model: "",
-          options: "111"
-        }
-      ],
+      tableData: [],
       form: {},
       fileList: [],
       baseUrlOption: "",
@@ -470,7 +455,6 @@ export default {
     async getReqBody(apiId) {
       try {
         const result = await getReqBody({ apiId });
-
         if (result.data.code === "00000") {
           this.tableData = result.data.data;
           for (const item of this.tableData) {
@@ -487,8 +471,16 @@ export default {
     async putCaseRules() {
       try {
         const apiId = this.apiId;
-        await putCaseRules({ caseRulesList: this.tableData, apiId });
-        this.$message.success("参数规则修改成功");
+        console.log(apiId);
+        const result = await putCaseRules({
+          caseRulesList: this.tableData,
+          apiId
+        });
+        if (result.data.code === "00000") {
+          this.$message.success(result.data.message);
+        } else {
+          this.$message.error(result.data.message);
+        }
       } catch (error) {
         this.$message.error(error);
       }
@@ -532,7 +524,7 @@ export default {
     onCreateCase(row) {
       this.$router.push({
         path: "/case/edit",
-        query: { type: 0, apiId: row.apiId }
+        query: { type: 0, apiId: row.id }
       });
     },
 
