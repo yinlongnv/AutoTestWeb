@@ -49,6 +49,7 @@ export default {
     },
     async logout() {
       sessionStorage.clear()
+      localStorage.clear()
       this.$router.push({ path: '/login' })
     }
   }

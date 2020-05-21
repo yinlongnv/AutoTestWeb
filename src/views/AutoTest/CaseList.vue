@@ -327,13 +327,13 @@ export default {
         .catch(() => {});
     },
     onExecute(row) {
-      this.$confirm("确定要执行该条用例嘛?","提示", {
+      this.$confirm("确定要执行该条用例嘛?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
         this.execute(row.id);
-      })
+      });
     },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);
@@ -368,14 +368,14 @@ export default {
         this.$message.error("请输入关联接口信息和上传文件");
       }
     },
-    async execute(caseIds) {
-      // const result = await deleteCases({ caseIds });
-      // if (result.data.code === "00000") {
-      //   this.$refs.tableRef.onSearch();
-      //   this.$message.success("删除成功");
-      // } else {
-      //   this.$message.error("操作失败，请重试");
-      // }
+    async execute(caseId) {
+      const result = await execute({ caseId });
+      if (result.data.code === "00000") {
+        this.$refs.tableRef.onSearch();
+        this.$message.success(result.data.message);
+      } else {
+        this.$message.error(result.data.message);
+      }
     }
   }
 };

@@ -15,28 +15,20 @@
           range-separator="至"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
+          @change="listWithSearch"
         />
       </el-col>
     </el-row>
-    <el-table
-      :data="tableData"
-      style="width: 100%;margin-top:16px"
-      border
-    >
-      <el-table-column
-        prop="name"
-      >
+    <el-table :data="tableData" style="width: 100%;margin-top:16px" border>
+      <el-table-column prop="name">
         <template slot-scope="scope">
           <div class="flex-box">
             <div :class="scope.row.isRead?'circle':'circle-red'" />
-            <div style="margin-left:16px" @click="goDetail(scope.row)"> 【消息】测试{{ scope.row.name }}</div>
+            <div style="margin-left:16px" @click="goDetail(scope.row)">【消息】测试{{ scope.row.name }}</div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="date"
-        width="180"
-      />
+      <el-table-column prop="date" width="180" />
     </el-table>
     <el-pagination
       v-show="pager.total > pager.size"
@@ -53,6 +45,7 @@
 </template>
 
 <script>
+import { listWithSearch, markRead } from "@/api/notice";
 export default {
   data() {
     return {
@@ -62,72 +55,68 @@ export default {
         current: 1,
         size: 10
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-        isRead: false
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄',
-        isRead: false
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-        isRead: false
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄',
-        isRead: false
-      }]
-    }
+      tableData: []
+    };
+  },
+  created() {
+    this.listWithSearch();
   },
   methods: {
+    async listWithSearch() {
+      try {
+        if (this.timeArray === null) {
+          this.timeArray = ["", ""];
+        }
+        const startTime = this.timeArray[0] || "";
+        const endTime = this.timeArray[1] || "";
+        const result = await listWithSearch({ startTime, endTime });
+        this.tableData = result.data.data.tbody;
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
     async onChangePage(current) {
-      this.onSearch(current)
+      this.onSearch(current);
       window.scrollTo({
         top: 0
         // behavior: 'smooth'
-      })
+      });
     },
     goDetail() {
-      this.$router.push({ path: '/notice/detail' })
+      this.$router.push({ path: "/notice/detail" });
     },
     readAll() {
       for (const item of this.tableData) {
-        item.isRead = true
+        item.isRead = true;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-/deep/.el-table th, .el-table tr:first-child{
-	display: none;
+/deep/.el-table th,
+.el-table tr:first-child {
+  display: none;
 }
-/deep/.el-table--enable-row-transition .el-table__body td{
-	border: none;
-	border-bottom: 1px solid #EBEEF5;
+/deep/.el-table--enable-row-transition .el-table__body td {
+  border: none;
+  border-bottom: 1px solid #ebeef5;
 }
-.flex-box{
-	display: flex;
-	align-items: center;
+.flex-box {
+  display: flex;
+  align-items: center;
 }
-.circle{
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	background: #999;
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #999;
 }
-.circle-red{
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	background: red;
+.circle-red {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: red;
 }
-
 </style>

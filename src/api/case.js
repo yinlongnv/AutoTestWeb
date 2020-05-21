@@ -48,7 +48,7 @@ export function handleUpload(data) {
 export function execute(data) {
   return request({
     url: "/case/execute",
-    method: "get",
-    params: { ...data, userId }
+    method: "post",
+    data: { userId, ...data }
   });
 }
