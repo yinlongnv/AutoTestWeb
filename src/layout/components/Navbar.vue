@@ -7,7 +7,6 @@
     />
 
     <div class="right-menu">
-
       <el-dropdown class="avatar-container" trigger="click" style="display:flex">
         <div @click="goNotice">通知栏</div>
 
@@ -30,30 +29,30 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Hamburger from '@/components/Hamburger'
+import { mapGetters } from "vuex";
+import Hamburger from "@/components/Hamburger";
 
 export default {
   components: {
     Hamburger
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar'])
+    ...mapGetters(["sidebar", "avatar"])
   },
   methods: {
     goNotice() {
-      this.$router.push({ path: '/notice/list' })
+      this.$router.push({ path: "/notice/list" });
     },
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch("app/toggleSideBar");
     },
     async logout() {
-      sessionStorage.clear()
-      localStorage.clear()
-      this.$router.push({ path: '/login' })
+      sessionStorage.clear();
+      localStorage.clear();
+      this.$router.push({ path: "/login" });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

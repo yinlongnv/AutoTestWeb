@@ -5,21 +5,7 @@
       <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
       <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
-      <el-select
-        v-model="type"
-        style="width:150px;margin-left:16px"
-        placeholder="批量管理"
-        size="small"
-        :no-data-text="'暂无数据'"
-        @change="batchActions"
-      >
-        <el-option
-          v-for="item in typeOptions"
-          :key="item.value"
-          :label="item.name"
-          :value="item.value"
-        />
-      </el-select>
+      <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
       <div style="text-align:right;width:100%">
         <el-cascader
           v-model="value"
@@ -200,16 +186,6 @@ export default {
       fileList: [],
       dialogFormVisible: false,
       type: "",
-      typeOptions: [
-        {
-          name: "批量执行",
-          value: "执行"
-        },
-        {
-          name: "批量删除",
-          value: "删除"
-        }
-      ],
       role: "",
       executeStatusOptions: [
         {
@@ -291,14 +267,6 @@ export default {
       } catch (error) {
         this.$message.error(error);
       }
-    },
-    batchActions() {
-      if (this.type === "删除") {
-        this.onDelete(this.idList);
-      } else {
-        this.onExecute(this.idList);
-      }
-      this.type = "";
     },
     goDetail(path, row) {
       if (path === "/api/detail") {
