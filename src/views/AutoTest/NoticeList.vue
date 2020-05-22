@@ -15,7 +15,6 @@
           range-separator="至"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
-          @change="listWithSearch"
         />
       </el-col>
     </el-row>
@@ -23,19 +22,22 @@
       <el-table-column prop="name">
         <template slot-scope="scope">
           <div class="flex-box">
-            <div :class="scope.row.isRead?'circle':'circle-red'" />
+            <div :class="scope.row.isRead==='0'?'circle-red':'circle'" />
             <div
               style="margin-left:16px"
               @click="goDetail(scope.row)"
             >【消息】测试用例执行完毕，请点击公告查看详情{{ scope.row.name }}</div>
-            <div>{{ scope.row.createdAt }}</div>
-            <!-- 我想把执行时间展示在每条的最右侧，可是我不会 -->
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="date" width="180" />
+      <el-table-column prop="date" width="180">
+        <template slot-scope="scope">
+          <div>{{ scope.row.createdAt }}</div>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
+      style="margin-top:20px"
       v-show="pager.total > pager.size"
       ref="livePagination"
       :style="'text-align:center'"
@@ -50,11 +52,12 @@
 </template>
 
 <script>
-import { listWithSearch, markRead } from "@/api/notice";
+import { listWithSearch, markRead, markReadAll } from "@/api/notice";
 export default {
   data() {
     return {
       timeArray: [],
+      timeParam: [],
       pager: {
         total: 0,
         current: 1,
@@ -64,36 +67,43 @@ export default {
     };
   },
   created() {
-    this.listWithSearch();
+    this.listWithSearch(1);
   },
-  methods: {
-    async listWithSearch() {
-      try {
-        if (this.timeArray === null) {
+  watch: {
+    timeArray: {
+      handler(val) {
+        if (val === null) {
           this.timeArray = ["", ""];
         }
-        const startTime = this.timeArray[0] || "";
-        const endTime = this.timeArray[1] || "";
-        const result = await listWithSearch({ startTime, endTime });
+        this.listWithSearch(this.pager.current);
+      },
+      deep: true
+    }
+  },
+  methods: {
+    async listWithSearch(current) {
+      try {
+        const result = await listWithSearch({
+          startTime: this.timeArray[0],
+          endTime: this.timeArray[1],
+          page: current
+        });
         this.tableData = result.data.data.tbody;
+        this.pager.total = result.data.data.pageInfo.total;
       } catch (error) {
         this.$message.error(error);
       }
     },
     async onChangePage(current) {
-      this.onSearch(current);
-      window.scrollTo({
-        top: 0
-        // behavior: 'smooth'
-      });
+      this.listWithSearch(current);
     },
-    goDetail() {
-      this.$router.push({ path: "/notice/detail" });
+    goDetail(row) {
+      let id = row.id;
+      this.$router.push({ path: "/notice/detail", query: { id } });
     },
-    readAll() {
-      for (const item of this.tableData) {
-        item.isRead = true;
-      }
+    async readAll() {
+      await markReadAll();
+      this.listWithSearch();
     }
   }
 };
@@ -107,6 +117,8 @@ export default {
 /deep/.el-table--enable-row-transition .el-table__body td {
   border: none;
   border-bottom: 1px solid #ebeef5;
+  height: 70px;
+  line-height: 70px;
 }
 .flex-box {
   display: flex;

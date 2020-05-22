@@ -299,9 +299,11 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(() => {
-        this.execute(row.id);
-      });
+      })
+        .then(() => {
+          this.execute(row.id);
+        })
+        .catch(() => {});
     },
     handleSelectionChange(row) {
       this.idList = row.map(f => f.id);
@@ -339,8 +341,8 @@ export default {
     async execute(caseId) {
       const result = await execute({ caseId });
       if (result.data.code === "00000") {
-        this.$refs.tableRef.onSearch();
         this.$message.success(result.data.message);
+        setTimeout(() => this.$refs.tableRef.onSearch(), 15000);
       } else {
         this.$message.error(result.data.message);
       }

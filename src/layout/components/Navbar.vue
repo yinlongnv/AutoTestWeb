@@ -6,10 +6,15 @@
       @toggleClick="toggleSideBar"
     />
 
-    <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click" style="display:flex">
-        <div @click="goNotice">通知栏</div>
+    <div class="right-menu" style="display:flex;align-items:center">
+      <img
+        @click="goNotice"
+        style="width: 20px;height: 20px;margin-right:16px;cursor:pointer"
+        src="@/assets/notice.png"
+        alt
+      />
 
+      <el-dropdown class="avatar-container" trigger="click" style="display:flex">
         <div class="avatar-wrapper">
           <i class="el-icon-user-solid user-avatar" style="font-size:24px" />
           <i class="el-icon-caret-bottom" />
