@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div>测试报告</div>
+    <div>通知公告详情</div>
     <div class="content">
       <p
         style="font-size: 18px; color: rgb(72, 73, 77); text-align: center; font-weight: bolder;"
-      >消息导入巴拉巴拉</p>
+      >【消息】测试用例执行完毕，详细信息如下</p>
       <el-row>
-        <el-col :span="12">执行时间</el-col>
-        <el-col style="text-align:right" :span="12">执行人</el-col>
+        <el-col :span="12">执行人：</el-col>
+        <el-col style="text-align:right" :span="12">执行时间：</el-col>
       </el-row>
     </div>
   </div>
