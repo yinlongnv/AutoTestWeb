@@ -24,7 +24,12 @@
         <template slot-scope="scope">
           <div class="flex-box">
             <div :class="scope.row.isRead?'circle':'circle-red'" />
-            <div style="margin-left:16px" @click="goDetail(scope.row)">【消息】测试{{ scope.row.name }}</div>
+            <div
+              style="margin-left:16px"
+              @click="goDetail(scope.row)"
+            >【消息】测试用例执行完毕，请点击公告查看详情{{ scope.row.name }}</div>
+            <div>{{ scope.row.createdAt }}</div>
+            <!-- 我想把执行时间展示在每条的最右侧，可是我不会 -->
           </div>
         </template>
       </el-table-column>
