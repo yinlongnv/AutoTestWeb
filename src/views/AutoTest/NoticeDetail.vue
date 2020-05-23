@@ -47,8 +47,24 @@ export default {
       let caseId = this.detailInfo.caseId;
       this.$router.push({ path: "/case/detail", query: { caseId } });
     },
+    // viewReport() {
+    //   let href = "http://10.11.45.43:9001/" + this.detailInfo.htmlUrl;
+    //   window.open(href, "_blank");
+    //   // window.location.href = href;
+    // }
+    // viewReport1() {
+    //   let href = "http://10.11.45.43:9001/" + this.detailInfo.htmlUrl;
+    //   window.open(href, "_blank");
+    //   // window.location.href = href;
+    // },
+    // viewReport2() {
+    //   let href = "localhost:9001/" + this.detailInfo.htmlUrl;
+    //   window.open(href, "_blank");
+    //   // window.location.href = href;
+    // },
     viewReport() {
-      let href = "http://10.11.45.43:9001/" + this.detailInfo.htmlUrl;
+      let href =
+        "http://10.11.45.43:9001/htmlReports/" + this.detailInfo.htmlUrl;
       window.open(href, "_blank");
       // window.location.href = href;
     }

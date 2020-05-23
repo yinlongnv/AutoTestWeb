@@ -155,7 +155,7 @@ export default {
         .catch(() => {});
     },
     viewReport() {
-      let href = "http://10.11.45.43:9001/" + this.caseInfo.htmlUrl;
+      let href = "http://10.11.45.43:9001/htmlReports/" + this.caseInfo.htmlUrl;
       window.open(href, "_blank");
       // window.location.href = href;
     },
