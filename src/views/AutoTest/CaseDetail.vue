@@ -67,6 +67,12 @@
         执行时间:
         <span>{{ caseInfo.lastExecuteTime }}</span>
       </div>
+      <div
+        @click="viewReport"
+        style="cursor:pointer;color:blue;margin-bottom:10px"
+        class="info-item"
+        v-if="caseInfo.htmlUrl"
+      >点击查看测试报告：{{ caseInfo.htmlUrl }}</div>
     </div>
     <div style="padding:24px 0">
       <el-button size="small" @click="goBack">返回</el-button>
@@ -137,6 +143,11 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    viewReport() {
+      let href = "http://10.11.45.43:9001/" + this.caseInfo.htmlUrl;
+      window.open(href, "_blank");
+      // window.location.href = href;
     },
     async deleteCases(caseIds) {
       try {
