@@ -48,7 +48,7 @@ export default {
       this.$router.push({ path: "/case/detail", query: { caseId } });
     },
     viewReport() {
-      let href = "localhost:9001/" + this.detailInfo.htmlUrl;
+      let href = "http://10.11.45.43:9001/" + this.detailInfo.htmlUrl;
       window.open(href, "_blank");
       // window.location.href = href;
     }

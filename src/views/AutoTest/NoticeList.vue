@@ -24,7 +24,7 @@
           <div class="flex-box">
             <div :class="scope.row.isRead==='0'?'circle-red':'circle'" />
             <div
-              style="margin-left:16px"
+              style="margin-left:16px;cursor:pointer"
               @click="goDetail(scope.row)"
             >【消息】测试用例执行完毕，请点击公告查看详情{{ scope.row.name }}</div>
           </div>
