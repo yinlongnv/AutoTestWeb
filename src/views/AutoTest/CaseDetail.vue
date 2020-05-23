@@ -119,7 +119,17 @@ export default {
     },
     goRun() {
       let id = this.$route.query.id;
-      this.execute(id);
+      // this.execute(id);
+      // setTimeout(() => this.$refs.tableRef.onSearch(), 15000);
+      this.$confirm("确定要执行该条用例嘛?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.execute(id);
+        })
+        .catch(() => {});
     },
     async execute(caseId) {
       const result = await execute({ caseId });
