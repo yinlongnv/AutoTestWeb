@@ -88,9 +88,9 @@ export default {
         ]
       },
       inputWidth: "width:460px",
-      formLabelWidth: "120px",
-      communityList: [],
-      subdistrictList: []
+      formLabelWidth: "120px"
+      // communityList: [],
+      // subdistrictList: []
     };
   },
   created() {

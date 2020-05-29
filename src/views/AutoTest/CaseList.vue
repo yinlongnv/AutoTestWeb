@@ -4,7 +4,8 @@
     <div class="flex-box">
       <el-button type="primary" size="small" @click="createCase">创建用例</el-button>
       <el-button icon="el-icon-download" size="small" @click="handleDownload">下载模板</el-button>
-      <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button>
+      <!-- <el-button icon="el-icon-upload2" size="small" @click="dialogFormVisible = true">批量导入</el-button> -->
+      <el-button icon="el-icon-upload2" size="small" @click="handleImport">批量导入</el-button>
       <el-button icon="el-icon-delete" size="small" @click="onDelete(idList)">批量删除</el-button>
       <div style="text-align:right;width:100%">
         <el-cascader
@@ -207,6 +208,11 @@ export default {
     this.getfilterMap();
   },
   methods: {
+    handleImport() {
+      this.importValue = [];
+      this.fileList = [];
+      this.dialogFormVisible = true;
+    },
     // 下载模板
     handleDownload() {
       import("@/utils/Export2Excel").then(excel => {
