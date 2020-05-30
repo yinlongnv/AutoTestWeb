@@ -66,7 +66,7 @@ export default {
       // let href =
       //   "http://10.11.45.43:9001/htmlReports/" + this.detailInfo.htmlUrl;
       let href =
-        "http://10.14.1.52:9001/htmlReports/" + this.detailInfo.htmlUrl;
+        "http://10.14.0.110:9002/htmlReports/" + this.detailInfo.htmlUrl;
       window.open(href, "_blank");
       // window.location.href = href;
     }
