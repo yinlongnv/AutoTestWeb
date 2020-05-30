@@ -348,7 +348,7 @@ export default {
       const result = await execute({ caseId });
       if (result.data.code === "00000") {
         this.$message.success(result.data.message);
-        setTimeout(() => this.$refs.tableRef.onSearch(), 15000);
+        setTimeout(() => this.$refs.tableRef.onSearch(), 10000);
       } else {
         this.$message.error(result.data.message);
       }

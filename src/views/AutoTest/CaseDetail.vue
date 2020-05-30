@@ -56,12 +56,11 @@
           v-if="caseInfo.executeStatus"
           style="color:#67C23A"
           type="success"
-        >{{ caseInfo.executeStatus|executeStatusFilter }}</el-tag>
-        <el-tag
-          v-else
-          style="color:#E6A23C"
-          type="warning"
-        >{{ caseInfo.executeStatus|executeStatusFilter }}</el-tag>
+          >{{ caseInfo.executeStatus | executeStatusFilter }}</el-tag
+        >
+        <el-tag v-else style="color:#E6A23C" type="warning">{{
+          caseInfo.executeStatus | executeStatusFilter
+        }}</el-tag>
       </div>
       <div class="info-item">
         执行时间:
@@ -72,7 +71,9 @@
         style="cursor:pointer;color:blue;margin-bottom:10px"
         class="info-item"
         v-if="caseInfo.htmlUrl"
-      >点击查看测试报告：{{ caseInfo.htmlUrl }}</div>
+      >
+        点击查看测试报告：{{ caseInfo.htmlUrl }}
+      </div>
     </div>
     <div style="padding:24px 0">
       <el-button size="small" @click="goBack">返回</el-button>
@@ -135,7 +136,7 @@ export default {
       const result = await execute({ caseId });
       if (result.data.code === "00000") {
         this.$message.success(result.data.message);
-        setTimeout(() => this.$refs.tableRef.onSearch(), 15000);
+        setTimeout(() => this.getCaseDetail(), 10000);
       } else {
         this.$message.error(result.data.message);
       }
@@ -155,7 +156,7 @@ export default {
         .catch(() => {});
     },
     viewReport() {
-      let href = "http://10.14.1.36:9001/htmlReports/" + this.caseInfo.htmlUrl;
+      let href = "http://10.14.1.52:9001/htmlReports/" + this.caseInfo.htmlUrl;
       window.open(href, "_blank");
       // window.location.href = href;
     },
