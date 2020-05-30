@@ -33,6 +33,7 @@
             :value="item.value"
           />
         </el-select>
+        <!-- 筛选最后登录起止时间段 -->
         <el-date-picker
           v-model="timeArray"
           size="small"
@@ -165,10 +166,10 @@ export default {
       errorMsg: "操作失败，请重试",
       formLabelWidth: "120px",
       searchObj: {
-        userInfo: "",
-        role: "",
-        startTime: "",
-        endTime: ""
+        userInfo: "", // 用户名/用户编号
+        role: "", // 用户角色
+        startTime: "", // 最后登录开始时间
+        endTime: "" // 最后登录结束时间
       },
       idList: [],
       type: "",
@@ -199,6 +200,7 @@ export default {
     };
   },
   watch: {
+    // 取最后登录时间筛选：开始时间，结束时间
     timeArray(val) {
       if (!val) {
         this.searchObj.startTime = "";
